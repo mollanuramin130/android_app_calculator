@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Widget.CalculatorButton.Number" parent="Widget.MaterialComponents.Button">
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:textSize">@dimen/button_text_size</item>
+        <item name="android:textColor">@color/text_on_light</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/button_number_bg</item>
+        <item name="backgroundTint">@null</item>
+        <item name="android:elevation">@dimen/button_elevation</item>
+    </style>
+
+    <style name="Widget.CalculatorButton.Operator" parent="Widget.MaterialComponents.Button">
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:textSize">@dimen/button_text_size</item>
+        <item name="android:textColor">@color/text_on_dark</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/button_operator_bg</item>
+        <item name="backgroundTint">@null</item>
+        <item name="android:elevation">@dimen/button_elevation</item>
+    </style>
+
+    <style name="Widget.CalculatorButton.Zero" parent="Widget.CalculatorButton.Number">
+        <item name="android:background">@drawable/button_zero_bg</item>
+    </style>
+</resources>

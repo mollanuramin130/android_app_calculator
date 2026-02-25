@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Sunset Coral theme -->
+    <color name="coral_light_peach">#FFF0E8</color>
+    <color name="coral_peach">#FFD4C4</color>
+    <color name="coral_mid">#FFB8A0</color>
+    <color name="coral_deep">#E8957A</color>
+    <color name="coral_dark">#D97A5F</color>
+    <color name="display_bg">#E5C4B8</color>
+    <color name="button_number_bg">#FFF5F2</color>
+    <color name="button_operator_bg">#D96A4A</color>
+    <color name="text_on_light">#B84A2A</color>
+    <color name="toolbar_text_and_icon">#8B3A20</color>
+    <color name="text_on_dark">#FFFFFF</color>
+    <color name="display_text">#FFFFFF</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>

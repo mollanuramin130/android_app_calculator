@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Nur\'s Custom Calculator</string>
+    <string name="history">History</string>
+    <string name="backspace">Backspace</string>
+    <string name="delete">Delete</string>
+    <string name="history_title">Calculation History</string>
+    <string name="history_empty">No calculations yet</string>
+</resources>

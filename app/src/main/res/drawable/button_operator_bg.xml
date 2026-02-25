@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/coral_mid" />
+            <corners android:radius="@dimen/button_corner_radius" />
+        </shape>
+    </item>
+    <!-- Explicit default so the button doesn't get stuck in pressed state -->
+    <item android:state_pressed="false" android:state_enabled="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/button_operator_bg" />
+            <corners android:radius="@dimen/button_corner_radius" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/button_operator_bg" />
+            <corners android:radius="@dimen/button_corner_radius" />
+        </shape>
+    </item>
+</selector>

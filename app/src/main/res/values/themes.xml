@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.SunsetCoralCalculator" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/coral_deep</item>
+        <item name="android:navigationBarColor">@color/coral_dark</item>
+        <item name="android:windowBackground">@drawable/bg_gradient</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <!-- Use coral as primary so no purple appears -->
+        <item name="colorPrimary">@color/coral_dark</item>
+        <item name="colorPrimaryVariant">@color/coral_deep</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Prevent Material from tinting our custom button backgrounds -->
+        <item name="colorButtonNormal">@color/button_number_bg</item>
+    </style>
+</resources>

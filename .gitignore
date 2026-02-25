@@ -1,0 +1,22 @@
+# Keystore and signing (never commit)
+keystore.properties
+*.keystore
+*.jks
+
+# Build
+/build
+app/build
+.gradle
+local.properties
+
+# IDE
+.idea
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Large design images (kept locally; not in repo to keep push size small)
+Calculator_Screen_Image/
+Extra_Image/
