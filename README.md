@@ -1,6 +1,7 @@
 # Sunset Coral Calculator
 
-Android calculator app matching the **Sunset Coral** design from `Calculator_Screen_Image/calculator_sunset_coral.png`.
+Android calculator app matching the **Sunset Coral** design from `Calculator_Screen_Image/calculator_sunset_coral.png`.  
+*(Design images in `Calculator_Screen_Image/` and `Extra_Image/` are kept locally only, not in the repo.)*
 
 **Repository:** [github.com/mollanuramin130/android_app_calculator](https://github.com/mollanuramin130/android_app_calculator)
 
