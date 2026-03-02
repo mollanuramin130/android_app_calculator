@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Date Calculator screen: light mode -->
+<resources>
+    <!-- Toolbar gradient -->
+    <color name="date_toolbar_gradient_start">#4F46E5</color>
+    <color name="date_toolbar_gradient_end">#06B6D4</color>
+    <!-- Toolbar elevation / divider -->
+    <color name="date_toolbar_divider">#00000000</color>
+
+    <!-- Screen background -->
+    <color name="date_screen_bg">#F4F6F9</color>
+    <color name="date_screen_bg_start">#F4F6F9</color>
+    <color name="date_screen_bg_end">#F4F6F9</color>
+
+    <!-- Card (date_card_stroke in colors_common; elevation in dimens.xml) -->
+    <color name="date_card_bg">#FFFFFF</color>
+
+    <!-- Button gradient -->
+    <color name="date_button_gradient_start">#4F46E5</color>
+    <color name="date_button_gradient_end">#06B6D4</color>
+
+    <!-- Input fields -->
+    <color name="date_input_bg">#FFFFFF</color>
+    <color name="date_input_text">@color/date_text_primary</color>
+    <color name="date_input_hint">@color/date_text_secondary</color>
+
+    <!-- Text -->
+    <color name="date_text_primary">#1F2937</color>
+    <color name="date_text_secondary">#6B7280</color>
+    <color name="date_toolbar_title">#FFFFFF</color>
+    <color name="date_result_title">#1F2937</color>
+    <color name="date_result_value">#1F2937</color>
+    <color name="date_result_sub">#6B7280</color>
+</resources>

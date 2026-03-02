@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Date Calculator: dark mode card (0 elevation + 0.5dp divider) -->
+    <dimen name="date_card_elevation">0dp</dimen>
+    <dimen name="date_card_stroke_width">1dp</dimen>
+    <dimen name="date_toolbar_elevation">0dp</dimen>
+</resources>
