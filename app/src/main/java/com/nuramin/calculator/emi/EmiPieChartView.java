@@ -10,7 +10,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
-import com.nuramin.calculator.R;
+import com.nuramin.sunsetcoralcalculator.R;
 
 /**
  * Simple pie chart showing Principal vs Interest portions.

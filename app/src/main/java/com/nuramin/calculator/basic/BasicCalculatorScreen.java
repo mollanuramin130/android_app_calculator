@@ -1,8 +1,17 @@
 package com.nuramin.calculator.basic;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.content.Context;
+import android.os.Build;
+import android.view.inputmethod.InputMethodManager;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
@@ -11,11 +20,13 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.nuramin.calculator.R;
+import com.nuramin.sunsetcoralcalculator.R;
 import com.nuramin.calculator.adapter.HistoryAdapter;
 import com.nuramin.calculator.common.AppConstants;
+import com.nuramin.calculator.model.HistoryEntry;
 import com.nuramin.calculator.util.CalculatorUtils;
 import com.nuramin.calculator.util.ExprParser;
+import com.nuramin.calculator.util.HistoryStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +43,8 @@ public class BasicCalculatorScreen {
     private HorizontalScrollView displayScroll;
     private Button btnEquals;
     private ListView panelHistoryList;
+    private View tabCalculateHistory;
+    private View tabOldHistory;
 
     // ---- Core state ----
     private final StringBuilder expression = new StringBuilder();
@@ -41,13 +54,28 @@ public class BasicCalculatorScreen {
     private int openParenthesisCount = 0;
 
     private boolean updatingFromCode = false;
-    private final List<String> historyList = new ArrayList<>();
+    /** Current session only; cleared when app is terminated. */
+    private final List<HistoryEntry> sessionHistory = new ArrayList<>();
+    /** Loaded from storage; persisted until user clears history. */
+    private final List<HistoryEntry> oldHistory = new ArrayList<>();
+    private HistoryStorage historyStorage;
     private HistoryAdapter historyAdapter;
+    /** 0 = Calculate History, 1 = Old History */
+    private int currentHistoryTab = 0;
 
     /** Scientific mode: angle unit for sin/cos/tan (true = degrees, false = radians). */
     private boolean degMode = true;
     /** Scientific mode: when true, sin→asin, cos→acos, tan→atan. */
     private boolean invMode = false;
+
+    /** Current result animator so we can cancel it when a new result is set. */
+    private ValueAnimator resultCountUpAnimator;
+
+    /** Last valid live-eval result; shown in live area when current expression is incomplete/invalid. */
+    private String lastValidLiveResult = null;
+
+    /** When set, updateDisplay() will set cursor to this position instead of end (for insert-at-cursor). */
+    private Integer pendingSelectionAfterUpdate = null;
 
     private static final String OP_PLUS = "+";
     private static final String OP_MINUS = "−";
@@ -66,6 +94,12 @@ public class BasicCalculatorScreen {
         panelHistoryList = activity.findViewById(R.id.panel_history_list);
 
         if (tvExpression == null || tvResult == null) return;
+
+        // Prevent soft keyboard in all scenarios (tap, select, copy, long-press)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            tvExpression.setShowSoftInputOnFocus(false);
+        }
+        tvExpression.setOnFocusChangeListener((v, hasFocus) -> { if (hasFocus) hideSoftKeyboard(); });
 
         // Number buttons 0–9 and dot: route to single handler
         setNumberButton(R.id.btn_0, "0");
@@ -100,7 +134,7 @@ public class BasicCalculatorScreen {
 
         View btnBackspace = activity.findViewById(R.id.btn_backspace);
         if (btnBackspace != null) {
-            btnBackspace.setOnClickListener(v -> deleteLast());
+            setupDeleteButtonPressAndHold(btnBackspace);
         }
 
         // Scientific buttons (may be in scientific_rows, same layout)
@@ -144,13 +178,53 @@ public class BasicCalculatorScreen {
             }
         });
 
-        historyAdapter = new HistoryAdapter(activity, historyList, this::applyResultFromHistory);
+        historyStorage = new HistoryStorage(activity);
+        oldHistory.addAll(historyStorage.loadOldHistory());
+        historyAdapter = new HistoryAdapter(activity, new ArrayList<>(), this::applyResultFromHistory);
         if (panelHistoryList != null) {
             panelHistoryList.setAdapter(historyAdapter);
             panelHistoryList.setOnItemClickListener((parent, view, position, id) -> {});
         }
 
+        tabCalculateHistory = activity.findViewById(R.id.tab_calculate_history);
+        tabOldHistory = activity.findViewById(R.id.tab_old_history);
+        if (tabCalculateHistory != null) {
+            tabCalculateHistory.setOnClickListener(v -> setHistoryTab(0));
+        }
+        if (tabOldHistory != null) {
+            tabOldHistory.setOnClickListener(v -> setHistoryTab(1));
+        }
+        refreshHistoryTabs();
+        refreshHistoryList();
+
         updateDisplay();
+    }
+
+    private void setHistoryTab(int tab) {
+        if (currentHistoryTab == tab) return;
+        currentHistoryTab = tab;
+        refreshHistoryTabs();
+        refreshHistoryList();
+    }
+
+    private void refreshHistoryTabs() {
+        if (tabCalculateHistory != null) {
+            tabCalculateHistory.setBackgroundResource(currentHistoryTab == 0 ? R.drawable.bg_history_segment_selected : R.drawable.bg_history_segment_unselected);
+        }
+        if (tabOldHistory != null) {
+            tabOldHistory.setBackgroundResource(currentHistoryTab == 1 ? R.drawable.bg_history_segment_selected : R.drawable.bg_history_segment_unselected);
+        }
+    }
+
+    private List<HistoryEntry> getDisplayedHistoryList() {
+        return currentHistoryTab == 0 ? sessionHistory : oldHistory;
+    }
+
+    private void refreshHistoryList() {
+        if (historyAdapter == null) return;
+        historyAdapter.clear();
+        historyAdapter.addAll(getDisplayedHistoryList());
+        historyAdapter.notifyDataSetChanged();
     }
 
     private void setNumberButton(int id, String value) {
@@ -166,6 +240,40 @@ public class BasicCalculatorScreen {
     private void setScientificButton(int id, View.OnClickListener listener) {
         View v = activity.findViewById(id);
         if (v != null) v.setOnClickListener(listener);
+    }
+
+    /** Press: single delete. Press and hold: repeat delete after initial delay. */
+    private void setupDeleteButtonPressAndHold(View btnBackspace) {
+        final Handler handler = new Handler(Looper.getMainLooper());
+        final long repeatDelayMs = 80;
+        final long initialHoldMs = 450;
+        final boolean[] repeatStarted = { false };
+        final Runnable repeatRunnable = new Runnable() {
+            @Override
+            public void run() {
+                repeatStarted[0] = true;
+                deleteLast();
+                handler.postDelayed(this, repeatDelayMs);
+            }
+        };
+        btnBackspace.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    repeatStarted[0] = false;
+                    v.setPressed(true);
+                    handler.postDelayed(repeatRunnable, initialHoldMs);
+                    return true;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    v.setPressed(false);
+                    handler.removeCallbacks(repeatRunnable);
+                    if (event.getAction() == MotionEvent.ACTION_UP && !repeatStarted[0]) {
+                        deleteLast();
+                    }
+                    return true;
+            }
+            return false;
+        });
     }
 
     // ---- Scientific button handlers ----
@@ -278,6 +386,23 @@ public class BasicCalculatorScreen {
         return c == '+' || c == '−' || c == '×' || c == '÷' || c == '^';
     }
 
+    /** Current cursor/insert position in expression (for insert-at-cursor). */
+    private int getInsertPosition() {
+        if (tvExpression == null) return expression.length();
+        int sel = tvExpression.getSelectionStart();
+        if (sel < 0) return expression.length();
+        return Math.min(sel, expression.length());
+    }
+
+    /** Insert string at cursor position; keeps cursor after inserted text. */
+    private void insertAtCursor(String s) {
+        int pos = getInsertPosition();
+        expression.insert(pos, s);
+        syncStateFromExpression();
+        pendingSelectionAfterUpdate = pos + s.length();
+        updateDisplay();
+    }
+
     private char lastChar() {
         return expression.length() == 0 ? '\0' : expression.charAt(expression.length() - 1);
     }
@@ -288,7 +413,15 @@ public class BasicCalculatorScreen {
             expression.setLength(0);
             isResultDisplayed = false;
         }
-        // Prevent leading zero duplication (00, 000): current number already "0" only
+        int pos = getInsertPosition();
+        if (pos < expression.length()) {
+            expression.insert(pos, value);
+            syncStateFromExpression();
+            pendingSelectionAfterUpdate = pos + 1;
+            updateDisplay();
+            return;
+        }
+        // Cursor at end: prevent leading zero duplication (00, 000)
         if (value.equals("0")) {
             int start = lastNumberStart();
             String num = expression.substring(start);
@@ -316,11 +449,19 @@ public class BasicCalculatorScreen {
     // ---- 4. Operator handling ----
     private void handleOperator(String op) {
         if (isResultDisplayed) isResultDisplayed = false;
+        int pos = getInsertPosition();
         int len = expression.length();
         if (len == 0) {
             if (op.equals(OP_MINUS)) expression.append(op);
             lastInputIsOperator = true;
             lastInputIsDecimal = false;
+            updateDisplay();
+            return;
+        }
+        if (pos < len) {
+            expression.insert(pos, op);
+            syncStateFromExpression();
+            pendingSelectionAfterUpdate = pos + 1;
             updateDisplay();
             return;
         }
@@ -341,6 +482,14 @@ public class BasicCalculatorScreen {
         if (isResultDisplayed) {
             expression.setLength(0);
             isResultDisplayed = false;
+        }
+        int pos = getInsertPosition();
+        if (pos < expression.length()) {
+            expression.insert(pos, ".");
+            syncStateFromExpression();
+            pendingSelectionAfterUpdate = pos + 1;
+            updateDisplay();
+            return;
         }
         if (hasDecimalInCurrentNumber()) return;
         if (expression.length() == 0 || lastInputIsOperator || lastChar() == '(') expression.append("0");
@@ -368,6 +517,15 @@ public class BasicCalculatorScreen {
             expression.setLength(0);
             isResultDisplayed = false;
         }
+        int pos = getInsertPosition();
+        if (pos < expression.length()) {
+            char ch = '(';
+            expression.insert(pos, ch);
+            syncStateFromExpression();
+            pendingSelectionAfterUpdate = pos + 1;
+            updateDisplay();
+            return;
+        }
         int len = expression.length();
         boolean empty = len == 0;
         boolean lastIsOp = lastInputIsOperator;
@@ -388,10 +546,44 @@ public class BasicCalculatorScreen {
         updateDisplay();
     }
 
+    /** Suffixes for scientific functions that end with '('; longest first for matching. */
+    private static final String[] SCIENTIFIC_FUNCTION_SUFFIXES = {
+        "atan(", "asin(", "acos(", "sqrt(", "sin(", "cos(", "tan(", "log(", "ln("
+    };
+
     // ---- 7. Delete last ----
     private void deleteLast() {
         if (expression.length() == 0) return;
         if (isResultDisplayed) return;
+        int pos = getInsertPosition();
+        if (pos > 0 && pos < expression.length()) {
+            char removed = expression.charAt(pos - 1);
+            expression.deleteCharAt(pos - 1);
+            if (removed == '(') openParenthesisCount--;
+            else if (removed == ')') openParenthesisCount++;
+            syncStateFromExpression();
+            pendingSelectionAfterUpdate = pos - 1;
+            updateDisplay();
+            return;
+        }
+        if (pos < expression.length()) return;
+        String expr = expression.toString();
+        for (String suffix : SCIENTIFIC_FUNCTION_SUFFIXES) {
+            if (expr.endsWith(suffix)) {
+                expression.setLength(expression.length() - suffix.length());
+                openParenthesisCount--;
+                if (expression.length() > 0) {
+                    char last = lastChar();
+                    lastInputIsOperator = isOperatorChar(last);
+                    lastInputIsDecimal = last == '.';
+                } else {
+                    lastInputIsOperator = false;
+                    lastInputIsDecimal = false;
+                }
+                updateDisplay();
+                return;
+            }
+        }
         char removed = expression.charAt(expression.length() - 1);
         expression.setLength(expression.length() - 1);
         if (removed == '(') openParenthesisCount--;
@@ -409,6 +601,8 @@ public class BasicCalculatorScreen {
 
     // ---- 8. AC ----
     private void clearAll() {
+        cancelResultAnimation();
+        lastValidLiveResult = null;
         expression.setLength(0);
         updatingFromCode = true;
         tvResult.setText("0");
@@ -482,18 +676,12 @@ public class BasicCalculatorScreen {
 
         Double result = evaluateExpression(toEval);
         if (result == null) {
-            tvResult.setText("Error");
-            expression.setLength(0);
+            cancelResultAnimation();
+            if (tvResult != null) tvResult.setText("Error");
+            if (tvExpression != null) tvExpression.setVisibility(View.VISIBLE);
             lastInputIsOperator = false;
             lastInputIsDecimal = false;
             isResultDisplayed = false;
-            openParenthesisCount = 0;
-            updatingFromCode = true;
-            if (tvExpression != null) {
-                tvExpression.setText("");
-                tvExpression.setVisibility(View.GONE);
-            }
-            updatingFromCode = false;
             scrollDisplayToEnd();
             return;
         }
@@ -503,11 +691,14 @@ public class BasicCalculatorScreen {
 
         updatingFromCode = true;
         if (tvExpression != null) {
-            tvExpression.setText(expression.toString());
             tvExpression.setVisibility(View.VISIBLE);
-            tvExpression.setSelection(expression.length());
         }
-        tvResult.setText("= " + resultStr);
+        lastValidLiveResult = resultStr;
+        if (tvExpression != null) {
+            tvExpression.setText(resultStr);
+            tvExpression.setSelection(resultStr.length());
+        }
+        if (tvResult != null) tvResult.setText("");
         expression.setLength(0);
         expression.append(resultStr.replace(",", ""));
         updatingFromCode = false;
@@ -515,7 +706,7 @@ public class BasicCalculatorScreen {
         lastInputIsDecimal = false;
         isResultDisplayed = true;
         openParenthesisCount = 0;
-        if (historyAdapter != null) historyAdapter.notifyDataSetChanged();
+        refreshHistoryList();
         scrollDisplayToEnd();
     }
 
@@ -553,6 +744,59 @@ public class BasicCalculatorScreen {
         return out.toString();
     }
 
+    /**
+     * Smart live evaluation: try to get a result from current input by normalizing then evaluating.
+     * 1) Auto-close unclosed parentheses (e.g. sin(9 -> sin(9)).
+     * 2) Try evaluate. If fail, strip trailing operators and try again (e.g. 9+6+ -> 9+6).
+     * Returns null if no valid result; otherwise the computed value.
+     */
+    private Double evaluateLiveExpression(String toEval) {
+        if (toEval == null || toEval.isEmpty()) return null;
+        String normalized = closeUnclosedParenthesesForLiveEval(toEval);
+        Double result = evaluateExpression(normalized);
+        if (result != null) return result;
+        String trimmed = stripTrailingOperatorsForLiveEval(normalized);
+        if (!trimmed.equals(normalized)) result = evaluateExpression(trimmed);
+        return result;
+    }
+
+    /**
+     * For live evaluation only: append ')' for each unclosed '(' so that e.g. 9+6+sin(9
+     * becomes 9+6+sin(9) and can be evaluated without waiting for the user to type ).
+     */
+    private String closeUnclosedParenthesesForLiveEval(String s) {
+        if (s == null) return "";
+        int open = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '(') open++;
+            else if (s.charAt(i) == ')') open--;
+        }
+        StringBuilder out = new StringBuilder(s);
+        while (open > 0) {
+            out.append(')');
+            open--;
+        }
+        return out.toString();
+    }
+
+    /**
+     * For live evaluation only: remove trailing operator chars so e.g. 9+6+ or 9+6-
+     * becomes 9+6 and can be evaluated to show the last partial result.
+     */
+    private String stripTrailingOperatorsForLiveEval(String s) {
+        if (s == null) return "";
+        String t = s.trim();
+        while (t.length() > 0) {
+            char c = t.charAt(t.length() - 1);
+            if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^') {
+                t = t.substring(0, t.length() - 1).trim();
+            } else {
+                break;
+            }
+        }
+        return t;
+    }
+
     private Double evaluateExpression(String s) {
         if (s == null || s.isEmpty()) return null;
         try {
@@ -577,17 +821,24 @@ public class BasicCalculatorScreen {
      * Do not implement database here.
      */
     private void saveToHistory(String expressionString, String resultString) {
-        String entry = expressionString + "\n= " + resultString;
-        historyList.add(0, entry);
-        if (historyList.size() > AppConstants.MAX_HISTORY_ITEMS) {
-            historyList.remove(historyList.size() - 1);
+        sessionHistory.add(0, new HistoryEntry(expressionString, resultString));
+        if (sessionHistory.size() > AppConstants.MAX_HISTORY_ITEMS) {
+            sessionHistory.remove(sessionHistory.size() - 1);
         }
+        long now = System.currentTimeMillis();
+        oldHistory.add(0, new HistoryEntry(expressionString, resultString, now));
+        while (oldHistory.size() > 200) oldHistory.remove(oldHistory.size() - 1);
+        if (historyStorage != null) {
+            historyStorage.appendEntry(expressionString, resultString);
+        }
+        refreshHistoryList();
     }
 
     public void updateDisplay() {
         if (tvExpression == null || tvResult == null) return;
         String expr = expression.toString();
         if (expr.isEmpty()) {
+            lastValidLiveResult = null;
             tvExpression.setVisibility(View.GONE);
             updatingFromCode = true;
             tvExpression.setText("");
@@ -597,12 +848,15 @@ public class BasicCalculatorScreen {
             tvExpression.setVisibility(View.VISIBLE);
             updatingFromCode = true;
             tvExpression.setText(expr);
-            tvExpression.setSelection(expr.length());
+            int sel = (pendingSelectionAfterUpdate != null) ? Math.max(0, Math.min(pendingSelectionAfterUpdate, expr.length())) : expr.length();
+            tvExpression.setSelection(sel);
+            pendingSelectionAfterUpdate = null;
             updatingFromCode = false;
             String toEval = expandPercentages(expr).replace('×', '*').replace('÷', '/').replace('−', '-').replaceAll("\\s+", "");
-            Double live = evaluateExpression(toEval);
+            Double live = evaluateLiveExpression(toEval);
             if (live != null) {
-                tvResult.setText("= " + formatResult(live));
+                lastValidLiveResult = formatResult(live);
+                tvResult.setText(lastValidLiveResult);
             } else {
                 tvResult.setText("");
             }
@@ -616,28 +870,63 @@ public class BasicCalculatorScreen {
         }
     }
 
-    public void clearHistory() {
-        historyList.clear();
-        if (historyAdapter != null) historyAdapter.notifyDataSetChanged();
+    private void hideSoftKeyboard() {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null && tvExpression != null) {
+            imm.hideSoftInputFromWindow(tvExpression.getWindowToken(), 0);
+        }
     }
 
+    public void clearHistory() {
+        sessionHistory.clear();
+        oldHistory.clear();
+        if (historyStorage != null) historyStorage.clear();
+        refreshHistoryList();
+    }
+
+    /**
+     * Insert history result as digits into the current expression at cursor (or append).
+     * Does not replace the expression: e.g. "12+" + USE "20" → "12+20".
+     */
     private void applyResultFromHistory(String resultStr) {
+        if (resultStr == null || resultStr.isEmpty()) return;
+        String digits = resultStr.replace(",", "").trim();
         try {
-            double d = Double.parseDouble(resultStr);
-            expression.setLength(0);
-            expression.append(CalculatorUtils.formatNumber(d).replace(",", ""));
-            lastInputIsOperator = false;
-            lastInputIsDecimal = false;
-            isResultDisplayed = true;
-            openParenthesisCount = 0;
-            updatingFromCode = true;
-            if (tvExpression != null) {
-                tvExpression.setText(expression.toString());
-                tvExpression.setVisibility(View.VISIBLE);
-            }
-            tvResult.setText("= " + CalculatorUtils.formatNumber(d));
-            updatingFromCode = false;
-            updateDisplay();
-        } catch (NumberFormatException ignored) {}
+            Double.parseDouble(digits);
+        } catch (NumberFormatException e) {
+            return;
+        }
+        int pos = getInsertPosition();
+        expression.insert(pos, digits);
+        syncStateFromExpression();
+        lastInputIsOperator = false;
+        lastInputIsDecimal = false;
+        isResultDisplayed = false;
+        pendingSelectionAfterUpdate = pos + digits.length();
+        if (tvExpression != null) tvExpression.setVisibility(View.VISIBLE);
+        if (tvResult != null) tvResult.setText("");
+        updateDisplay();
+    }
+
+    private void cancelResultAnimation() {
+        if (resultCountUpAnimator != null && resultCountUpAnimator.isRunning()) {
+            resultCountUpAnimator.cancel();
+            resultCountUpAnimator = null;
+        }
+    }
+
+    /** Subtle scale-in for a view (expression or result). */
+    private void playResultScaleIn(View view) {
+        if (view == null) return;
+        view.setScaleX(0.94f);
+        view.setScaleY(0.94f);
+        ObjectAnimator sx = ObjectAnimator.ofFloat(view, View.SCALE_X, 0.94f, 1f);
+        ObjectAnimator sy = ObjectAnimator.ofFloat(view, View.SCALE_Y, 0.94f, 1f);
+        sx.setDuration(220);
+        sy.setDuration(220);
+        sx.setInterpolator(new DecelerateInterpolator());
+        sy.setInterpolator(new DecelerateInterpolator());
+        sx.start();
+        sy.start();
     }
 }

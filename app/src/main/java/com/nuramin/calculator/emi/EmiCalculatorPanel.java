@@ -3,20 +3,19 @@ package com.nuramin.calculator.emi;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.nuramin.calculator.R;
+import com.nuramin.sunsetcoralcalculator.R;
 import com.nuramin.calculator.util.CalculatorUtils;
-
-import android.view.Gravity;
+import com.nuramin.calculator.util.ConverterUiHelper;
 
 /**
  * EMI Calculator: principal, rate, tenure with sliders; calculate; result card and pie chart.
+ * Nav and overflow are handled by the main activity toolbar.
  */
 public final class EmiCalculatorPanel {
 
@@ -29,15 +28,6 @@ public final class EmiCalculatorPanel {
 
     public static void setup(View panel, @Nullable DrawerLayout drawerLayout, @Nullable View.OnClickListener onOverflowClick) {
         if (panel == null) return;
-        ImageButton navMenu = panel.findViewById(R.id.emi_nav_menu);
-        ImageButton menuDots = panel.findViewById(R.id.emi_menu_dots);
-        final DrawerLayout layout = drawerLayout;
-        if (navMenu != null && layout != null) {
-            navMenu.setOnClickListener(v -> layout.openDrawer(Gravity.START));
-        }
-        if (menuDots != null && onOverflowClick != null) {
-            menuDots.setOnClickListener(onOverflowClick);
-        }
 
         EditText principalEt = panel.findViewById(R.id.emi_principal);
         SeekBar principalSlider = panel.findViewById(R.id.emi_slider_principal);
@@ -123,6 +113,8 @@ public final class EmiCalculatorPanel {
                 totalPaymentTv.setText(panel.getContext().getString(R.string.emi_total_payment, "₹ " + CalculatorUtils.formatNumber(totalPayment)));
                 pieChart.setAmounts(P, totalInterest);
                 resultCard.setVisibility(View.VISIBLE);
+                ConverterUiHelper.hideSoftKeyboard(panel);
+                ConverterUiHelper.scrollToShowResult(panel, resultCard);
             });
         }
     }

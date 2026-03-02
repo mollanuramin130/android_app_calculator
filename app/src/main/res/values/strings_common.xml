@@ -5,6 +5,10 @@
     <string name="backspace">Backspace</string>
     <string name="delete">Delete</string>
     <string name="history_title">Calculation History</string>
+    <string name="tab_calculate_history">Calculate History</string>
+    <string name="tab_old_history">Old History</string>
+    <string name="tab_recent">Recent</string>
+    <string name="tab_old">Old</string>
     <string name="history_empty">No calculations yet</string>
     <string name="history_replace_title">Replace expression?</string>
     <string name="history_replace_message">Your current expression will be removed. Continue?</string>

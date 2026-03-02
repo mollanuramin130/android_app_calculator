@@ -6,7 +6,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -19,8 +18,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.nuramin.calculator.R;
+import com.nuramin.sunsetcoralcalculator.R;
 import com.nuramin.calculator.util.CalculatorUtils;
+import com.nuramin.calculator.util.ConverterUiHelper;
 
 import org.json.JSONObject;
 
@@ -58,15 +58,6 @@ public final class CurrencyPanel {
     public static void setup(View panel, @Nullable DrawerLayout drawerLayout, @Nullable View.OnClickListener onOverflowClick) {
         if (panel == null) return;
         sPanel = panel;
-        ImageButton navMenu = panel.findViewById(R.id.currency_nav_menu);
-        ImageButton menuDots = panel.findViewById(R.id.currency_menu_dots);
-        final DrawerLayout layout = drawerLayout;
-        if (navMenu != null && layout != null) {
-            navMenu.setOnClickListener(v -> layout.openDrawer(Gravity.START));
-        }
-        if (menuDots != null && onOverflowClick != null) {
-            menuDots.setOnClickListener(onOverflowClick);
-        }
 
         Spinner fromSpinner = panel.findViewById(R.id.currency_from);
         Spinner toSpinner = panel.findViewById(R.id.currency_to);
@@ -169,7 +160,7 @@ public final class CurrencyPanel {
                 }
             });
         }
-        if (swapBtn != null && fromSpinner != null && toSpinner != null) {
+        if (swapBtn != null && fromSpinner != null && toSpinner != null && resultTv != null) {
             swapBtn.setOnClickListener(v -> {
                 int from = fromSpinner.getSelectedItemPosition();
                 int to = toSpinner.getSelectedItemPosition();
@@ -177,6 +168,8 @@ public final class CurrencyPanel {
                 toSpinner.setSelection(from);
                 updateFlags.run();
                 updateResult.run();
+                ConverterUiHelper.hideSoftKeyboard(panel);
+                ConverterUiHelper.scrollToShowResult(panel, resultTv);
             });
         }
         updateFlags.run();

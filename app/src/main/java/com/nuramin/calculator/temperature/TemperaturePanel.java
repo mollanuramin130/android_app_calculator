@@ -1,21 +1,21 @@
 package com.nuramin.calculator.temperature;
 
-import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.nuramin.calculator.R;
+import com.nuramin.sunsetcoralcalculator.R;
 import com.nuramin.calculator.util.CalculatorUtils;
+import com.nuramin.calculator.util.ConverterUiHelper;
 
 /**
  * Temperature Converter: from/to units, convert button, result, formula, quick swap.
+ * Nav and overflow are handled by the main activity toolbar.
  */
 public final class TemperaturePanel {
 
@@ -25,15 +25,6 @@ public final class TemperaturePanel {
 
     public static void setup(View panel, @Nullable DrawerLayout drawerLayout, @Nullable View.OnClickListener onOverflowClick) {
         if (panel == null) return;
-        ImageButton navMenu = panel.findViewById(R.id.temp_nav_menu);
-        ImageButton menuDots = panel.findViewById(R.id.temp_menu_dots);
-        final DrawerLayout layout = drawerLayout;
-        if (navMenu != null && layout != null) {
-            navMenu.setOnClickListener(v -> layout.openDrawer(Gravity.START));
-        }
-        if (menuDots != null && onOverflowClick != null) {
-            menuDots.setOnClickListener(onOverflowClick);
-        }
 
         EditText input = panel.findViewById(R.id.temp_input);
         Spinner fromSpinner = panel.findViewById(R.id.temp_from);
@@ -54,7 +45,11 @@ public final class TemperaturePanel {
         }
 
         if (convertBtn != null && input != null && result != null && formula != null && fromSpinner != null && toSpinner != null) {
-            convertBtn.setOnClickListener(v -> performConvert(input, fromSpinner, toSpinner, result, formula));
+            convertBtn.setOnClickListener(v -> {
+                performConvert(input, fromSpinner, toSpinner, result, formula);
+                ConverterUiHelper.hideSoftKeyboard(panel);
+                ConverterUiHelper.scrollToShowResult(panel, result);
+            });
         }
 
         if (quickSwap != null && fromSpinner != null && toSpinner != null && input != null && result != null && formula != null) {
@@ -64,6 +59,8 @@ public final class TemperaturePanel {
                 fromSpinner.setSelection(to);
                 toSpinner.setSelection(from);
                 performConvert(input, fromSpinner, toSpinner, result, formula);
+                ConverterUiHelper.hideSoftKeyboard(panel);
+                ConverterUiHelper.scrollToShowResult(panel, result);
             });
         }
     }

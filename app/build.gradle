@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.nuramin.calculator'
+    namespace 'com.nuramin.sunsetcoralcalculator'
     compileSdk 35
 
     defaultConfig {

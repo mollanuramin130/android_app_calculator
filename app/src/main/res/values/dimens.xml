@@ -14,8 +14,11 @@
     <dimen name="mode_key_height">56dp</dimen>
     <dimen name="mode_key_margin">6dp</dimen>
     <dimen name="mode_key_text_size">22sp</dimen>
+    <dimen name="mode_scientific_key_text_size">13sp</dimen>
     <dimen name="mode_display_expression_size">32sp</dimen>
     <dimen name="mode_display_result_size">44sp</dimen>
+    <!-- Live evaluation line: smaller, not bold, no equals sign -->
+    <dimen name="mode_display_live_result_size">22sp</dimen>
     <dimen name="age_spinner_dropdown_height">200dp</dimen>
     <dimen name="date_card_elevation">4dp</dimen>
     <dimen name="date_card_stroke_width">0dp</dimen>
