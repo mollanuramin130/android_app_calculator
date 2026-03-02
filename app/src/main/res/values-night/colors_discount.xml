@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Discount / Percentage Calculator - Dark -->
+    <color name="discount_screen_bg">#FF000000</color>
+    <color name="discount_card_primary">#FF1C1C1E</color>
+    <color name="discount_card_secondary">#FF2C2C2E</color>
+    <color name="discount_accent">#FFC67C4E</color>
+    <color name="discount_text_primary">#FFFFFFFF</color>
+    <color name="discount_text_secondary">#FFB0B0B0</color>
+    <color name="discount_btn_plus_bg">#FF2C2C2E</color>
+    <color name="discount_positive">#FF34C759</color>
+    <color name="discount_negative">#FFFF453A</color>
+</resources>
