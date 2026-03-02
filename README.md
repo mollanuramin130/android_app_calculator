@@ -27,9 +27,17 @@ Android calculator app matching the **Sunset Coral** design from `Calculator_Scr
 
 If the Gradle wrapper is missing, create the project from Android Studio (**File → New → Import Project**) or run **Gradle → Wrapper** to generate it.
 
+**If you see "Activity class does not exist" when running:**  
+Uninstall the old app from the device/emulator (Settings → Apps → your calculator app → Uninstall), then **File → Invalidate Caches → Invalidate and Restart**. Run again. The app package is `com.nuramin.calculator`.
+
+**If the Run button is disabled:**  
+- **Option 1 – Use Gradle:** In the toolbar, open the **Run configuration dropdown** (where it says "app" or "Install_Debug"). Select **"Install_Debug"**. Connect an emulator or device, then click **Run**. The app will install; open it from the device.  
+- **Option 2 – Create Android App config:** **Run → Edit Configurations…** → click **+** (top-left) → **Android App**. Set **Module** to your app module (e.g. `Custom_Calculator_App.app`), **Launch Options** to **Default Activity** → **Apply** → **OK**. Choose a device in the toolbar and run.  
+- **Option 3:** **File → Sync Project with Gradle Files**, then **Build → Rebuild Project**. After sync, the **app** run configuration may appear; select it and a device, then run.
+
 ## Project structure
 
-- `app/src/main/java/com/nuramin/sunsetcoralcalculator/MainActivity.java` – calculator logic  
+- `app/src/main/java/com/nuramin/calculator/MainActivity.java` – calculator logic  
 - `app/src/main/res/layout/activity_main.xml` – layout (title, display, button grid)  
 - `app/src/main/res/values/` – colors, dimensions, themes, styles  
 - `app/src/main/res/drawable/` – gradients, button backgrounds, launcher icon  

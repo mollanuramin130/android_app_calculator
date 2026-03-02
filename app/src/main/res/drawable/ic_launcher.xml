@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Full logo in one drawable - no separate background so it always shows -->
-    <item android:drawable="@drawable/ic_launcher_foreground" />
-</layer-list>

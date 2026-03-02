@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.SunsetCoralCalculator" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:statusBarColor">@color/mode_display_bg</item>
+        <item name="android:navigationBarColor">@color/mode_screen_bg</item>
+        <item name="android:windowBackground">@color/mode_screen_bg</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="colorPrimary">@color/coral_dark</item>
+        <item name="colorPrimaryVariant">@color/coral_deep</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorButtonNormal">@color/button_number_bg</item>
+        <item name="popupMenuStyle">@style/PopupMenuStyle</item>
+    </style>
+</resources>

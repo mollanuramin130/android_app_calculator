@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Temperature Converter - Light -->
+    <color name="temp_gradient_start">#FF4C7DFF</color>
+    <color name="temp_gradient_end">#FF00BCD4</color>
+    <color name="temp_screen_bg">#FFF0F0F0</color>
+    <color name="temp_card_bg">#FFFFFFFF</color>
+    <color name="temp_label_text">#FF424242</color>
+    <color name="temp_quick_swap_text">#FF424242</color>
+    <color name="temp_input_bg">#FFFFFFFF</color>
+    <color name="temp_input_border">#FFD0D7DE</color>
+    <color name="temp_chevron">#FF616161</color>
+    <color name="temp_thermometer_tint">#FF4FC3F7</color>
+    <color name="temp_convert_button_coral">#FFD96A4A</color>
+</resources>

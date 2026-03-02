@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/mode_menu_bg"
+    android:padding="24dp"
+    android:minWidth="280dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <ImageButton
+            android:id="@+id/feedback_compose_close"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_close"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Close"
+            android:padding="8dp"
+            app:tint="@color/mode_button_text_light" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/feedback_title"
+            android:textColor="@color/mode_button_text_light"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <View
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/feedback_describe_issue"
+        android:textColor="@color/mode_button_text_light"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/feedback_sensitive_hint"
+        android:textColor="@color/history_timestamp_text"
+        android:textSize="12sp"
+        android:layout_marginBottom="8dp" />
+
+    <EditText
+        android:id="@+id/feedback_message"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:gravity="top|start"
+        android:inputType="textMultiLine|textCapSentences"
+        android:minLines="3"
+        android:padding="12dp"
+        android:background="@drawable/bg_feedback_edit"
+        android:textColor="@color/mode_button_text_light"
+        android:textColorHint="@color/history_timestamp_text"
+        android:hint="@string/feedback_message_hint"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/feedback_attach_screenshot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="44dp"
+        android:text="@string/feedback_attach_screenshot"
+        android:textColor="@color/mode_button_text_light"
+        android:background="@drawable/bg_feedback_edit"
+        android:layout_marginBottom="16dp"
+        style="?android:attr/borderlessButtonStyle" />
+
+    <TextView
+        android:id="@+id/feedback_attachment_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/history_timestamp_text"
+        android:textSize="12sp"
+        android:visibility="gone"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/feedback_send"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="@string/feedback_send_button"
+        android:textColor="@color/white"
+        android:background="@drawable/button_feedback_primary"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+</LinearLayout>

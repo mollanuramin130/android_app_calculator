@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="emi_enter_details">Enter Details</string>
+    <string name="emi_loan_amount">Loan Amount</string>
+    <string name="emi_interest_rate">Interest Rate</string>
+    <string name="emi_loan_tenure">Loan Tenure</string>
+    <string name="emi_calculate">Calculate</string>
+    <string name="emi_your_emi">Your EMI</string>
+    <string name="emi_per_month">/ month</string>
+    <string name="emi_total_interest">Total Interest Payable: %1$s</string>
+    <string name="emi_total_payment">Total Payment (Principal): %1$s</string>
+    <string name="emi_principal">Principal</string>
+    <string name="emi_interest">Interest</string>
+    <string name="emi_loan_schedule">Loan EMI Schedule</string>
+    <string name="emi_rupee_symbol">₹</string>
+    <string name="emi_range_10k">₹ 10k</string>
+    <string name="emi_range_1cr">₹ 1 Cr</string>
+    <string name="emi_range_1pct">1%</string>
+    <string name="emi_range_25pct">25%</string>
+    <string name="emi_range_6m">6M</string>
+    <string name="emi_range_360m">360M</string>
+    <string name="emi_months">Months</string>
+</resources>

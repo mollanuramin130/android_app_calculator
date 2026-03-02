@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="currency_subtitle">Check live rates, set rate alerts, receive notifications and more.</string>
+    <string name="currency_amount_label">Amount</string>
+    <string name="currency_converted_label">Converted Amount</string>
+    <string name="currency_indicative_rate">Indicative Exchange Rate</string>
+    <string name="currency_swap_hint">Swap currencies</string>
+    <string name="currency_offline_title">Using sample rates</string>
+    <string name="currency_offline_message">For live, accurate exchange rates please turn on your internet.</string>
+    <string name="currency_rates_not_accurate">These rates are for reference only and may not be accurate. Turn on mobile data or Wi‑Fi for live rates.</string>
+    <string name="currency_internet_off_title">No internet connection</string>
+    <string name="currency_internet_off_message">Turn on your mobile data or Wi‑Fi to get actual exchange values.</string>
+    <string name="currency_usd">USD</string>
+    <string name="currency_eur">EUR</string>
+    <string name="currency_gbp">GBP</string>
+    <string name="currency_inr">INR</string>
+    <string name="currency_bdt">BDT</string>
+    <string-array name="currency_codes">
+        <item>USD</item>
+        <item>EUR</item>
+        <item>GBP</item>
+        <item>INR</item>
+        <item>BDT</item>
+    </string-array>
+</resources>

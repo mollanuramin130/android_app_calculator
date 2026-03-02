@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Interest Calculator - Light -->
+    <color name="int_screen_bg">#FFF4F6F9</color>
+    <color name="int_appbar_start">#FF4F46E5</color>
+    <color name="int_appbar_end">#FF06B6D4</color>
+    <color name="int_card_bg">#FFFFFFFF</color>
+    <color name="int_text_primary">#FF1F2937</color>
+    <color name="int_text_secondary">#FF6B7280</color>
+    <color name="int_input_bg">#FFF1F5F9</color>
+    <color name="int_input_border">#FFE5E7EB</color>
+    <color name="int_input_text">#FF1F2937</color>
+    <color name="int_slider_active">#FF3B82F6</color>
+    <color name="int_slider_inactive">#FFD1D5DB</color>
+    <color name="int_button_start">#FF4F46E5</color>
+    <color name="int_button_end">#FF06B6D4</color>
+    <color name="int_segmented_selected_start">#FF06B6D4</color>
+    <color name="int_segmented_selected_end">#FF2563EB</color>
+    <color name="int_segmented_unselected">#00FFFFFF</color>
+    <color name="int_divider">#FFE5E7EB</color>
+    <color name="int_view_breakdown_btn_bg">#FFFFFFFF</color>
+    <color name="int_view_breakdown_btn_border">#FFE5E7EB</color>
+    <color name="int_view_breakdown_btn_text">#FF1F2937</color>
+    <color name="int_card_border">#0D000000</color>
+</resources>

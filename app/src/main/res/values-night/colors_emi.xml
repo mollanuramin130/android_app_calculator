@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- EMI Calculator - Dark -->
+    <color name="emi_screen_bg">#FF0F172A</color>
+    <color name="emi_appbar_start">#FF1E3A8A</color>
+    <color name="emi_appbar_end">#FF0891B2</color>
+    <color name="emi_card_bg">#FF1E293B</color>
+    <color name="emi_text_primary">#FFF9FAFB</color>
+    <color name="emi_text_secondary">#FF9CA3AF</color>
+    <color name="emi_input_bg">#FF334155</color>
+    <color name="emi_input_text">#FFFFFFFF</color>
+    <color name="emi_slider_active">#FF06B6D4</color>
+    <color name="emi_slider_inactive">#FF475569</color>
+    <color name="emi_button_start">#FF2563EB</color>
+    <color name="emi_button_end">#FF06B6D4</color>
+    <color name="emi_pie_principal">#FF3B82F6</color>
+    <color name="emi_pie_interest">#FF22D3EE</color>
+    <color name="emi_card_border">#1AFFFFFF</color>
+</resources>
