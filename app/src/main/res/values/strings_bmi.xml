@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bmi_calculator_title">BMI Calculator</string>
+    <string name="bmi_your_bmi">Your BMI</string>
+    <string name="bmi_underweight_label">Underweight</string>
+    <string name="bmi_normal_label">Normal Weight</string>
+    <string name="bmi_overweight_label">Overweight</string>
+    <string name="bmi_obese_label">Obese</string>
+    <string name="bmi_male">Male</string>
+    <string name="bmi_female">Female</string>
+    <string name="bmi_height_label">Height (cm)</string>
+    <string name="bmi_weight_label">Weight (kg)</string>
+    <string name="bmi_age_label">Age</string>
+    <string name="bmi_calculate_btn">CALCULATE BMI</string>
+    <string name="bmi_category_info_title">BMI Categories</string>
+    <string name="bmi_range_underweight">Underweight &lt;18.5</string>
+    <string name="bmi_range_normal">Normal 18.5–24.9</string>
+    <string name="bmi_range_overweight">Overweight 25–29.9</string>
+    <string name="bmi_range_obese">Obese 30+</string>
+    <string name="bmi_error_invalid">Please enter valid values</string>
+    <string name="mode_bmi_calculator">BMI Calculator</string>
+</resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="discount_calculator_title">Discount / Percentage Calculator</string>
+    <string name="discount_label_discounted_price">Discounted Price</string>
+    <string name="discount_you_save">You Save %1$s</string>
+    <string name="discount_label_original">Original Price</string>
+    <string name="discount_label_discount">Discount</string>
+    <string name="discount_label_price_off">Price Off</string>
+    <string name="discount_original_price">Original Price</string>
+    <string name="discount_percentage">Discount Percentage</string>
+    <string name="discount_amount">Discount Amount</string>
+    <string name="discount_calculate_btn">CALCULATE</string>
+    <string name="discount_breakdown_original">Original Price: %1$s</string>
+    <string name="discount_breakdown_discount">Discount: -%1$s%% %2$s</string>
+    <string name="discount_breakdown_price_off">Price Off: %1$s</string>
+    <string name="discount_breakdown_final">Final Price: %1$s</string>
+    <string name="discount_error_invalid">Please enter valid values</string>
+    <string name="mode_discount_calculator">Discount / Percentage</string>
+</resources>

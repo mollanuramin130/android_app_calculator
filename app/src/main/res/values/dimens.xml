@@ -14,9 +14,27 @@
     <dimen name="mode_key_height">56dp</dimen>
     <dimen name="mode_key_margin">6dp</dimen>
     <dimen name="mode_key_text_size">22sp</dimen>
+    <dimen name="mode_scientific_key_text_size">13sp</dimen>
     <dimen name="mode_display_expression_size">32sp</dimen>
     <dimen name="mode_display_result_size">44sp</dimen>
+    <!-- Live evaluation line: smaller, not bold, no equals sign -->
+    <dimen name="mode_display_live_result_size">22sp</dimen>
     <dimen name="age_spinner_dropdown_height">200dp</dimen>
     <dimen name="date_card_elevation">4dp</dimen>
     <dimen name="date_card_stroke_width">0dp</dimen>
+    <!-- Date calculator: smart space - day (01), month (01 Jan), year -->
+    <dimen name="date_card_padding">18dp</dimen>
+    <dimen name="date_row_height">54dp</dimen>
+    <dimen name="date_field_margin">6dp</dimen>
+    <dimen name="date_calendar_btn_size">46dp</dimen>
+    <dimen name="date_label_margin_top">14dp</dimen>
+    <dimen name="date_row_margin_top">8dp</dimen>
+    <dimen name="date_display_text_min">10sp</dimen>
+    <dimen name="date_display_text_max">16sp</dimen>
+    <dimen name="date_month_text_min">9sp</dimen>
+    <dimen name="date_month_text_max">15sp</dimen>
+    <dimen name="date_field_min_width">40dp</dimen>
+    <dimen name="date_month_min_width">64dp</dimen>
+    <dimen name="date_spinner_padding_end">26dp</dimen>
+    <dimen name="date_card_radius">16dp</dimen>
 </resources>

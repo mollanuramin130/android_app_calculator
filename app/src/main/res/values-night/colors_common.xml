@@ -26,6 +26,8 @@
     <color name="mode_toolbar_bg">#FF121212</color>
     <color name="mode_menu_bg">#FF383838</color>
     <color name="history_title_bg">#26FFFFFF</color>
+    <color name="history_tab_selected_bg">#4DE8957A</color>
+    <color name="history_tab_unselected_bg">#2DFFFFFF</color>
     <color name="quick_bar_bg">#1AFFFFFF</color>
     <color name="quick_bar_divider">#20FFFFFF</color>
     <color name="age_label">#FFE0E0E0</color>
@@ -36,8 +38,12 @@
     <color name="keypad_accent_bg">#FFB0B0B0</color>
     <color name="keypad_accent_text">#FF212121</color>
     <color name="history_timestamp_text">#99FFFFFF</color>
+    <color name="history_label_text">#99FFFFFF</color>
+    <color name="history_label_icon">#99FFFFFF</color>
+    <color name="history_tab_divider">#40FFFFFF</color>
     <color name="quick_bar_icon_tint">#FFFFFFFF</color>
     <color name="drawer_header_bg">#FF37474F</color>
     <color name="drawer_header_text">#FFFFFFFF</color>
     <color name="date_card_stroke">#14FFFFFF</color>
+    <color name="date_spinner_text">#FFFFFFFF</color>
 </resources>

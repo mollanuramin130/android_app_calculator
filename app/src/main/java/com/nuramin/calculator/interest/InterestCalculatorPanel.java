@@ -1,35 +1,26 @@
 package com.nuramin.calculator.interest;
 
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.nuramin.calculator.R;
+import com.nuramin.sunsetcoralcalculator.R;
 import com.nuramin.calculator.util.CalculatorUtils;
+import com.nuramin.calculator.util.ConverterUiHelper;
 
 /**
  * Interest Calculator: simple/compound, principal, rate, time; calculate; result and breakdown.
+ * Nav and overflow are handled by the main activity toolbar.
  */
 public final class InterestCalculatorPanel {
 
     public static void setup(View panel, @Nullable DrawerLayout drawerLayout, @Nullable View.OnClickListener onOverflowClick) {
         if (panel == null) return;
-        ImageButton navMenu = panel.findViewById(R.id.interest_nav_menu);
-        ImageButton menuDots = panel.findViewById(R.id.interest_menu_dots);
-        final DrawerLayout layout = drawerLayout;
-        if (navMenu != null && layout != null) {
-            navMenu.setOnClickListener(v -> layout.openDrawer(Gravity.START));
-        }
-        if (menuDots != null && onOverflowClick != null) {
-            menuDots.setOnClickListener(onOverflowClick);
-        }
 
         RadioGroup interestType = panel.findViewById(R.id.interest_type);
         EditText principalEt = panel.findViewById(R.id.interest_principal);
@@ -72,6 +63,8 @@ public final class InterestCalculatorPanel {
                         isCompound ? R.string.int_compound_interest_label : R.string.int_simple_interest_label));
                 breakdownInterestTv.setText(rupee + " " + CalculatorUtils.formatNumber(interest));
                 resultCard.setVisibility(View.VISIBLE);
+                ConverterUiHelper.hideSoftKeyboard(panel);
+                ConverterUiHelper.scrollToShowResult(panel, resultCard);
             });
         }
 

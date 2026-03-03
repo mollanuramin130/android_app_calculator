@@ -1,4 +1,4 @@
-package com.nuramin.calculator;
+package com.nuramin.calculator.date;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -19,7 +19,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.nuramin.calculator.R;
+import com.nuramin.calculator.MainActivity;
+import com.nuramin.sunsetcoralcalculator.R;
 
 import com.google.android.material.card.MaterialCardView;
 
@@ -27,8 +28,9 @@ import java.util.Calendar;
 import java.util.Locale;
 
 /**
- * Date Calculator screen: same toolbar and drawer as MainActivity.
- * Title set to "Date Calculator". Age mode and Date Difference mode with full validation.
+ * Legacy Date Calculator Activity (full-screen with own toolbar/drawer).
+ * The app now uses DateCalculatorPanel inside MainActivity for the same flow as other screens.
+ * This Activity is kept for backward compatibility if started by an intent; normally not used.
  */
 public class DateCalculatorActivity extends AppCompatActivity {
 
@@ -49,6 +51,12 @@ public class DateCalculatorActivity extends AppCompatActivity {
     private static final String PREFS_NAME = "calculator_prefs";
     private static final String KEY_THEME = "theme_mode";
     private static final String FEEDBACK_EMAIL = "mollanuramin130@gmail.com";
+
+    @Override
+    public void onBackPressed() {
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        super.onBackPressed();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +141,7 @@ public class DateCalculatorActivity extends AppCompatActivity {
                 Intent i = new Intent(this, MainActivity.class);
                 i.putExtra(MainActivity.EXTRA_OPEN_PANEL, panelKey);
                 startActivity(i);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                 finish();
             });
         }
@@ -155,6 +164,7 @@ public class DateCalculatorActivity extends AppCompatActivity {
                 Intent i = new Intent(this, MainActivity.class);
                 i.putExtra(MainActivity.EXTRA_CLEAR_HISTORY, true);
                 startActivity(i);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                 finish();
             });
         }

@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bmi_screen_bg">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- 1. BMI Result Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/bmi_result_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="6dp"
+                app:cardBackgroundColor="@color/bmi_card_primary"
+                android:padding="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bmi_your_bmi"
+                        android:textColor="@color/bmi_text_secondary"
+                        android:textSize="16sp"
+                        android:letterSpacing="0.03" />
+
+                    <TextView
+                        android:id="@+id/bmi_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="24.6"
+                        android:textColor="@color/bmi_normal"
+                        android:textSize="48sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/bmi_category_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/bmi_normal_label"
+                        android:textColor="@color/bmi_normal"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <!-- BMI Range Progress Bar (4 segments) -->
+                    <LinearLayout
+                        android:id="@+id/bmi_progress_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="6dp"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal"
+                        android:baselineAligned="false">
+                        <View
+                            android:id="@+id/bmi_seg_under"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="46"
+                            android:background="@color/bmi_underweight" />
+                        <View
+                            android:id="@+id/bmi_seg_normal"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="16"
+                            android:background="@color/bmi_normal" />
+                        <View
+                            android:id="@+id/bmi_seg_over"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="12"
+                            android:background="@color/bmi_overweight" />
+                        <View
+                            android:id="@+id/bmi_seg_obese"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="26"
+                            android:background="@color/bmi_obese" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:textSize="12sp"
+                        android:textColor="@color/bmi_text_secondary"
+                        android:text="Underweight &lt;18.5   Normal 18.5–24.9   Overweight 25–29.9   Obese 30+" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 2. Gender Toggle -->
+            <LinearLayout
+                android:id="@+id/bmi_gender_toggle"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:background="@drawable/bmi_toggle_bg"
+                android:padding="4dp">
+
+                <LinearLayout
+                    android:id="@+id/bmi_gender_male"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:background="@drawable/bmi_toggle_selected"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bmi_male"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/bmi_gender_female"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bmi_female"
+                        android:textColor="@color/bmi_text_secondary"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 3. Height Input Card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/bmi_input_card"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:elevation="4dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/bmi_height_label"
+                    android:textColor="@color/bmi_text_secondary"
+                    android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/bmi_height_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="170"
+                    android:textColor="@color/bmi_text_primary"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_marginEnd="8dp" />
+                <ImageButton
+                    android:id="@+id/bmi_height_minus"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bmi_btn_plus"
+                    android:src="@drawable/ic_bmi_minus"
+                    android:contentDescription="Decrease height"
+                    app:tint="@color/bmi_text_primary"
+                    android:layout_marginEnd="4dp" />
+                <ImageButton
+                    android:id="@+id/bmi_height_plus"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bmi_btn_plus"
+                    android:src="@android:drawable/ic_input_add"
+                    android:contentDescription="Increase height"
+                    app:tint="@color/bmi_text_primary" />
+            </LinearLayout>
+
+            <!-- 4. Weight Input Card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/bmi_input_card"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:elevation="4dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/bmi_weight_label"
+                    android:textColor="@color/bmi_text_secondary"
+                    android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/bmi_weight_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="65"
+                    android:textColor="@color/bmi_text_primary"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_marginEnd="8dp" />
+                <ImageButton
+                    android:id="@+id/bmi_weight_minus"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bmi_btn_plus"
+                    android:src="@drawable/ic_bmi_minus"
+                    android:contentDescription="Decrease weight"
+                    app:tint="@color/bmi_text_primary"
+                    android:layout_marginEnd="4dp" />
+                <ImageButton
+                    android:id="@+id/bmi_weight_plus"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bmi_btn_plus"
+                    android:src="@android:drawable/ic_input_add"
+                    android:contentDescription="Increase weight"
+                    app:tint="@color/bmi_text_primary" />
+            </LinearLayout>
+
+            <!-- 5. Age Input Card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/bmi_input_card"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:elevation="4dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/bmi_age_label"
+                    android:textColor="@color/bmi_text_secondary"
+                    android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/bmi_age_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="25"
+                    android:textColor="@color/bmi_text_primary"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_marginEnd="8dp" />
+                <ImageButton
+                    android:id="@+id/bmi_age_minus"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bmi_btn_plus"
+                    android:src="@drawable/ic_bmi_minus"
+                    android:contentDescription="Decrease age"
+                    app:tint="@color/bmi_text_primary"
+                    android:layout_marginEnd="4dp" />
+                <ImageButton
+                    android:id="@+id/bmi_age_plus"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bmi_btn_plus"
+                    android:src="@android:drawable/ic_input_add"
+                    android:contentDescription="Increase age"
+                    app:tint="@color/bmi_text_primary" />
+            </LinearLayout>
+
+            <!-- 6. Calculate Button -->
+            <Button
+                android:id="@+id/bmi_calculate_btn"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/bmi_btn_calculate"
+                android:text="@string/bmi_calculate_btn"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.06"
+                android:elevation="8dp" />
+
+            <!-- 7. BMI Category Info Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/bmi_card_primary"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bmi_category_info_title"
+                        android:textColor="@color/bmi_text_primary"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="12dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="• Underweight &lt;18.5"
+                        android:textColor="@color/bmi_underweight"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="• Normal 18.5–24.9"
+                        android:textColor="@color/bmi_normal"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="• Overweight 25–29.9"
+                        android:textColor="@color/bmi_overweight"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="• Obese 30+"
+                        android:textColor="@color/bmi_obese"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

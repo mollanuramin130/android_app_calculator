@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/mode_screen_bg">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="24dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/date_card_main"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:cardCornerRadius="@dimen/date_card_radius"
+                app:cardElevation="@dimen/date_card_elevation"
+                app:cardBackgroundColor="@color/date_card_bg"
+                app:strokeColor="@color/date_card_stroke"
+                app:strokeWidth="@dimen/date_card_stroke_width">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/date_card_padding">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/date_mode_age"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/mode_button_text_light"
+                        android:layout_marginBottom="2dp" />
+
+                    <TextView
+                        android:id="@+id/date_label_section1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/date_dob_label"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/mode_button_text_light"
+                        android:layout_marginTop="@dimen/date_label_margin_top" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="@dimen/date_row_margin_top">
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/date_row_height"
+                            android:layout_weight="0.95"
+                            android:minWidth="@dimen/date_field_min_width"
+                            android:layout_marginEnd="@dimen/date_field_margin">
+                            <Spinner
+                                android:id="@+id/date1_day"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/date_spinner_bg"
+                                android:minHeight="@dimen/date_row_height"
+                                android:paddingStart="10dp"
+                                android:paddingEnd="@dimen/date_spinner_padding_end"
+                                android:spinnerMode="dropdown"
+                                android:popupBackground="@color/date_card_bg" />
+                            <TextView
+                                android:id="@+id/date1_day_display"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:paddingStart="10dp"
+                                android:paddingEnd="@dimen/date_spinner_padding_end"
+                                android:textColor="@color/date_spinner_text"
+                                android:textSize="@dimen/date_display_text_max"
+                                android:textStyle="bold"
+                                android:maxLines="1"
+                                android:ellipsize="end"
+                                app:autoSizeTextType="uniform"
+                                app:autoSizeMinTextSize="@dimen/date_display_text_min"
+                                app:autoSizeMaxTextSize="@dimen/date_display_text_max"
+                                app:autoSizeStepGranularity="1sp"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:text="01" />
+                        </FrameLayout>
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/date_row_height"
+                            android:layout_weight="1.28"
+                            android:minWidth="@dimen/date_month_min_width"
+                            android:layout_marginEnd="@dimen/date_field_margin">
+                            <Spinner
+                                android:id="@+id/date1_month"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/date_spinner_bg"
+                                android:minHeight="@dimen/date_row_height"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="@dimen/date_spinner_padding_end"
+                                android:spinnerMode="dropdown"
+                                android:popupBackground="@color/date_card_bg" />
+                            <TextView
+                                android:id="@+id/date1_month_display"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="@dimen/date_spinner_padding_end"
+                                android:textColor="@color/date_spinner_text"
+                                android:textSize="@dimen/date_month_text_max"
+                                android:textStyle="bold"
+                                android:maxLines="1"
+                                android:ellipsize="end"
+                                app:autoSizeTextType="uniform"
+                                app:autoSizeMinTextSize="@dimen/date_month_text_min"
+                                app:autoSizeMaxTextSize="@dimen/date_month_text_max"
+                                app:autoSizeStepGranularity="1sp"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:text="01 Jan" />
+                        </FrameLayout>
+
+                        <EditText
+                            android:id="@+id/date1_year"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/date_row_height"
+                            android:layout_weight="1.2"
+                            android:layout_marginEnd="@dimen/date_field_margin"
+                            android:background="@drawable/bg_date_input_year"
+                            android:gravity="center"
+                            android:hint="@string/date_hint_yyyy"
+                            android:inputType="number"
+                            android:maxLength="4"
+                            android:textSize="15sp"
+                            android:textColor="@color/mode_button_text_light"
+                            android:textColorHint="@color/history_timestamp_text"
+                            android:paddingStart="6dp"
+                            android:paddingEnd="6dp" />
+
+                        <ImageButton
+                            android:id="@+id/date1_calendar"
+                            android:layout_width="@dimen/date_calendar_btn_size"
+                            android:layout_height="@dimen/date_calendar_btn_size"
+                            android:src="@drawable/ic_calendar"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/date_pick_date"
+                            android:scaleType="centerInside"
+                            android:padding="8dp"
+                            app:tint="@color/mode_toolbar_icon" />
+                    </LinearLayout>
+
+                    <CheckBox
+                        android:id="@+id/date_use_today_checkbox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/date_label_margin_top"
+                        android:text="@string/date_use_todays_date"
+                        android:textSize="14sp"
+                        android:textColor="@color/mode_button_text_light"
+                        android:buttonTint="?attr/colorPrimary"
+                        android:checked="true" />
+
+                    <TextView
+                        android:id="@+id/date_label_section2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/date_todays_date_label"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/mode_button_text_light"
+                        android:layout_marginTop="@dimen/date_row_margin_top" />
+
+                    <LinearLayout
+                        android:id="@+id/date_row_section2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="@dimen/date_row_margin_top">
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/date_row_height"
+                            android:layout_weight="0.95"
+                            android:minWidth="@dimen/date_field_min_width"
+                            android:layout_marginEnd="@dimen/date_field_margin">
+                            <Spinner
+                                android:id="@+id/date2_day"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/date_spinner_bg"
+                                android:minHeight="@dimen/date_row_height"
+                                android:paddingStart="10dp"
+                                android:paddingEnd="@dimen/date_spinner_padding_end"
+                                android:spinnerMode="dropdown"
+                                android:popupBackground="@color/date_card_bg" />
+                            <TextView
+                                android:id="@+id/date2_day_display"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:paddingStart="10dp"
+                                android:paddingEnd="@dimen/date_spinner_padding_end"
+                                android:textColor="@color/date_spinner_text"
+                                android:textSize="@dimen/date_display_text_max"
+                                android:textStyle="bold"
+                                android:maxLines="1"
+                                android:ellipsize="end"
+                                app:autoSizeTextType="uniform"
+                                app:autoSizeMinTextSize="@dimen/date_display_text_min"
+                                app:autoSizeMaxTextSize="@dimen/date_display_text_max"
+                                app:autoSizeStepGranularity="1sp"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:text="01" />
+                        </FrameLayout>
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/date_row_height"
+                            android:layout_weight="1.28"
+                            android:minWidth="@dimen/date_month_min_width"
+                            android:layout_marginEnd="@dimen/date_field_margin">
+                            <Spinner
+                                android:id="@+id/date2_month"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/date_spinner_bg"
+                                android:minHeight="@dimen/date_row_height"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="@dimen/date_spinner_padding_end"
+                                android:spinnerMode="dropdown"
+                                android:popupBackground="@color/date_card_bg" />
+                            <TextView
+                                android:id="@+id/date2_month_display"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="@dimen/date_spinner_padding_end"
+                                android:textColor="@color/date_spinner_text"
+                                android:textSize="@dimen/date_month_text_max"
+                                android:textStyle="bold"
+                                android:maxLines="1"
+                                android:ellipsize="end"
+                                app:autoSizeTextType="uniform"
+                                app:autoSizeMinTextSize="@dimen/date_month_text_min"
+                                app:autoSizeMaxTextSize="@dimen/date_month_text_max"
+                                app:autoSizeStepGranularity="1sp"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:text="01 Jan" />
+                        </FrameLayout>
+
+                        <EditText
+                            android:id="@+id/date2_year"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/date_row_height"
+                            android:layout_weight="1.2"
+                            android:layout_marginEnd="@dimen/date_field_margin"
+                            android:background="@drawable/bg_date_input_year"
+                            android:gravity="center"
+                            android:hint="@string/date_hint_yyyy"
+                            android:inputType="number"
+                            android:maxLength="4"
+                            android:textSize="15sp"
+                            android:textColor="@color/mode_button_text_light"
+                            android:textColorHint="@color/history_timestamp_text"
+                            android:paddingStart="6dp"
+                            android:paddingEnd="6dp" />
+
+                        <ImageButton
+                            android:id="@+id/date2_calendar"
+                            android:layout_width="@dimen/date_calendar_btn_size"
+                            android:layout_height="@dimen/date_calendar_btn_size"
+                            android:src="@drawable/ic_calendar"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/date_pick_date"
+                            android:scaleType="centerInside"
+                            android:padding="8dp"
+                            app:tint="@color/mode_toolbar_icon" />
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/date_btn_calculate"
+                        style="@style/Widget.CalculatorButton.KeypadAccent"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/date_row_height"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/date_calculate_btn"
+                        android:textAllCaps="true"
+                        android:textSize="16sp" />
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/date_result_card"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:visibility="gone"
+                        app:cardCornerRadius="@dimen/date_card_radius"
+                        app:cardElevation="@dimen/date_card_elevation"
+                        app:cardBackgroundColor="@color/date_card_bg"
+                        app:strokeColor="@color/date_card_stroke"
+                        app:strokeWidth="@dimen/date_card_stroke_width">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="@dimen/date_card_padding">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/date_result_title"
+                                android:textSize="15sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/mode_button_text_light" />
+
+                            <TextView
+                                android:id="@+id/date_result_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:textSize="22sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/mode_button_text_light"
+                                android:text="" />
+
+                            <TextView
+                                android:id="@+id/date_result_sub"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:textSize="14sp"
+                                android:textColor="@color/history_timestamp_text"
+                                android:text="" />
+
+                            <TextView
+                                android:id="@+id/date_result_detail"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:visibility="gone"
+                                android:textSize="13sp"
+                                android:lineSpacingMultiplier="1.2"
+                                android:textColor="@color/history_timestamp_text"
+                                android:text="" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

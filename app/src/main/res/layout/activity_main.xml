@@ -103,30 +103,39 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="4"
-            android:minHeight="80dp">
+            android:minHeight="80dp"
+            android:clipChildren="false"
+            android:clipToPadding="false">
 
-            <HorizontalScrollView
-                android:id="@+id/display_scroll"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fillViewport="true"
-                android:scrollbars="horizontal">
+                android:orientation="vertical"
+                android:gravity="end"
+                android:clipChildren="false">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="112dp"
-                    android:layout_gravity="end|bottom"
-                    android:orientation="vertical"
-                    android:gravity="end">
+                <HorizontalScrollView
+                    android:id="@+id/display_scroll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fillViewport="false"
+                    android:scrollbars="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:layout_gravity="end"
+                        android:orientation="horizontal"
+                        android:gravity="end|center_vertical"
+                        android:minWidth="120dp">
 
                     <EditText
                         android:id="@+id/tv_expression"
                         android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
+                        android:layout_height="match_parent"
                         android:minHeight="44dp"
                         android:minWidth="120dp"
-                        android:gravity="end"
+                        android:gravity="end|center_vertical"
                         android:textColor="@color/mode_button_text_light"
                         android:textSize="@dimen/mode_display_expression_size"
                         android:visibility="visible"
@@ -137,7 +146,7 @@
                         android:focusable="true"
                         android:focusableInTouchMode="true"
                         android:inputType="text"
-                        android:imeOptions="actionNone"
+                        android:imeOptions="flagNoExtractUi"
                         android:longClickable="true"
                         android:shadowColor="#80000000"
                         android:shadowDx="0"
@@ -146,27 +155,27 @@
                         tools:text="123+456"
                         tools:visibility="visible" />
 
-                    <TextView
-                        android:id="@+id/tv_result"
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:minHeight="44dp"
-                        android:layout_marginTop="8dp"
-                        android:gravity="end"
-                        android:textColor="@color/mode_button_text_light"
-                        android:textSize="@dimen/mode_display_result_size"
-                        android:textStyle="bold"
-                        android:text="0"
-                        android:singleLine="true"
-                        android:ellipsize="none"
-                        android:shadowColor="#80000000"
-                        android:shadowDx="0"
-                        android:shadowDy="1"
-                        android:shadowRadius="2"
-                        tools:text="= 579" />
-                </LinearLayout>
-            </HorizontalScrollView>
+                    </LinearLayout>
+                </HorizontalScrollView>
+
+                <TextView
+                    android:id="@+id/tv_result"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="end|center_vertical"
+                    android:textColor="@color/mode_button_text_light"
+                    android:textSize="@dimen/mode_display_live_result_size"
+                    android:text="0"
+                    android:singleLine="true"
+                    android:ellipsize="start"
+                    android:includeFontPadding="true"
+                    android:shadowColor="#80000000"
+                    android:shadowDx="0"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"
+                    tools:text="5,730" />
+            </LinearLayout>
         </FrameLayout>
 
         <!-- 60%: title + previous calculated expressions and results (vertical scroll) -->
@@ -176,37 +185,124 @@
             android:layout_weight="6"
             android:orientation="vertical">
 
+            <!-- History row: label (History) | divider | tabs (Recent | Old only) -->
             <LinearLayout
-                android:id="@+id/panel_history_title"
+                android:id="@+id/panel_history_tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:background="@drawable/bg_history_title"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
+                android:background="@drawable/bg_history_bar"
+                android:paddingVertical="8dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:minHeight="48dp"
                 android:elevation="2dp">
 
-                <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@drawable/ic_history"
-                    app:tint="@color/mode_button_text_light"
-                    android:contentDescription="@null" />
-
-                <TextView
+                <!-- History: section label only (not a tab), weight 4 -->
+                <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="10dp"
-                    android:text="@string/history_title"
-                    android:textColor="@color/mode_button_text_light"
-                    android:textSize="17sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.03" />
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="8dp"
+                    android:clickable="false"
+                    android:focusable="false">
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_history"
+                        app:tint="@color/history_label_icon"
+                        android:contentDescription="@null" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/history"
+                        android:textColor="@color/history_label_text"
+                        android:textSize="14sp"
+                        android:letterSpacing="0.02" />
+                </LinearLayout>
+
+                <!-- Divider: separates label from switchable tabs -->
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="28dp"
+                    android:background="@color/history_tab_divider" />
+
+                <!-- Recent tab: weight 3 -->
+                <LinearLayout
+                    android:id="@+id/tab_calculate_history"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:layout_marginEnd="5dp"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:background="@drawable/bg_history_segment_selected"
+                    android:paddingVertical="8dp"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="6dp"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_temp_convert_refresh"
+                        app:tint="@color/mode_toolbar_icon"
+                        android:contentDescription="@null" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:text="@string/tab_recent"
+                        android:textColor="@color/mode_toolbar_icon"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:maxLines="1"
+                        android:ellipsize="end" />
+                </LinearLayout>
+
+                <!-- Old tab: weight 3 -->
+                <LinearLayout
+                    android:id="@+id/tab_old_history"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:layout_marginStart="5dp"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:background="@drawable/bg_history_segment_unselected"
+                    android:paddingVertical="8dp"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="6dp"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_calendar"
+                        app:tint="@color/mode_toolbar_icon"
+                        android:contentDescription="@null" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:text="@string/tab_old"
+                        android:textColor="@color/mode_toolbar_icon"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:maxLines="1"
+                        android:ellipsize="end" />
+                </LinearLayout>
             </LinearLayout>
 
             <ListView
@@ -263,6 +359,8 @@
                     android:contentDescription="@string/quick_scientific_mode"
                     android:padding="6dp"
                     android:scaleType="centerInside"
+                    android:clickable="false"
+                    android:focusable="false"
                     app:tint="@color/quick_bar_icon_tint" />
                 <TextView
                     android:layout_width="wrap_content"
@@ -296,6 +394,8 @@
                     android:contentDescription="@string/quick_switch_mode"
                     android:padding="6dp"
                     android:scaleType="centerInside"
+                    android:clickable="false"
+                    android:focusable="false"
                     app:tint="@color/quick_bar_icon_tint" />
                 <TextView
                     android:layout_width="wrap_content"
@@ -335,16 +435,16 @@
                 android:orientation="horizontal"
                 android:baselineAligned="false"
                 android:layout_marginBottom="@dimen/mode_key_margin">
-                    <Button android:id="@+id/btn_sqrt" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="√"
+                    <Button android:id="@+id/btn_sqrt" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="√"
                         android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
                         android:layout_marginEnd="@dimen/mode_key_margin" />
-                    <Button android:id="@+id/btn_pi" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="π"
+                    <Button android:id="@+id/btn_pi" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="π"
                         android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
                         android:layout_marginEnd="@dimen/mode_key_margin" />
-                    <Button android:id="@+id/btn_power" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="^"
+                    <Button android:id="@+id/btn_power" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="^"
                         android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
                         android:layout_marginEnd="@dimen/mode_key_margin" />
-                    <Button android:id="@+id/btn_factorial" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="!"
+                    <Button android:id="@+id/btn_factorial" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="!"
                         android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
                 </LinearLayout>
                 <!-- Row: Deg sin cos tan -->
@@ -355,16 +455,16 @@
                     android:orientation="horizontal"
                     android:baselineAligned="false"
                     android:layout_marginBottom="@dimen/mode_key_margin">
-                    <Button android:id="@+id/btn_deg" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="Deg"
+                    <Button android:id="@+id/btn_deg" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="DEG"
                         android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
                         android:layout_marginEnd="@dimen/mode_key_margin" />
-                    <Button android:id="@+id/btn_sin" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="sin"
+                    <Button android:id="@+id/btn_sin" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="sin"
                         android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
                         android:layout_marginEnd="@dimen/mode_key_margin" />
-                    <Button android:id="@+id/btn_cos" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="cos"
+                    <Button android:id="@+id/btn_cos" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="cos"
                         android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
                         android:layout_marginEnd="@dimen/mode_key_margin" />
-                    <Button android:id="@+id/btn_tan" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="tan"
+                    <Button android:id="@+id/btn_tan" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="tan"
                         android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
                 </LinearLayout>
                 <!-- Row: Inv e ln log -->
@@ -375,16 +475,16 @@
                     android:orientation="horizontal"
                     android:baselineAligned="false"
                     android:layout_marginBottom="@dimen/mode_key_margin">
-                    <Button android:id="@+id/btn_inv" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="Inv"
+                    <Button android:id="@+id/btn_inv" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="INV"
                         android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
                         android:layout_marginEnd="@dimen/mode_key_margin" />
-                    <Button android:id="@+id/btn_e" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="e"
+                    <Button android:id="@+id/btn_e" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="e"
                         android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
                         android:layout_marginEnd="@dimen/mode_key_margin" />
-                    <Button android:id="@+id/btn_ln" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="ln"
+                    <Button android:id="@+id/btn_ln" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="ln"
                         android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
                         android:layout_marginEnd="@dimen/mode_key_margin" />
-                    <Button android:id="@+id/btn_log" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="log"
+                    <Button android:id="@+id/btn_log" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="log"
                         android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
                 </LinearLayout>
             </LinearLayout>
@@ -525,6 +625,24 @@
     <include
         android:id="@+id/panel_currency"
         layout="@layout/currency_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+    <include
+        android:id="@+id/panel_date_calc"
+        layout="@layout/date_calculator_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+    <include
+        android:id="@+id/panel_bmi"
+        layout="@layout/bmi_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+    <include
+        android:id="@+id/panel_discount"
+        layout="@layout/discount_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" />

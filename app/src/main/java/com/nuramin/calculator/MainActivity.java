@@ -1,5 +1,7 @@
 package com.nuramin.calculator;
 
+import com.nuramin.sunsetcoralcalculator.R;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -10,13 +12,17 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.nuramin.calculator.basic.BasicCalculatorScreen;
+import com.nuramin.calculator.bmi.BmiCalculatorPanel;
 import com.nuramin.calculator.currency.CurrencyPanel;
+import com.nuramin.calculator.discount.DiscountCalculatorPanel;
+import com.nuramin.calculator.date.DateCalculatorPanel;
 import com.nuramin.calculator.emi.EmiCalculatorPanel;
 import com.nuramin.calculator.interest.InterestCalculatorPanel;
 import com.nuramin.calculator.temperature.TemperaturePanel;
@@ -35,7 +41,12 @@ public class MainActivity extends AppCompatActivity {
     private View panelEmi;
     private View panelInterest;
     private View panelCurrency;
+    private View panelDateCalc;
+    private View panelBmi;
+    private View panelDiscount;
     private LinearLayout scientificRows;
+    /** Currently visible content panel (calculator, temp, emi, etc.). */
+    private View currentPanel;
 
     private BasicCalculatorScreen basicCalculatorScreen;
 
@@ -62,6 +73,9 @@ public class MainActivity extends AppCompatActivity {
         panelEmi = findViewById(R.id.panel_emi);
         panelInterest = findViewById(R.id.panel_interest);
         panelCurrency = findViewById(R.id.panel_currency);
+        panelDateCalc = findViewById(R.id.panel_date_calc);
+        panelBmi = findViewById(R.id.panel_bmi);
+        panelDiscount = findViewById(R.id.panel_discount);
         scientificRows = findViewById(R.id.scientific_rows);
 
         basicCalculatorScreen = new BasicCalculatorScreen(this);
@@ -73,9 +87,13 @@ public class MainActivity extends AppCompatActivity {
         EmiCalculatorPanel.setup(panelEmi, drawerLayout, onOverflowClick);
         InterestCalculatorPanel.setup(panelInterest, drawerLayout, onOverflowClick);
         CurrencyPanel.setup(panelCurrency, drawerLayout, onOverflowClick);
+        DateCalculatorPanel.setup(panelDateCalc, drawerLayout, onOverflowClick);
+        BmiCalculatorPanel.setup(panelBmi, drawerLayout, onOverflowClick);
+        DiscountCalculatorPanel.setup(panelDiscount, drawerLayout, onOverflowClick);
 
         setupDrawer();
         setupQuickBar();
+        setupBackPress();
 
         // If launched from Date Calculator drawer, open the requested panel
         String openPanel = getIntent() != null ? getIntent().getStringExtra(EXTRA_OPEN_PANEL) : null;
@@ -87,6 +105,12 @@ public class MainActivity extends AppCompatActivity {
             showPanel(panelInterest, R.string.mode_interest);
         } else if ("currency".equals(openPanel)) {
             showPanel(panelCurrency, R.string.mode_currency);
+        } else if ("date_calc".equals(openPanel)) {
+            showPanel(panelDateCalc, R.string.date_calculator_title);
+        } else if ("bmi".equals(openPanel)) {
+            showPanel(panelBmi, R.string.bmi_calculator_title);
+        } else if ("discount".equals(openPanel)) {
+            showPanel(panelDiscount, R.string.discount_calculator_title);
         } else {
             showPanel(calculatorPanel, 0);
         }
@@ -108,14 +132,9 @@ public class MainActivity extends AppCompatActivity {
         setDrawerItemClick(R.id.drawer_item_emi, panelEmi, R.string.mode_emi);
         setDrawerItemClick(R.id.drawer_item_interest, panelInterest, R.string.mode_interest);
         setDrawerItemClick(R.id.drawer_item_currency, panelCurrency, R.string.mode_currency);
-
-        View dateCalcItem = findViewById(R.id.drawer_item_date_calc);
-        if (dateCalcItem != null) {
-            dateCalcItem.setOnClickListener(v -> {
-                drawerLayout.closeDrawer(Gravity.START);
-                startActivity(new Intent(this, DateCalculatorActivity.class));
-            });
-        }
+        setDrawerItemClick(R.id.drawer_item_date_calc, panelDateCalc, R.string.date_calculator_title);
+        setDrawerItemClick(R.id.drawer_item_bmi, panelBmi, R.string.bmi_calculator_title);
+        setDrawerItemClick(R.id.drawer_item_discount, panelDiscount, R.string.discount_calculator_title);
 
         View historyItem = findViewById(R.id.drawer_item_history);
         if (historyItem != null) {
@@ -142,23 +161,57 @@ public class MainActivity extends AppCompatActivity {
         panelEmi.setVisibility(panel == panelEmi ? View.VISIBLE : View.GONE);
         panelInterest.setVisibility(panel == panelInterest ? View.VISIBLE : View.GONE);
         panelCurrency.setVisibility(panel == panelCurrency ? View.VISIBLE : View.GONE);
+        panelDateCalc.setVisibility(panel == panelDateCalc ? View.VISIBLE : View.GONE);
+        panelBmi.setVisibility(panel == panelBmi ? View.VISIBLE : View.GONE);
+        panelDiscount.setVisibility(panel == panelDiscount ? View.VISIBLE : View.GONE);
 
-        // Hide main toolbar when a mode with its own gradient bar is shown (removes double topbar).
+        // Always show main toolbar (same as Basic Calculator); only title changes per screen.
         boolean isBasicCalculator = (panel == calculatorPanel);
         if (mainToolbar != null) {
-            mainToolbar.setVisibility(isBasicCalculator ? View.VISIBLE : View.GONE);
+            mainToolbar.setVisibility(View.VISIBLE);
         }
         if (modeTitle != null) {
+            modeTitle.setVisibility(View.VISIBLE);
             if (isBasicCalculator) {
-                modeTitle.setVisibility(View.GONE);
+                updateCalculatorModeTitle();
             } else {
                 modeTitle.setText(titleResId);
-                modeTitle.setVisibility(View.VISIBLE);
             }
         }
         if (panel == panelCurrency) {
             com.nuramin.calculator.currency.CurrencyPanel.onPanelVisible(this, panelCurrency);
         }
+        currentPanel = panel;
+    }
+
+    /**
+     * Back button: from any other screen go to basic calculator; from basic/scientific calculator
+     * move app to background (expression is preserved until app is terminated or cleared by user).
+     */
+    private void setupBackPress() {
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (drawerLayout != null && drawerLayout.isDrawerOpen(Gravity.START)) {
+                    drawerLayout.closeDrawer(Gravity.START);
+                    return;
+                }
+                if (currentPanel != null && currentPanel != calculatorPanel) {
+                    showPanel(calculatorPanel, 0);
+                    return;
+                }
+                // On basic/scientific calculator: move to background, do not finish (expression stays)
+                moveTaskToBack(true);
+            }
+        });
+    }
+
+    /** Update topbar title when on calculator: "Basic Calculator" or "Scientific mode". */
+    private void updateCalculatorModeTitle() {
+        if (modeTitle == null || scientificRows == null || calculatorPanel == null) return;
+        if (calculatorPanel.getVisibility() != View.VISIBLE) return;
+        boolean scientificVisible = scientificRows.getVisibility() == View.VISIBLE;
+        modeTitle.setText(scientificVisible ? R.string.quick_scientific_mode : R.string.mode_basic_calculator);
     }
 
     private void setupQuickBar() {
@@ -167,6 +220,7 @@ public class MainActivity extends AppCompatActivity {
             quickScientific.setOnClickListener(v -> {
                 int vis = scientificRows.getVisibility();
                 scientificRows.setVisibility(vis == View.VISIBLE ? View.GONE : View.VISIBLE);
+                updateCalculatorModeTitle();
             });
         }
         View quickModes = findViewById(R.id.quick_modes_wrapper);
