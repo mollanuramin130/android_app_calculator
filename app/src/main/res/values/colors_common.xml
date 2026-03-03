@@ -45,4 +45,5 @@
     <color name="drawer_header_bg">#FF37474F</color>
     <color name="drawer_header_text">#FFFFFFFF</color>
     <color name="date_card_stroke">#00000000</color>
+    <color name="date_spinner_text">#FF1A1A1A</color>
 </resources>
