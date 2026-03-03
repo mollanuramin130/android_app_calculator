@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- BMI Calculator - Dark (spec: #000000 screen, #1C1C1E card, #C67C4E accent) -->
+    <color name="bmi_screen_bg">#FF000000</color>
+    <color name="bmi_card_primary">#FF1C1C1E</color>
+    <color name="bmi_card_secondary">#FF2C2C2E</color>
+    <color name="bmi_accent">#FFC67C4E</color>
+    <color name="bmi_text_primary">#FFFFFFFF</color>
+    <color name="bmi_text_secondary">#FFB0B0B0</color>
+    <color name="bmi_btn_plus_bg">#FF2C2C2E</color>
+    <color name="bmi_underweight">#FF4DA3FF</color>
+    <color name="bmi_normal">#FF34C759</color>
+    <color name="bmi_overweight">#FFFF9F0A</color>
+    <color name="bmi_obese">#FFFF453A</color>
+</resources>

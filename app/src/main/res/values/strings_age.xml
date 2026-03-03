@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="age_first_date">First date (Day / Month / Year)</string>
+    <string name="age_second_date">Second date (Day / Month / Year)</string>
+    <string name="age_use_today">Use today\'s date</string>
+    <string name="age_enter_dob">Enter Your Date of Birth</string>
+    <string name="age_calculate_button">Calculate Age</string>
+    <string name="age_your_age_is">Your Age is:</string>
+    <string name="age_years">Years</string>
+    <string name="age_months">Months</string>
+    <string name="age_days">Days</string>
+    <string name="age_total_days">Days</string>
+    <string name="age_born_on">You were born on: %1$s</string>
+    <string name="age_next_birthday">Next Birthday in: %1$d Months, %2$d Days</string>
+    <string name="age_placeholder">—</string>
+    <string name="age_nav_home">Home</string>
+    <string name="age_nav_info">Info</string>
+    <string name="age_illustration_desc">Age calculator illustration with calendar and hourglass</string>
+</resources>

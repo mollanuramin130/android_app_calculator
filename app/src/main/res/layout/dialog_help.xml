@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/mode_menu_bg"
+    android:padding="24dp"
+    android:minWidth="280dp"
+    android:maxHeight="400dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <ImageButton
+            android:id="@+id/help_close"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_close"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Close"
+            android:padding="8dp"
+            app:tint="@color/mode_button_text_light" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/menu_help"
+            android:textColor="@color/mode_button_text_light"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <View
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:fillViewport="false"
+        android:scrollbars="vertical"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:id="@+id/help_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/help_content_full"
+            android:textColor="@color/mode_button_text_light"
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.2"
+            android:paddingEnd="4dp" />
+    </ScrollView>
+
+    <Button
+        android:id="@+id/help_contact_developer"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="@string/help_contact_developer"
+        android:textColor="@color/white"
+        android:background="@drawable/button_feedback_primary"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        />
+</LinearLayout>

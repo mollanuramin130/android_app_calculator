@@ -1,243 +1,655 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@drawable/bg_gradient"
-    android:paddingStart="@dimen/grid_margin"
-    android:paddingEnd="@dimen/grid_margin"
-    android:paddingTop="@dimen/grid_margin"
-    android:paddingBottom="@dimen/grid_margin"
-    tools:context=".MainActivity">
+    android:fitsSystemWindows="true"
+    tools:context=".MainActivity"
+    tools:openDrawer="start">
 
-    <!-- Top bar: title + history + backspace -->
+    <!-- Main content -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/mode_screen_bg"
+        android:fitsSystemWindows="true">
+
+    <!-- Top bar: 56dp, 16dp padding (matches Temp/EMI/Interest). 3-bar | title | 3-dots -->
+    <LinearLayout
+        android:id="@+id/main_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:minHeight="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:minHeight="48dp">
+        android:background="@color/mode_toolbar_bg"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:elevation="4dp">
 
-        <TextView
+        <ImageButton
+            android:id="@+id/btn_drawer"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_menu"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Open menu"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            android:layout_gravity="center_vertical"
+            app:tint="@color/mode_toolbar_icon" />
+
+        <!-- Wrapper keeps space so 3-dots stays right when title is gone (Basic Calculator) -->
+        <FrameLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/app_name"
-            android:textColor="@color/toolbar_text_and_icon"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <TextView
+                android:id="@+id/mode_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@color/mode_toolbar_icon"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                android:ellipsize="end"
+                android:maxLines="1" />
+        </FrameLayout>
 
         <ImageButton
-            android:id="@+id/btn_history"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:src="@drawable/ic_history"
-            android:background="@drawable/ic_toolbar_button"
-            android:contentDescription="@string/history"
-            android:padding="10dp"
-            android:layout_marginStart="4dp"
-            android:scaleType="centerInside" />
-
-        <ImageButton
-            android:id="@+id/btn_backspace"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:src="@drawable/ic_backspace"
-            android:background="@drawable/ic_toolbar_button"
-            android:contentDescription="@string/backspace"
-            android:padding="10dp"
-            android:layout_marginStart="4dp"
-            android:scaleType="centerInside" />
+            android:id="@+id/btn_menu"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_more_vert"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Menu"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            android:layout_gravity="center_vertical"
+            app:tint="@color/mode_toolbar_icon" />
     </LinearLayout>
 
-    <!-- Display area: horizontally scrollable when expression/result is long -->
     <FrameLayout
+        android:id="@+id/content_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+    <LinearLayout
+        android:id="@+id/calculator_panel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <!-- Display: 40% current expression+result, 60% previous calculations (vertical scroll, each item horizontal scroll) -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/display_bg"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:minHeight="180dp">
+        android:orientation="vertical"
+        android:background="@color/mode_display_bg"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="8dp">
 
-        <HorizontalScrollView
-                android:id="@+id/display_scroll"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fillViewport="true"
-                android:scrollbars="horizontal"
-                android:scrollbarStyle="outsideOverlay">
+        <!-- 40%: current expression and result -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4"
+            android:minHeight="80dp"
+            android:clipChildren="false"
+            android:clipToPadding="false">
 
             <LinearLayout
-                android:id="@+id/display_content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|bottom"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:gravity="end">
+                android:gravity="end"
+                android:clipChildren="false">
 
-                <!-- Equation: single line, extends right so user can scroll to see all -->
-                <TextView
-                    android:id="@+id/tv_expression"
-                    android:layout_width="wrap_content"
+                <HorizontalScrollView
+                    android:id="@+id/display_scroll"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/display_text_size"
-                    android:visibility="gone"
-                    android:singleLine="true"
-                    android:ellipsize="none"
-                    tools:text="105,670 × 105,670"
-                    tools:visibility="visible" />
+                    android:fillViewport="false"
+                    android:scrollbars="horizontal">
 
-                <!-- Result: single line, scroll to see full number -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:layout_gravity="end"
+                        android:orientation="horizontal"
+                        android:gravity="end|center_vertical"
+                        android:minWidth="120dp">
+
+                    <EditText
+                        android:id="@+id/tv_expression"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:minHeight="44dp"
+                        android:minWidth="120dp"
+                        android:gravity="end|center_vertical"
+                        android:textColor="@color/mode_button_text_light"
+                        android:textSize="@dimen/mode_display_expression_size"
+                        android:visibility="visible"
+                        android:singleLine="true"
+                        android:ellipsize="none"
+                        android:background="@null"
+                        android:cursorVisible="true"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:inputType="text"
+                        android:imeOptions="flagNoExtractUi"
+                        android:longClickable="true"
+                        android:shadowColor="#80000000"
+                        android:shadowDx="0"
+                        android:shadowDy="1"
+                        android:shadowRadius="2"
+                        tools:text="123+456"
+                        tools:visibility="visible" />
+
+                    </LinearLayout>
+                </HorizontalScrollView>
+
                 <TextView
                     android:id="@+id/tv_result"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
                     android:layout_marginTop="8dp"
-                    android:gravity="end"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/display_result_text_size"
-                    android:textStyle="bold"
+                    android:gravity="end|center_vertical"
+                    android:textColor="@color/mode_button_text_light"
+                    android:textSize="@dimen/mode_display_live_result_size"
                     android:text="0"
                     android:singleLine="true"
-                    android:ellipsize="none"
-                    tools:text="= 11,166,108,900" />
+                    android:ellipsize="start"
+                    android:includeFontPadding="true"
+                    android:shadowColor="#80000000"
+                    android:shadowDx="0"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"
+                    tools:text="5,730" />
             </LinearLayout>
-        </HorizontalScrollView>
+        </FrameLayout>
+
+        <!-- 60%: title + previous calculated expressions and results (vertical scroll) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="6"
+            android:orientation="vertical">
+
+            <!-- History row: label (History) | divider | tabs (Recent | Old only) -->
+            <LinearLayout
+                android:id="@+id/panel_history_tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/bg_history_bar"
+                android:paddingVertical="8dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:minHeight="48dp"
+                android:elevation="2dp">
+
+                <!-- History: section label only (not a tab), weight 4 -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="8dp"
+                    android:clickable="false"
+                    android:focusable="false">
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_history"
+                        app:tint="@color/history_label_icon"
+                        android:contentDescription="@null" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/history"
+                        android:textColor="@color/history_label_text"
+                        android:textSize="14sp"
+                        android:letterSpacing="0.02" />
+                </LinearLayout>
+
+                <!-- Divider: separates label from switchable tabs -->
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="28dp"
+                    android:background="@color/history_tab_divider" />
+
+                <!-- Recent tab: weight 3 -->
+                <LinearLayout
+                    android:id="@+id/tab_calculate_history"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:layout_marginEnd="5dp"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:background="@drawable/bg_history_segment_selected"
+                    android:paddingVertical="8dp"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="6dp"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_temp_convert_refresh"
+                        app:tint="@color/mode_toolbar_icon"
+                        android:contentDescription="@null" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:text="@string/tab_recent"
+                        android:textColor="@color/mode_toolbar_icon"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:maxLines="1"
+                        android:ellipsize="end" />
+                </LinearLayout>
+
+                <!-- Old tab: weight 3 -->
+                <LinearLayout
+                    android:id="@+id/tab_old_history"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:layout_marginStart="5dp"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:background="@drawable/bg_history_segment_unselected"
+                    android:paddingVertical="8dp"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="6dp"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_calendar"
+                        app:tint="@color/mode_toolbar_icon"
+                        android:contentDescription="@null" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:text="@string/tab_old"
+                        android:textColor="@color/mode_toolbar_icon"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:maxLines="1"
+                        android:ellipsize="end" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/panel_history_list"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="4dp"
+                android:scrollbars="vertical"
+                android:background="@android:color/transparent"
+                android:cacheColorHint="@android:color/transparent" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Quick bar: scientific toggle + modes - compact row, icons only -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_quick_bar">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/quick_bar_divider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="6dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:minHeight="44dp">
+
+            <!-- Scientific mode: icon + label -->
+            <LinearLayout
+                android:id="@+id/quick_scientific_toggle_wrapper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:clickable="true"
+                android:focusable="true">
+                <ImageButton
+                    android:id="@+id/quick_scientific_toggle"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/ic_expand_scientific"
+                    android:background="@drawable/bg_quick_icon_circle"
+                    android:contentDescription="@string/quick_scientific_mode"
+                    android:padding="6dp"
+                    android:scaleType="centerInside"
+                    android:clickable="false"
+                    android:focusable="false"
+                    app:tint="@color/quick_bar_icon_tint" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/quick_scientific_mode"
+                    android:textColor="@color/mode_toolbar_icon"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <!-- Switch mode: icon + label -->
+            <LinearLayout
+                android:id="@+id/quick_modes_wrapper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:clickable="true"
+                android:focusable="true">
+                <ImageButton
+                    android:id="@+id/quick_modes"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/ic_menu"
+                    android:background="@drawable/bg_quick_icon_circle"
+                    android:contentDescription="@string/quick_switch_mode"
+                    android:padding="6dp"
+                    android:scaleType="centerInside"
+                    android:clickable="false"
+                    android:focusable="false"
+                    app:tint="@color/quick_bar_icon_tint" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/quick_switch_mode"
+                    android:textColor="@color/mode_toolbar_icon"
+                    android:textSize="13sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Keypad: fills space below display. When scientific hidden, 5 rows expand; when visible, 8 rows share space. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/mode_key_margin"
+        android:paddingEnd="@dimen/mode_key_margin"
+        android:paddingBottom="@dimen/mode_key_margin">
+
+        <!-- Scientific rows (visible in Scientific mode); weight 3 so 3/8 of keypad when visible -->
+        <LinearLayout
+            android:id="@+id/scientific_rows"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <!-- Row: √ π ^ ! -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:baselineAligned="false"
+                android:layout_marginBottom="@dimen/mode_key_margin">
+                    <Button android:id="@+id/btn_sqrt" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="√"
+                        android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                        android:layout_marginEnd="@dimen/mode_key_margin" />
+                    <Button android:id="@+id/btn_pi" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="π"
+                        android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                        android:layout_marginEnd="@dimen/mode_key_margin" />
+                    <Button android:id="@+id/btn_power" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="^"
+                        android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                        android:layout_marginEnd="@dimen/mode_key_margin" />
+                    <Button android:id="@+id/btn_factorial" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="!"
+                        android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+                </LinearLayout>
+                <!-- Row: Deg sin cos tan -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:baselineAligned="false"
+                    android:layout_marginBottom="@dimen/mode_key_margin">
+                    <Button android:id="@+id/btn_deg" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="DEG"
+                        android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                        android:layout_marginEnd="@dimen/mode_key_margin" />
+                    <Button android:id="@+id/btn_sin" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="sin"
+                        android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                        android:layout_marginEnd="@dimen/mode_key_margin" />
+                    <Button android:id="@+id/btn_cos" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="cos"
+                        android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                        android:layout_marginEnd="@dimen/mode_key_margin" />
+                    <Button android:id="@+id/btn_tan" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="tan"
+                        android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+                </LinearLayout>
+                <!-- Row: Inv e ln log -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:baselineAligned="false"
+                    android:layout_marginBottom="@dimen/mode_key_margin">
+                    <Button android:id="@+id/btn_inv" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="INV"
+                        android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                        android:layout_marginEnd="@dimen/mode_key_margin" />
+                    <Button android:id="@+id/btn_e" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="e"
+                        android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                        android:layout_marginEnd="@dimen/mode_key_margin" />
+                    <Button android:id="@+id/btn_ln" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="ln"
+                        android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                        android:layout_marginEnd="@dimen/mode_key_margin" />
+                    <Button android:id="@+id/btn_log" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="log"
+                        android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Row 1: AC ( ) % ÷ -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:baselineAligned="false"
+                android:layout_marginBottom="@dimen/mode_key_margin">
+                <Button android:id="@+id/btn_clear" style="@style/Widget.CalculatorButton.KeypadAccent" android:text="AC"
+                    android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/mode_key_margin" />
+                <Button android:id="@+id/btn_lparen" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="( )"
+                    android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/mode_key_margin" />
+                <Button android:id="@+id/btn_percent" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="%"
+                    android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/mode_key_margin" />
+                <Button android:id="@+id/btn_divide" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="÷"
+                    android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+            </LinearLayout>
+
+            <!-- Row 2: 7 8 9 × -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:baselineAligned="false"
+                android:layout_marginBottom="@dimen/mode_key_margin">
+                <Button android:id="@+id/btn_7" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="7"
+                    android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/mode_key_margin" />
+                <Button android:id="@+id/btn_8" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="8"
+                    android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/mode_key_margin" />
+                <Button android:id="@+id/btn_9" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="9"
+                    android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/mode_key_margin" />
+                <Button android:id="@+id/btn_multiply" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="×"
+                    android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+            </LinearLayout>
+
+            <!-- Row 3: 4 5 6 - -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:baselineAligned="false"
+                android:layout_marginBottom="@dimen/mode_key_margin">
+                <Button android:id="@+id/btn_4" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="4"
+                    android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/mode_key_margin" />
+                <Button android:id="@+id/btn_5" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="5"
+                    android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/mode_key_margin" />
+                <Button android:id="@+id/btn_6" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="6"
+                    android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/mode_key_margin" />
+                <Button android:id="@+id/btn_minus" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="−"
+                    android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+            </LinearLayout>
+
+            <!-- Row 4: 1 2 3 + -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:baselineAligned="false"
+                android:layout_marginBottom="@dimen/mode_key_margin">
+                <Button android:id="@+id/btn_1" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="1"
+                    android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/mode_key_margin" />
+                <Button android:id="@+id/btn_2" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="2"
+                    android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/mode_key_margin" />
+                <Button android:id="@+id/btn_3" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="3"
+                    android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/mode_key_margin" />
+                <Button android:id="@+id/btn_plus" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="+"
+                    android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+            </LinearLayout>
+
+            <!-- Row 5: 0 . ⌫ = -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:baselineAligned="false">
+                <Button android:id="@+id/btn_0" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="0"
+                    android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/mode_key_margin" />
+                <Button android:id="@+id/btn_dot" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="."
+                    android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/mode_key_margin" />
+                <ImageButton
+                    android:id="@+id/btn_backspace"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/mode_key_margin"
+                    android:src="@drawable/ic_backspace"
+                    android:background="@drawable/button_keypad_standard"
+                    android:contentDescription="@string/backspace"
+                    android:padding="12dp"
+                    android:scaleType="centerInside"
+                    app:tint="@color/keypad_standard_text" />
+                <Button android:id="@+id/btn_equals" style="@style/Widget.CalculatorButton.KeypadAccent" android:text="="
+                    android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
+            </LinearLayout>
+    </LinearLayout>
+    </LinearLayout>
+
+    <include
+        android:id="@+id/panel_temp"
+        layout="@layout/temperature_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+    <include
+        android:id="@+id/panel_emi"
+        layout="@layout/emi_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+    <include
+        android:id="@+id/panel_interest"
+        layout="@layout/interest_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+    <include
+        android:id="@+id/panel_currency"
+        layout="@layout/currency_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+    <include
+        android:id="@+id/panel_date_calc"
+        layout="@layout/date_calculator_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+    <include
+        android:id="@+id/panel_bmi"
+        layout="@layout/bmi_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
     </FrameLayout>
 
-    <!-- Delete and % on same line -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="@dimen/button_margin">
-
-        <Button android:id="@+id/btn_delete" style="@style/Widget.CalculatorButton.Operator"
-            android:layout_width="0dp" android:layout_height="@dimen/button_row_height" android:layout_weight="1"
-            android:layout_marginEnd="@dimen/button_margin"
-            android:text="@string/delete" />
-        <Button android:id="@+id/btn_percent" style="@style/Widget.CalculatorButton.Operator"
-            android:layout_width="0dp" android:layout_height="@dimen/button_row_height" android:layout_weight="1"
-            android:text="%" />
     </LinearLayout>
 
-    <!-- ( ) ÷ row for expressions -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="@dimen/button_margin">
-
-        <Button android:id="@+id/btn_lparen" style="@style/Widget.CalculatorButton.Operator"
-            android:layout_width="0dp" android:layout_height="@dimen/button_row_height" android:layout_weight="1"
-            android:layout_marginEnd="@dimen/button_margin"
-            android:text="(" />
-        <Button android:id="@+id/btn_rparen" style="@style/Widget.CalculatorButton.Operator"
-            android:layout_width="0dp" android:layout_height="@dimen/button_row_height" android:layout_weight="1"
-            android:layout_marginEnd="@dimen/button_margin"
-            android:text=")" />
-        <Button android:id="@+id/btn_divide" style="@style/Widget.CalculatorButton.Operator"
-            android:layout_width="0dp" android:layout_height="@dimen/button_row_height" android:layout_weight="1"
-            android:text="÷" />
-    </LinearLayout>
-
-    <!-- Button grid: 4 columns same for all rows -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <!-- Row 1: 7 8 9 + -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/button_row_height"
-            android:orientation="horizontal"
-            android:baselineAligned="false"
-            android:layout_marginBottom="@dimen/button_margin">
-
-            <Button android:id="@+id/btn_7" style="@style/Widget.CalculatorButton.Number" android:text="7"
-                android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
-                android:layout_marginEnd="@dimen/button_margin" />
-            <Button android:id="@+id/btn_8" style="@style/Widget.CalculatorButton.Number" android:text="8"
-                android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
-                android:layout_marginEnd="@dimen/button_margin" />
-            <Button android:id="@+id/btn_9" style="@style/Widget.CalculatorButton.Number" android:text="9"
-                android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
-                android:layout_marginEnd="@dimen/button_margin" />
-            <Button android:id="@+id/btn_plus" style="@style/Widget.CalculatorButton.Operator" android:text="+"
-                android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
-        </LinearLayout>
-
-        <!-- Row 2: 4 5 6 - -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/button_row_height"
-            android:orientation="horizontal"
-            android:baselineAligned="false"
-            android:layout_marginBottom="@dimen/button_margin">
-
-            <Button android:id="@+id/btn_4" style="@style/Widget.CalculatorButton.Number" android:text="4"
-                android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
-                android:layout_marginEnd="@dimen/button_margin" />
-            <Button android:id="@+id/btn_5" style="@style/Widget.CalculatorButton.Number" android:text="5"
-                android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
-                android:layout_marginEnd="@dimen/button_margin" />
-            <Button android:id="@+id/btn_6" style="@style/Widget.CalculatorButton.Number" android:text="6"
-                android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
-                android:layout_marginEnd="@dimen/button_margin" />
-            <Button android:id="@+id/btn_minus" style="@style/Widget.CalculatorButton.Operator" android:text="−"
-                android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
-        </LinearLayout>
-
-        <!-- Row 3: 1 2 3 × -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/button_row_height"
-            android:orientation="horizontal"
-            android:baselineAligned="false"
-            android:layout_marginBottom="@dimen/button_margin">
-
-            <Button android:id="@+id/btn_1" style="@style/Widget.CalculatorButton.Number" android:text="1"
-                android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
-                android:layout_marginEnd="@dimen/button_margin" />
-            <Button android:id="@+id/btn_2" style="@style/Widget.CalculatorButton.Number" android:text="2"
-                android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
-                android:layout_marginEnd="@dimen/button_margin" />
-            <Button android:id="@+id/btn_3" style="@style/Widget.CalculatorButton.Number" android:text="3"
-                android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
-                android:layout_marginEnd="@dimen/button_margin" />
-            <Button android:id="@+id/btn_multiply" style="@style/Widget.CalculatorButton.Operator" android:text="×"
-                android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
-        </LinearLayout>
-
-        <!-- Row 4: . 0 (wide) = C -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/button_row_height"
-            android:orientation="horizontal"
-            android:baselineAligned="false"
-            android:weightSum="5"
-            android:layout_marginBottom="@dimen/button_margin">
-
-            <Button android:id="@+id/btn_dot" style="@style/Widget.CalculatorButton.Number" android:text="."
-                android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
-                android:layout_marginEnd="@dimen/button_margin" />
-            <Button android:id="@+id/btn_0" style="@style/Widget.CalculatorButton.Zero" android:text="0"
-                android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="2"
-                android:layout_marginEnd="@dimen/button_margin" />
-            <Button android:id="@+id/btn_equals" style="@style/Widget.CalculatorButton.Operator" android:text="="
-                android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
-                android:layout_marginEnd="@dimen/button_margin" />
-            <Button android:id="@+id/btn_clear" style="@style/Widget.CalculatorButton.Operator" android:text="C"
-                android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
-        </LinearLayout>
-    </LinearLayout>
-</LinearLayout>
+    <!-- Navigation drawer: calculation modes -->
+    <include
+        android:id="@+id/nav_drawer"
+        layout="@layout/nav_drawer"
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start" />
+</androidx.drawerlayout.widget.DrawerLayout>

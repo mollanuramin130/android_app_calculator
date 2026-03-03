@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Date Calculator: uses same Drawer + Toolbar as MainActivity. Title set in code to "Date Calculator". -->
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@color/mode_screen_bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/mode_screen_bg"
+        android:fitsSystemWindows="true">
+
+        <!-- Existing app toolbar: same height, icons, gradient (mode_toolbar_bg). Title set in code. -->
+        <LinearLayout
+            android:id="@+id/main_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:minHeight="56dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@color/mode_toolbar_bg"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:elevation="4dp">
+
+            <ImageButton
+                android:id="@+id/btn_drawer"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_menu"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/date_toolbar_menu_desc"
+                android:padding="8dp"
+                android:scaleType="centerInside"
+                android:layout_gravity="center_vertical"
+                app:tint="@color/mode_toolbar_icon" />
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                <TextView
+                    android:id="@+id/mode_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textColor="@color/mode_toolbar_icon"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:text="@string/date_calculator_title"
+                    android:visibility="visible"
+                    android:ellipsize="end"
+                    android:maxLines="1" />
+            </FrameLayout>
+
+            <ImageButton
+                android:id="@+id/btn_menu"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_more_vert"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/date_toolbar_overflow_desc"
+                android:padding="8dp"
+                android:scaleType="centerInside"
+                android:layout_gravity="center_vertical"
+                app:tint="@color/mode_toolbar_icon" />
+        </LinearLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="24dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Main card: same style as Calculation History card (elevation 4dp light / 0dp dark + stroke). -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/date_card_main"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="@dimen/date_card_elevation"
+                    app:cardBackgroundColor="@color/history_title_bg"
+                    app:strokeColor="@color/date_card_stroke"
+                    app:strokeWidth="@dimen/date_card_stroke_width">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <!-- Mode selection -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/date_select_mode"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/mode_button_text_light"
+                            android:layout_marginBottom="12dp" />
+
+                        <RadioGroup
+                            android:id="@+id/date_mode_group"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/date_mode_age"
+                                android:layout_width="0dp"
+                                android:layout_height="48dp"
+                                android:layout_weight="1"
+                                android:layout_marginEnd="4dp"
+                                android:text="@string/date_mode_age"
+                                android:textSize="14sp"
+                                android:textColor="@color/mode_button_text_light"
+                                android:buttonTint="?attr/colorPrimary"
+                                android:gravity="center_vertical"
+                                android:checked="true" />
+
+                            <RadioButton
+                                android:id="@+id/date_mode_difference"
+                                android:layout_width="0dp"
+                                android:layout_height="48dp"
+                                android:layout_weight="1"
+                                android:layout_marginStart="4dp"
+                                android:text="@string/date_mode_difference"
+                                android:textSize="14sp"
+                                android:textColor="@color/mode_button_text_light"
+                                android:buttonTint="?attr/colorPrimary"
+                                android:gravity="center_vertical" />
+                        </RadioGroup>
+
+                        <!-- Date section 1: DOB / Start date -->
+                        <TextView
+                            android:id="@+id/date_label_section1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/date_dob_label"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/mode_button_text_light"
+                            android:layout_marginTop="16dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginTop="8dp">
+
+                            <EditText
+                                android:id="@+id/date1_day"
+                                android:layout_width="0dp"
+                                android:layout_height="56dp"
+                                android:layout_weight="1"
+                                android:layout_marginEnd="8dp"
+                                android:background="@drawable/bg_date_input_rounded"
+                                android:gravity="center"
+                                android:hint="@string/date_hint_dd"
+                                android:inputType="number"
+                                android:maxLength="2"
+                                android:textSize="16sp"
+                                android:textColor="@color/mode_button_text_light"
+                                android:textColorHint="@color/history_timestamp_text"
+                                android:paddingStart="12dp"
+                                android:paddingEnd="12dp" />
+
+                            <EditText
+                                android:id="@+id/date1_month"
+                                android:layout_width="0dp"
+                                android:layout_height="56dp"
+                                android:layout_weight="1"
+                                android:layout_marginEnd="8dp"
+                                android:background="@drawable/bg_date_input_rounded"
+                                android:gravity="center"
+                                android:hint="@string/date_hint_mm"
+                                android:inputType="number"
+                                android:maxLength="2"
+                                android:textSize="16sp"
+                                android:textColor="@color/mode_button_text_light"
+                                android:textColorHint="@color/history_timestamp_text"
+                                android:paddingStart="12dp"
+                                android:paddingEnd="12dp" />
+
+                            <EditText
+                                android:id="@+id/date1_year"
+                                android:layout_width="0dp"
+                                android:layout_height="56dp"
+                                android:layout_weight="1.5"
+                                android:layout_marginEnd="8dp"
+                                android:background="@drawable/bg_date_input_rounded"
+                                android:gravity="center"
+                                android:hint="@string/date_hint_yyyy"
+                                android:inputType="number"
+                                android:maxLength="4"
+                                android:textSize="16sp"
+                                android:textColor="@color/mode_button_text_light"
+                                android:textColorHint="@color/history_timestamp_text"
+                                android:paddingStart="12dp"
+                                android:paddingEnd="12dp" />
+
+                            <ImageButton
+                                android:id="@+id/date1_calendar"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:src="@drawable/ic_calendar"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@string/date_pick_date"
+                                android:scaleType="centerInside"
+                                android:padding="12dp"
+                                app:tint="@color/mode_toolbar_icon" />
+                        </LinearLayout>
+
+                        <!-- Date section 2: End date (visible only in Date Difference mode) -->
+                        <TextView
+                            android:id="@+id/date_label_section2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/date_end_date_label"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/mode_button_text_light"
+                            android:layout_marginTop="16dp"
+                            android:visibility="gone" />
+
+                        <LinearLayout
+                            android:id="@+id/date_row_section2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginTop="8dp"
+                            android:visibility="gone">
+
+                            <EditText
+                                android:id="@+id/date2_day"
+                                android:layout_width="0dp"
+                                android:layout_height="56dp"
+                                android:layout_weight="1"
+                                android:layout_marginEnd="8dp"
+                                android:background="@drawable/bg_date_input_rounded"
+                                android:gravity="center"
+                                android:hint="@string/date_hint_dd"
+                                android:inputType="number"
+                                android:maxLength="2"
+                                android:textSize="16sp"
+                                android:textColor="@color/mode_button_text_light"
+                                android:textColorHint="@color/history_timestamp_text"
+                                android:paddingStart="12dp"
+                                android:paddingEnd="12dp" />
+
+                            <EditText
+                                android:id="@+id/date2_month"
+                                android:layout_width="0dp"
+                                android:layout_height="56dp"
+                                android:layout_weight="1"
+                                android:layout_marginEnd="8dp"
+                                android:background="@drawable/bg_date_input_rounded"
+                                android:gravity="center"
+                                android:hint="@string/date_hint_mm"
+                                android:inputType="number"
+                                android:maxLength="2"
+                                android:textSize="16sp"
+                                android:textColor="@color/mode_button_text_light"
+                                android:textColorHint="@color/history_timestamp_text"
+                                android:paddingStart="12dp"
+                                android:paddingEnd="12dp" />
+
+                            <EditText
+                                android:id="@+id/date2_year"
+                                android:layout_width="0dp"
+                                android:layout_height="56dp"
+                                android:layout_weight="1.5"
+                                android:layout_marginEnd="8dp"
+                                android:background="@drawable/bg_date_input_rounded"
+                                android:gravity="center"
+                                android:hint="@string/date_hint_yyyy"
+                                android:inputType="number"
+                                android:maxLength="4"
+                                android:textSize="16sp"
+                                android:textColor="@color/mode_button_text_light"
+                                android:textColorHint="@color/history_timestamp_text"
+                                android:paddingStart="12dp"
+                                android:paddingEnd="12dp" />
+
+                            <ImageButton
+                                android:id="@+id/date2_calendar"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:src="@drawable/ic_calendar"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@string/date_pick_date"
+                                android:scaleType="centerInside"
+                                android:padding="12dp"
+                                app:tint="@color/mode_toolbar_icon" />
+                        </LinearLayout>
+
+                        <!-- Calculate button: same style as "=" (KeypadAccent). -->
+                        <Button
+                            android:id="@+id/date_btn_calculate"
+                            style="@style/Widget.CalculatorButton.KeypadAccent"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:layout_marginTop="24dp"
+                            android:text="@string/date_calculate_btn"
+                            android:textAllCaps="true"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Result card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/date_result_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@id/date_card_main"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="@dimen/date_card_elevation"
+                    app:cardBackgroundColor="@color/history_title_bg"
+                    app:strokeColor="@color/date_card_stroke"
+                    app:strokeWidth="@dimen/date_card_stroke_width">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/date_result_title"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/mode_button_text_light" />
+
+                        <TextView
+                            android:id="@+id/date_result_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:textSize="26sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/mode_button_text_light"
+                            android:text="" />
+
+                        <TextView
+                            android:id="@+id/date_result_sub"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:textSize="14sp"
+                            android:textColor="@color/history_timestamp_text"
+                            android:text="" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+
+    <!-- Same navigation drawer as main app. -->
+    <include
+        android:id="@+id/nav_drawer"
+        layout="@layout/nav_drawer"
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start" />
+</androidx.drawerlayout.widget.DrawerLayout>

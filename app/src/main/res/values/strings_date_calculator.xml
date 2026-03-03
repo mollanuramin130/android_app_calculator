@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="date_calculator_title">Date Calculator</string>
+    <string name="date_toolbar_menu_desc">Open menu</string>
+    <string name="date_toolbar_overflow_desc">Menu</string>
+    <string name="date_select_mode">Select Calculation Mode</string>
+    <string name="date_mode_age">Age Calculator</string>
+    <string name="date_mode_difference">Date Difference</string>
+    <string name="date_dob_label">Date of Birth</string>
+    <string name="date_end_date_label">End Date</string>
+    <string name="date_start_date_label">Start Date</string>
+    <string name="date_hint_dd">DD</string>
+    <string name="date_hint_mm">MM</string>
+    <string name="date_hint_yyyy">YYYY</string>
+    <string name="date_pick_date">Pick date</string>
+    <string name="date_calculate_btn">CALCULATE</string>
+    <string name="date_result_title">Result</string>
+    <string name="date_result_age_format">%1$d Years %2$d Months %3$d Days</string>
+    <string name="date_result_total_days">Total %1$d Days</string>
+    <string name="date_result_breakdown">%1$d years, %2$d months, %3$d days</string>
+    <string name="date_error_invalid_day">Day must be 1–31</string>
+    <string name="date_error_invalid_month">Month must be 1–12</string>
+    <string name="date_error_invalid_year">Year must be 1900–2100</string>
+    <string name="date_error_future_dob">Date of birth cannot be in the future</string>
+    <string name="date_error_end_before_start">End date must be after start date</string>
+    <string name="date_error_fill_all">Please fill all date fields</string>
+</resources>

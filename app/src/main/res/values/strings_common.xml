@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Calculator: Sci, EMI, Age, Int</string>
+    <string name="history">History</string>
+    <string name="backspace">Backspace</string>
+    <string name="delete">Delete</string>
+    <string name="history_title">Calculation History</string>
+    <string name="tab_calculate_history">Calculate History</string>
+    <string name="tab_old_history">Old History</string>
+    <string name="tab_recent">Recent</string>
+    <string name="tab_old">Old</string>
+    <string name="history_empty">No calculations yet</string>
+    <string name="history_replace_title">Replace expression?</string>
+    <string name="history_replace_message">Your current expression will be removed. Continue?</string>
+    <string name="history_use">Use</string>
+    <string name="menu_clear_history">Clear history</string>
+    <string name="menu_choose_theme">Choose theme</string>
+    <string name="menu_privacy_policy">Privacy policy</string>
+    <string name="menu_send_feedback">Send feedback</string>
+    <string name="menu_help">Help</string>
+    <string name="help_message">Use the keypad to enter numbers and operators. Tap = to compute. Use the history icon for past calculations and the arrows icon to show scientific functions.</string>
+    <string name="help_content_full">• Basic calculator: Tap numbers and operators (+, −, ×, ÷). Tap = for the result. Use AC to clear, ( ) for parentheses.\n\n• Scientific mode: Tap \"Scientific mode\" above the keypad to show extra keys (√, π, sin, cos, tan, etc.).\n\n• History: Past calculations appear in the list. Tap \"Use\" on any item to load it and edit or continue.\n\n• Modes: Open the menu (☰) to switch to Temperature, EMI, Interest, Currency, or Date Calculator.\n\n• Theme: Use the 3-dot menu → Choose theme for Light, Dark, or System default.</string>
+    <string name="help_contact_developer">Contact developer for help</string>
+    <string name="help_email_subject">Nur\'s Custom Calculator – Help request</string>
+    <string name="drawer_title">Calculation modes</string>
+    <string name="mode_basic_calculator">Basic Calculator</string>
+    <string name="mode_basic_calculator_title">Basic Calculator Mode</string>
+    <string name="mode_age">Age Calculator</string>
+    <string name="mode_temperature">Temperature Calculator</string>
+    <string name="mode_emi">EMI Calculator</string>
+    <string name="mode_interest">Interest Calculator</string>
+    <string name="mode_currency">Currency Converter</string>
+    <string name="mode_date_calculator">Date Calculator</string>
+    <string name="quick_scientific_mode">Scientific mode</string>
+    <string name="quick_switch_mode">Switch mode</string>
+    <string name="theme_dialog_title">Choose theme</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_system">System default</string>
+    <string name="feedback_title">Send feedback</string>
+    <string name="feedback_welcome">Welcome! 👋</string>
+    <string name="feedback_intro_hint">Share your feedback or report an issue. Your message will be sent to the developer.</string>
+    <string name="feedback_get_started">Get started</string>
+    <string name="feedback_describe_issue">Could you describe your issue?</string>
+    <string name="feedback_sensitive_hint">Please don\'t include sensitive information.</string>
+    <string name="feedback_message_hint">Type your feedback here…</string>
+    <string name="feedback_attach_screenshot">Attach a screenshot</string>
+    <string name="feedback_send_button">Send feedback</string>
+    <string name="feedback_thanks_title">Thanks for sharing your feedback!</string>
+    <string name="feedback_thanks_message">We use feedback like yours to fix issues and improve the app.</string>
+    <string name="feedback_thanks_ok">OK</string>
+    <string name="privacy_policy_title">Privacy Policy</string>
+    <string name="privacy_policy_content">Nur\'s Custom Calculator respects your privacy.\n\n• This app does not collect personal data. Calculations are performed on your device only.\n\n• History is stored locally on your device and is not sent to any server.\n\n• If you contact us via Send feedback, we receive only the email content you choose to send (e.g. to mollanuramin130@gmail.com) to respond to your request.\n\n• We do not use analytics or third-party tracking in this app.\n\n• For questions about this policy, email mollanuramin130@gmail.com.</string>
+    <string name="feedback_email_subject">Nur\'s Custom Calculator – Feedback</string>
+</resources>

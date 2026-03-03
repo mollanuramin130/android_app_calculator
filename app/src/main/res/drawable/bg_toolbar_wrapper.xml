@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Wrapper that selects light/dark toolbar gradient via layer-list so we can use one include -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="@color/date_toolbar_gradient_start"
+                android:endColor="@color/date_toolbar_gradient_end"
+                android:angle="0" />
+        </shape>
+    </item>
+</layer-list>

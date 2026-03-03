@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Vertical swap: arrow up, arrow down (swap top/bottom currency rows) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M8.808,12.308V4.92L5.714,8.016L5,7.308L9.308,3l4.308,4.308l-0.714,0.708L9.808,4.92v7.387zM14.673,21l-4.307,-4.308l0.713,-0.707l3.094,3.094v-7.387h1v7.387l3.094,-3.095l0.714,0.708z"/>
+</vector>

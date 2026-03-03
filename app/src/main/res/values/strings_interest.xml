@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="int_enter_details">Enter Details</string>
+    <string name="int_principal_amount">Principal Amount</string>
+    <string name="int_interest_rate_pa">Interest Rate (P.A.)</string>
+    <string name="int_time_period">Time Period</string>
+    <string name="int_simple">Simple</string>
+    <string name="int_compound">Compound</string>
+    <string name="int_calculate">Calculate</string>
+    <string name="int_result">Result</string>
+    <string name="int_total_interest">Total Interest</string>
+    <string name="int_total_amount">Total Amount (Principal + %1$s)</string>
+    <string name="int_total_amount_label">Total Amount (Principal + Interest)</string>
+    <string name="int_breakdown">Breakdown</string>
+    <string name="int_principal_amount_label">Principal Amount</string>
+    <string name="int_compound_interest_label">Compound Interest</string>
+    <string name="int_simple_interest_label">Simple Interest</string>
+    <string name="int_view_breakdown">View Breakdown</string>
+    <string name="int_years">Years</string>
+    <string name="int_rupee">₹</string>
+</resources>

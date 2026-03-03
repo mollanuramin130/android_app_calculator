@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Age Calculator - Light -->
+    <color name="age_header_start">#FF6B5B95</color>
+    <color name="age_header_end">#FF4A7DC7</color>
+    <color name="age_screen_bg">#FFF5F3F8</color>
+    <color name="age_card_bg">#FFFFFFFF</color>
+    <color name="age_button_start">#FF8B7BB8</color>
+    <color name="age_button_end">#FFE87B9A</color>
+    <color name="age_label_dark">#FF2C3E50</color>
+    <color name="age_stat_label">#FF757575</color>
+    <color name="age_spinner_border">#FFD0D7DE</color>
+    <color name="age_dropdown_bg">#FFF5F5F5</color>
+    <color name="age_stat_box_bg">#FFEEEEEE</color>
+    <color name="age_bottom_nav_bg">#FFFFFFFF</color>
+    <color name="age_nav_icon">#FF6B5B95</color>
+</resources>

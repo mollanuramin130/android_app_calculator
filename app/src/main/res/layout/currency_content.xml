@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/mode_screen_bg">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:background="@color/mode_screen_bg"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/currency_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/currency_subtitle"
+                android:textColor="@color/currency_label_text"
+                android:textSize="14sp"
+                android:layout_marginBottom="20dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_currency_card"
+                android:padding="20dp"
+                android:elevation="2dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/currency_amount_label"
+                    android:textColor="@color/currency_label_text"
+                    android:textSize="13sp"
+                    android:layout_marginBottom="8dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:baselineAligned="false">
+                    <ImageView
+                        android:id="@+id/currency_from_flag"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginEnd="10dp"
+                        android:contentDescription="@null"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_flag_us" />
+                    <Spinner
+                        android:id="@+id/currency_from"
+                        android:layout_width="0dp"
+                        android:layout_height="52dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="12dp"
+                        android:background="@drawable/bg_currency_input"
+                        android:minHeight="52dp" />
+                    <EditText
+                        android:id="@+id/currency_amount"
+                        android:layout_width="0dp"
+                        android:layout_height="52dp"
+                        android:layout_weight="1"
+                        android:inputType="numberDecimal"
+                        android:hint="0.00"
+                        android:textColorHint="@color/currency_label_text"
+                        android:textColor="@color/currency_input_text"
+                        android:background="@drawable/bg_currency_input"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp">
+                    <ImageButton
+                        android:id="@+id/currency_swap"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/button_currency_swap"
+                        android:src="@drawable/ic_swap_currencies"
+                        android:contentDescription="@string/currency_swap_hint"
+                        android:scaleType="center"
+                        android:padding="12dp" />
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/currency_converted_label"
+                    android:textColor="@color/currency_label_text"
+                    android:textSize="13sp"
+                    android:layout_marginBottom="8dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:baselineAligned="false">
+                    <ImageView
+                        android:id="@+id/currency_to_flag"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginEnd="10dp"
+                        android:contentDescription="@null"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_flag_in" />
+                    <Spinner
+                        android:id="@+id/currency_to"
+                        android:layout_width="0dp"
+                        android:layout_height="52dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="12dp"
+                        android:background="@drawable/bg_currency_input"
+                        android:minHeight="52dp" />
+                    <TextView
+                        android:id="@+id/currency_result"
+                        android:layout_width="0dp"
+                        android:layout_height="52dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_currency_input"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/currency_input_text"
+                        android:textSize="16sp"
+                        android:text="—" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/currency_indicative_rate"
+                android:textColor="@color/currency_label_text"
+                android:textSize="13sp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="4dp" />
+            <TextView
+                android:id="@+id/currency_indicative_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/currency_input_text"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:text="—" />
+            <TextView
+                android:id="@+id/currency_warning_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:visibility="gone"
+                android:text="@string/currency_rates_not_accurate"
+                android:textColor="@color/currency_label_text"
+                android:textSize="12sp"
+                android:drawablePadding="6dp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

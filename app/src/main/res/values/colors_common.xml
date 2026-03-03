@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Sunset Coral theme + shared mode UI -->
+    <color name="coral_light_peach">#FFF0E8</color>
+    <color name="coral_peach">#FFD4C4</color>
+    <color name="coral_mid">#FFB8A0</color>
+    <color name="coral_deep">#E8957A</color>
+    <color name="coral_dark">#D97A5F</color>
+    <color name="display_bg">#E5C4B8</color>
+    <color name="button_number_bg">#FFF5F2</color>
+    <color name="button_operator_bg">#D96A4A</color>
+    <color name="text_on_light">#B84A2A</color>
+    <color name="toolbar_text_and_icon">#8B3A20</color>
+    <color name="text_on_dark">#FFFFFF</color>
+    <color name="display_text">#FFFFFF</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="mode_display_bg">#FFE8E5E0</color>
+    <color name="mode_button_dark">#FF3D3D3D</color>
+    <color name="mode_button_light">#FF9A9A9A</color>
+    <color name="mode_button_text_light">#FF1A1A1A</color>
+    <color name="mode_button_text_dark">#FF1A1A1A</color>
+    <color name="mode_screen_bg">#FFF0EDE8</color>
+    <color name="mode_toolbar_icon">#FF1A1A1A</color>
+    <color name="mode_toolbar_bg">#FFE5E2DC</color>
+    <color name="mode_menu_bg">#FFFFFFFF</color>
+    <color name="history_title_bg">#FFE8E5E0</color>
+    <color name="history_tab_selected_bg">#FFE8D4CC</color>
+    <color name="history_tab_unselected_bg">#FFD8D4D0</color>
+    <color name="quick_bar_bg">#FFE5E2DC</color>
+    <color name="quick_bar_divider">#1A000000</color>
+    <color name="age_label">#FF424242</color>
+    <color name="age_input_text">#FF212121</color>
+    <color name="age_input_bg">#FFEEEEEE</color>
+    <color name="keypad_standard_bg">#FFD8D8D8</color>
+    <color name="keypad_standard_text">#FF1A1A1A</color>
+    <color name="keypad_accent_bg">#FF3D3D3D</color>
+    <color name="keypad_accent_text">#FFFFFFFF</color>
+    <color name="history_timestamp_text">#FF757575</color>
+    <color name="history_label_text">#FF5C5C5C</color>
+    <color name="history_label_icon">#FF6B6B6B</color>
+    <color name="history_tab_divider">#FFB0B0B0</color>
+    <color name="quick_bar_icon_tint">#FFFFFFFF</color>
+    <color name="drawer_header_bg">#FF37474F</color>
+    <color name="drawer_header_text">#FFFFFFFF</color>
+    <color name="date_card_stroke">#00000000</color>
+</resources>

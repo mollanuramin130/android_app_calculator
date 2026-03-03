@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/mode_screen_bg">
+
+    <!-- Illustration with shadow for smooth blend into background -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:elevation="8dp"
+        android:background="@drawable/bg_age_illustration_shadow">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/age_calculation_illustration"
+            android:scaleType="fitCenter"
+            android:contentDescription="@string/age_illustration_desc" />
+    </FrameLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:background="@color/mode_screen_bg"
+        android:padding="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Card 1: Enter Your Date of Birth -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_age_card"
+                android:padding="24dp"
+                android:elevation="4dp"
+                android:layout_marginBottom="20dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/age_enter_dob"
+                    android:textColor="@color/age_label_dark"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginBottom="18dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+                    <FrameLayout
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="0.75"
+                        android:minWidth="56dp"
+                        android:layout_marginEnd="6dp">
+                        <Spinner
+                            android:id="@+id/age_first_day"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/age_spinner_dropdown"
+                            android:minHeight="50dp"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="32dp"
+                            android:popupBackground="@color/age_card_bg" />
+                        <TextView
+                            android:id="@+id/age_first_day_display"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical|start"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="32dp"
+                            android:textColor="@color/age_label_dark"
+                            android:textSize="16sp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:text="1" />
+                    </FrameLayout>
+                    <Spinner
+                        android:id="@+id/age_first_month"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1.5"
+                        android:background="@drawable/age_spinner_dropdown"
+                        android:minHeight="50dp"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="32dp"
+                        android:layout_marginEnd="6dp"
+                        android:popupBackground="@color/age_card_bg" />
+                    <Spinner
+                        android:id="@+id/age_first_year"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/age_spinner_dropdown"
+                        android:minHeight="50dp"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="32dp"
+                        android:popupBackground="@color/age_card_bg" />
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/age_first_calendar"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="12dp"
+                    android:src="@drawable/ic_calendar"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Pick date"
+                    android:padding="8dp"
+                    android:scaleType="centerInside"
+                    android:tint="@color/age_label_dark" />
+
+                <Button
+                    android:id="@+id/age_calculate"
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/age_calculate_button"
+                    android:background="@drawable/button_age_calculate"
+                    android:textColor="@android:color/white"
+                    android:textAllCaps="false"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:stateListAnimator="@null" />
+            </LinearLayout>
+
+            <!-- Card 2: Your Age is (hidden until user taps Calculate Age) -->
+            <LinearLayout
+                android:id="@+id/age_result_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_age_card"
+                android:padding="24dp"
+                android:elevation="4dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/age_your_age_is"
+                    android:textColor="@color/age_label_dark"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Row: Years, Months, Days -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:background="@drawable/bg_age_stat_box"
+                        android:padding="14dp"
+                        android:layout_marginEnd="6dp">
+                        <TextView
+                            android:id="@+id/age_years_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/age_placeholder"
+                            android:textColor="@color/age_label_dark"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/age_years"
+                            android:textColor="@color/age_stat_label"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:background="@drawable/bg_age_stat_box"
+                        android:padding="14dp"
+                        android:layout_marginEnd="6dp">
+                        <TextView
+                            android:id="@+id/age_months_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/age_placeholder"
+                            android:textColor="@color/age_label_dark"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/age_months"
+                            android:textColor="@color/age_stat_label"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:background="@drawable/bg_age_stat_box"
+                        android:padding="14dp"
+                        android:layout_marginStart="6dp">
+                        <TextView
+                            android:id="@+id/age_days_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/age_placeholder"
+                            android:textColor="@color/age_label_dark"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/age_days"
+                            android:textColor="@color/age_stat_label"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Total days -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/bg_age_stat_box"
+                    android:padding="14dp"
+                    android:layout_marginBottom="18dp">
+                    <TextView
+                        android:id="@+id/age_total_days_value"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/age_placeholder"
+                        android:textColor="@color/age_label_dark"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/age_total_days"
+                        android:textColor="@color/age_stat_label"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <!-- You were born on -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="10dp">
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_calendar"
+                        android:layout_marginEnd="8dp"
+                        android:tint="#FF2196F3"
+                        android:contentDescription="@null" />
+                    <TextView
+                        android:id="@+id/age_born_on_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/age_label_dark"
+                        android:textSize="14sp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="" />
+                </LinearLayout>
+
+                <!-- Next Birthday in -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_gift"
+                        android:layout_marginEnd="8dp"
+                        android:tint="#FFE91E63"
+                        android:contentDescription="@null" />
+                    <TextView
+                        android:id="@+id/age_next_birthday_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/age_label_dark"
+                        android:textSize="14sp"
+                        android:text="" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

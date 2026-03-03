@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="temp_converter_title">Temperature Converter</string>
+    <string name="temp_enter_heading">Enter Temperature</string>
+    <string name="temp_enter_hint">Enter temperature</string>
+    <string name="temp_from_label">From:</string>
+    <string name="temp_to_label">To:</string>
+    <string name="temp_convert">Convert</string>
+    <string name="temp_result_heading">Result</string>
+    <string name="temp_quick_swap">Quick Swap</string>
+    <string name="temp_celsius">Celsius (°C)</string>
+    <string name="temp_fahrenheit">Fahrenheit (°F)</string>
+    <string name="temp_kelvin">Kelvin (K)</string>
+    <string-array name="temp_units">
+        <item>°C</item>
+        <item>°F</item>
+        <item>K</item>
+    </string-array>
+</resources>
