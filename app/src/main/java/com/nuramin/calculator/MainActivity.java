@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -20,6 +21,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.nuramin.calculator.basic.BasicCalculatorScreen;
 import com.nuramin.calculator.bmi.BmiCalculatorPanel;
 import com.nuramin.calculator.currency.CurrencyPanel;
+import com.nuramin.calculator.discount.DiscountCalculatorPanel;
 import com.nuramin.calculator.date.DateCalculatorPanel;
 import com.nuramin.calculator.emi.EmiCalculatorPanel;
 import com.nuramin.calculator.interest.InterestCalculatorPanel;
@@ -41,7 +43,10 @@ public class MainActivity extends AppCompatActivity {
     private View panelCurrency;
     private View panelDateCalc;
     private View panelBmi;
+    private View panelDiscount;
     private LinearLayout scientificRows;
+    /** Currently visible content panel (calculator, temp, emi, etc.). */
+    private View currentPanel;
 
     private BasicCalculatorScreen basicCalculatorScreen;
 
@@ -70,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         panelCurrency = findViewById(R.id.panel_currency);
         panelDateCalc = findViewById(R.id.panel_date_calc);
         panelBmi = findViewById(R.id.panel_bmi);
+        panelDiscount = findViewById(R.id.panel_discount);
         scientificRows = findViewById(R.id.scientific_rows);
 
         basicCalculatorScreen = new BasicCalculatorScreen(this);
@@ -83,9 +89,11 @@ public class MainActivity extends AppCompatActivity {
         CurrencyPanel.setup(panelCurrency, drawerLayout, onOverflowClick);
         DateCalculatorPanel.setup(panelDateCalc, drawerLayout, onOverflowClick);
         BmiCalculatorPanel.setup(panelBmi, drawerLayout, onOverflowClick);
+        DiscountCalculatorPanel.setup(panelDiscount, drawerLayout, onOverflowClick);
 
         setupDrawer();
         setupQuickBar();
+        setupBackPress();
 
         // If launched from Date Calculator drawer, open the requested panel
         String openPanel = getIntent() != null ? getIntent().getStringExtra(EXTRA_OPEN_PANEL) : null;
@@ -101,6 +109,8 @@ public class MainActivity extends AppCompatActivity {
             showPanel(panelDateCalc, R.string.date_calculator_title);
         } else if ("bmi".equals(openPanel)) {
             showPanel(panelBmi, R.string.bmi_calculator_title);
+        } else if ("discount".equals(openPanel)) {
+            showPanel(panelDiscount, R.string.discount_calculator_title);
         } else {
             showPanel(calculatorPanel, 0);
         }
@@ -124,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
         setDrawerItemClick(R.id.drawer_item_currency, panelCurrency, R.string.mode_currency);
         setDrawerItemClick(R.id.drawer_item_date_calc, panelDateCalc, R.string.date_calculator_title);
         setDrawerItemClick(R.id.drawer_item_bmi, panelBmi, R.string.bmi_calculator_title);
+        setDrawerItemClick(R.id.drawer_item_discount, panelDiscount, R.string.discount_calculator_title);
 
         View historyItem = findViewById(R.id.drawer_item_history);
         if (historyItem != null) {
@@ -152,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
         panelCurrency.setVisibility(panel == panelCurrency ? View.VISIBLE : View.GONE);
         panelDateCalc.setVisibility(panel == panelDateCalc ? View.VISIBLE : View.GONE);
         panelBmi.setVisibility(panel == panelBmi ? View.VISIBLE : View.GONE);
+        panelDiscount.setVisibility(panel == panelDiscount ? View.VISIBLE : View.GONE);
 
         // Always show main toolbar (same as Basic Calculator); only title changes per screen.
         boolean isBasicCalculator = (panel == calculatorPanel);
@@ -169,6 +181,29 @@ public class MainActivity extends AppCompatActivity {
         if (panel == panelCurrency) {
             com.nuramin.calculator.currency.CurrencyPanel.onPanelVisible(this, panelCurrency);
         }
+        currentPanel = panel;
+    }
+
+    /**
+     * Back button: from any other screen go to basic calculator; from basic/scientific calculator
+     * move app to background (expression is preserved until app is terminated or cleared by user).
+     */
+    private void setupBackPress() {
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (drawerLayout != null && drawerLayout.isDrawerOpen(Gravity.START)) {
+                    drawerLayout.closeDrawer(Gravity.START);
+                    return;
+                }
+                if (currentPanel != null && currentPanel != calculatorPanel) {
+                    showPanel(calculatorPanel, 0);
+                    return;
+                }
+                // On basic/scientific calculator: move to background, do not finish (expression stays)
+                moveTaskToBack(true);
+            }
+        });
     }
 
     /** Update topbar title when on calculator: "Basic Calculator" or "Scientific mode". */

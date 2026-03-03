@@ -12,8 +12,8 @@
     <color name="date_screen_bg_start">#F4F6F9</color>
     <color name="date_screen_bg_end">#F4F6F9</color>
 
-    <!-- Card (date_card_stroke in colors_common; elevation in dimens.xml) -->
-    <color name="date_card_bg">#FFFFFF</color>
+    <!-- Card / inputs: solid so no background noise in dark mode -->
+    <color name="date_card_bg">#FFE8E5E0</color>
 
     <!-- Button gradient -->
     <color name="date_button_gradient_start">#4F46E5</color>
