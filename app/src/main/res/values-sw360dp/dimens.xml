@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Wider screens (≥360dp): more room for 01 Jan, 02 Feb, etc. -->
+    <dimen name="date_field_min_width">44dp</dimen>
+    <dimen name="date_month_min_width">72dp</dimen>
+    <dimen name="date_display_text_min">11sp</dimen>
+    <dimen name="date_display_text_max">17sp</dimen>
+    <dimen name="date_month_text_min">10sp</dimen>
+    <dimen name="date_month_text_max">16sp</dimen>
+</resources>

@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.nuramin.calculator.model.HistoryEntry;
@@ -23,11 +23,36 @@ public class HistoryAdapter extends ArrayAdapter<HistoryEntry> {
         void onUseResult(String resultValue);
     }
 
-    private final OnUseResultListener listener;
+    public interface OnUseExpressionListener {
+        void onUseExpression(String expression);
+    }
 
-    public HistoryAdapter(Context context, List<HistoryEntry> items, OnUseResultListener listener) {
+    public interface OnDismissListener {
+        void onDismiss(int position);
+    }
+
+    /** 0 = Recent (USE + dismiss), 1 = Old (USE result + USE expression, no dismiss). */
+    private int currentHistoryTab = 0;
+
+    private final OnUseResultListener useListener;
+    private final OnUseExpressionListener useExpressionListener;
+    private final OnDismissListener dismissListener;
+
+    public HistoryAdapter(Context context, List<HistoryEntry> items,
+                          OnUseResultListener useListener,
+                          OnUseExpressionListener useExpressionListener,
+                          OnDismissListener dismissListener) {
         super(context, R.layout.basic_list_item_calc_history, items);
-        this.listener = listener;
+        this.useListener = useListener;
+        this.useExpressionListener = useExpressionListener;
+        this.dismissListener = dismissListener;
+    }
+
+    public void setCurrentHistoryTab(int tab) {
+        if (currentHistoryTab != tab) {
+            currentHistoryTab = tab;
+            notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -41,7 +66,7 @@ public class HistoryAdapter extends ArrayAdapter<HistoryEntry> {
         TextView exprView = row.findViewById(R.id.history_expression);
         TextView resultView = row.findViewById(R.id.history_result);
         TextView timeView = row.findViewById(R.id.history_timestamp);
-        Button useBtn = row.findViewById(R.id.history_btn_use);
+        ImageButton useBtn = row.findViewById(R.id.history_btn_use);
         if (exprView != null) exprView.setText(exprPart);
         if (resultView != null) resultView.setText(resultPart);
         if (timeView != null) {
@@ -53,9 +78,22 @@ public class HistoryAdapter extends ArrayAdapter<HistoryEntry> {
                 timeView.setVisibility(View.GONE);
             }
         }
-        if (useBtn != null && listener != null) {
+        boolean isOldTab = (currentHistoryTab == 1);
+        if (useBtn != null && useListener != null) {
             final String resultToUse = resultPart.replace(",", "");
-            useBtn.setOnClickListener(v -> listener.onUseResult(resultToUse));
+            useBtn.setOnClickListener(v -> useListener.onUseResult(resultToUse));
+        }
+        ImageButton useExprBtn = row.findViewById(R.id.history_btn_use_expr);
+        if (useExprBtn != null && useExpressionListener != null) {
+            final String exprToUse = exprPart;
+            useExprBtn.setOnClickListener(v -> useExpressionListener.onUseExpression(exprToUse));
+            useExprBtn.setVisibility(isOldTab ? View.VISIBLE : View.GONE);
+        }
+        ImageButton dismissBtn = row.findViewById(R.id.history_btn_dismiss);
+        if (dismissBtn != null && dismissListener != null) {
+            final int pos = position;
+            dismissBtn.setOnClickListener(v -> dismissListener.onDismiss(pos));
+            dismissBtn.setVisibility(isOldTab ? View.GONE : View.VISIBLE);
         }
         return row;
     }

@@ -57,6 +57,11 @@ public final class HistoryStorage {
         prefs.edit().remove(KEY_OLD_HISTORY).apply();
     }
 
+    /** Replace persisted old history with the given list (e.g. after removing one entry). */
+    public void saveAll(List<HistoryEntry> list) {
+        save(list);
+    }
+
     private void save(List<HistoryEntry> list) {
         JSONArray arr = new JSONArray();
         for (HistoryEntry e : list) {

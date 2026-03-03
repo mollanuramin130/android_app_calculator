@@ -13,6 +13,9 @@
     <string name="history_replace_title">Replace expression?</string>
     <string name="history_replace_message">Your current expression will be removed. Continue?</string>
     <string name="history_use">Use</string>
+    <string name="history_use_result">Result</string>
+    <string name="history_use_expression">Expr</string>
+    <string name="history_dismiss">Remove from history</string>
     <string name="menu_clear_history">Clear history</string>
     <string name="menu_choose_theme">Choose theme</string>
     <string name="menu_privacy_policy">Privacy policy</string>

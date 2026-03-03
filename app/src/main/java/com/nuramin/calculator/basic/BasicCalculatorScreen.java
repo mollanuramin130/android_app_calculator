@@ -18,6 +18,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.nuramin.sunsetcoralcalculator.R;
@@ -51,6 +52,8 @@ public class BasicCalculatorScreen {
     private boolean lastInputIsOperator = false;
     private boolean lastInputIsDecimal = false;
     private boolean isResultDisplayed = false;
+    /** Expression as it was when user pressed =; used so one backspace restores expression minus last char. */
+    private String expressionBeforeEquals = null;
     private int openParenthesisCount = 0;
 
     private boolean updatingFromCode = false;
@@ -180,7 +183,8 @@ public class BasicCalculatorScreen {
 
         historyStorage = new HistoryStorage(activity);
         oldHistory.addAll(historyStorage.loadOldHistory());
-        historyAdapter = new HistoryAdapter(activity, new ArrayList<>(), this::applyResultFromHistory);
+        historyAdapter = new HistoryAdapter(activity, new ArrayList<>(),
+                this::applyResultFromHistory, this::onUseExpressionFromHistory, this::onHistoryEntryDismissed);
         if (panelHistoryList != null) {
             panelHistoryList.setAdapter(historyAdapter);
             panelHistoryList.setOnItemClickListener((parent, view, position, id) -> {});
@@ -222,6 +226,7 @@ public class BasicCalculatorScreen {
 
     private void refreshHistoryList() {
         if (historyAdapter == null) return;
+        historyAdapter.setCurrentHistoryTab(currentHistoryTab);
         historyAdapter.clear();
         historyAdapter.addAll(getDisplayedHistoryList());
         historyAdapter.notifyDataSetChanged();
@@ -553,6 +558,24 @@ public class BasicCalculatorScreen {
 
     // ---- 7. Delete last ----
     private void deleteLast() {
+        if (isResultDisplayed && expressionBeforeEquals != null) {
+            if (expressionBeforeEquals.length() > 0) {
+                String restored = expressionBeforeEquals.substring(0, expressionBeforeEquals.length() - 1);
+                expression.setLength(0);
+                expression.append(restored);
+                syncStateFromExpression();
+                isResultDisplayed = false;
+                expressionBeforeEquals = null;
+                if (tvResult != null) tvResult.setText("");
+                updateDisplay();
+            } else {
+                expressionBeforeEquals = null;
+                isResultDisplayed = false;
+                if (tvResult != null) tvResult.setText("");
+                updateDisplay();
+            }
+            return;
+        }
         if (expression.length() == 0) return;
         if (isResultDisplayed) return;
         int pos = getInsertPosition();
@@ -650,6 +673,7 @@ public class BasicCalculatorScreen {
 
     // ---- 10. Calculation engine ----
     private void calculateResult() {
+        expressionBeforeEquals = expression.toString();
         String exprStr = expression.toString().trim();
         if (exprStr.isEmpty()) return;
 
@@ -676,6 +700,7 @@ public class BasicCalculatorScreen {
 
         Double result = evaluateExpression(toEval);
         if (result == null) {
+            expressionBeforeEquals = null;
             cancelResultAnimation();
             if (tvResult != null) tvResult.setText("Error");
             if (tvExpression != null) tvExpression.setVisibility(View.VISIBLE);
@@ -882,6 +907,54 @@ public class BasicCalculatorScreen {
         oldHistory.clear();
         if (historyStorage != null) historyStorage.clear();
         refreshHistoryList();
+    }
+
+    /** Remove a single history entry at the given position (Recent or Old tab). */
+    private void onHistoryEntryDismissed(int position) {
+        List<HistoryEntry> list = getDisplayedHistoryList();
+        if (position < 0 || position >= list.size()) return;
+        list.remove(position);
+        if (currentHistoryTab == 1 && historyStorage != null) {
+            historyStorage.saveAll(oldHistory);
+        }
+        refreshHistoryList();
+    }
+
+    /**
+     * Called when user taps "use expression" (<> ) in Old history. If current expression is not
+     * empty, shows a warning popup; otherwise applies the history expression directly.
+     */
+    private void onUseExpressionFromHistory(String exprStr) {
+        if (exprStr == null) return;
+        String trimmed = exprStr.trim();
+        if (trimmed.isEmpty()) return;
+        boolean hasCurrentExpression = expression.length() > 0;
+        if (hasCurrentExpression) {
+            new AlertDialog.Builder(activity)
+                    .setTitle(R.string.history_replace_title)
+                    .setMessage(R.string.history_replace_message)
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> applyExpressionFromHistory(exprStr))
+                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.dismiss())
+                    .show();
+        } else {
+            applyExpressionFromHistory(exprStr);
+        }
+    }
+
+    /**
+     * Replace the current expression with a history entry's expression (Old tab: "Use expression").
+     */
+    private void applyExpressionFromHistory(String exprStr) {
+        if (exprStr == null) return;
+        String trimmed = exprStr.trim();
+        if (trimmed.isEmpty()) return;
+        expression.setLength(0);
+        expression.append(trimmed);
+        syncStateFromExpression();
+        isResultDisplayed = false;
+        if (tvExpression != null) tvExpression.setVisibility(View.VISIBLE);
+        if (tvResult != null) tvResult.setText("");
+        updateDisplay();
     }
 
     /**

@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -44,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     private View panelBmi;
     private View panelDiscount;
     private LinearLayout scientificRows;
+    /** Currently visible content panel (calculator, temp, emi, etc.). */
+    private View currentPanel;
 
     private BasicCalculatorScreen basicCalculatorScreen;
 
@@ -90,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
         setupDrawer();
         setupQuickBar();
+        setupBackPress();
 
         // If launched from Date Calculator drawer, open the requested panel
         String openPanel = getIntent() != null ? getIntent().getStringExtra(EXTRA_OPEN_PANEL) : null;
@@ -177,6 +181,29 @@ public class MainActivity extends AppCompatActivity {
         if (panel == panelCurrency) {
             com.nuramin.calculator.currency.CurrencyPanel.onPanelVisible(this, panelCurrency);
         }
+        currentPanel = panel;
+    }
+
+    /**
+     * Back button: from any other screen go to basic calculator; from basic/scientific calculator
+     * move app to background (expression is preserved until app is terminated or cleared by user).
+     */
+    private void setupBackPress() {
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (drawerLayout != null && drawerLayout.isDrawerOpen(Gravity.START)) {
+                    drawerLayout.closeDrawer(Gravity.START);
+                    return;
+                }
+                if (currentPanel != null && currentPanel != calculatorPanel) {
+                    showPanel(calculatorPanel, 0);
+                    return;
+                }
+                // On basic/scientific calculator: move to background, do not finish (expression stays)
+                moveTaskToBack(true);
+            }
+        });
     }
 
     /** Update topbar title when on calculator: "Basic Calculator" or "Scientific mode". */
