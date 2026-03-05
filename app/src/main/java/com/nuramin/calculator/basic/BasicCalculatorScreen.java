@@ -642,7 +642,9 @@ public class BasicCalculatorScreen {
         scrollDisplayToEnd();
     }
 
-    // ---- 9. Percentage: last number -> (number/100) ----
+    // ---- 9. Percentage: like standard calculators ----
+    // On press: append "%" after the last number (e.g. "500+10" -> "500+10%").
+    // On = : expand so "A+B%" = A + B% of A, "A−B%" = A - B% of A, "A×B%" = A*(B/100), "A÷B%" = A/(B/100).
     private void handlePercentage() {
         if (isResultDisplayed) {
             expression.setLength(0);
@@ -659,14 +661,13 @@ public class BasicCalculatorScreen {
         int start = i + 1;
         if (start >= len) return;
         String numStr = expression.substring(start, len);
-        double num;
         try {
-            num = Double.parseDouble(numStr);
+            Double.parseDouble(numStr);
         } catch (NumberFormatException e) {
             return;
         }
-        expression.setLength(start);
-        expression.append("(").append(num).append("/100)");
+        if (len > 0 && expression.charAt(len - 1) == '%') return;
+        expression.append("%");
         lastInputIsOperator = false;
         lastInputIsDecimal = false;
         updateDisplay();
@@ -737,8 +738,59 @@ public class BasicCalculatorScreen {
         scrollDisplayToEnd();
     }
 
-    /** Replace each "number%" with "(number/100)" for evaluation. */
+    /**
+     * Expand % for evaluation like standard calculators:
+     * - "A + B%" -> A + (A*B/100)  e.g. 500+10% = 550
+     * - "A − B%" -> A - (A*B/100)  e.g. 500−20% = 400
+     * - "A × B%" -> A*(B/100), "A ÷ B%" -> A/(B/100), standalone "B%" -> (B/100)
+     */
     private String expandPercentages(String expr) {
+        if (expr == null) return "";
+        String s = expr;
+        while (true) {
+            int[] plusMinusPercent = findFirstPlusMinusNumberPercent(s);
+            if (plusMinusPercent == null) break;
+            int opIdx = plusMinusPercent[0];
+            int numStart = plusMinusPercent[1];
+            int numEnd = plusMinusPercent[2];
+            String left = s.substring(0, opIdx).trim();
+            String numStr = s.substring(numStart, numEnd);
+            char op = s.charAt(opIdx);
+            String leftNorm = left.replaceAll("\\s+", "").replace('×', '*').replace('÷', '/').replace('−', '-');
+            String replacement = left + " " + op + " ((" + leftNorm + ")*" + numStr + "/100)";
+            s = replacement + s.substring(numEnd + 1);
+        }
+        return expandRemainingPercentAsDecimal(s);
+    }
+
+    /** Find first occurrence of (+ or −) (spaces) number %. Returns [opIndex, numStart, numEnd] or null. */
+    private int[] findFirstPlusMinusNumberPercent(String expr) {
+        for (int i = 0; i < expr.length(); i++) {
+            char c = expr.charAt(i);
+            if (c != '+' && c != '−' && c != '-') continue;
+            if (i == 0) continue;
+            int j = i + 1;
+            while (j < expr.length() && (Character.isWhitespace(expr.charAt(j)) || expr.charAt(j) == '.')) j++;
+            if (j >= expr.length()) continue;
+            int numStart = j;
+            while (j < expr.length()) {
+                char ch = expr.charAt(j);
+                if (Character.isDigit(ch) || ch == '.') j++;
+                else break;
+            }
+            if (j > numStart && j < expr.length() && expr.charAt(j) == '%') {
+                try {
+                    Double.parseDouble(expr.substring(numStart, j));
+                    return new int[]{i, numStart, j};
+                } catch (NumberFormatException ignored) {
+                }
+            }
+        }
+        return null;
+    }
+
+    /** Replace any remaining "number%" with "(number/100)" for ×, ÷, or standalone. */
+    private String expandRemainingPercentAsDecimal(String expr) {
         StringBuilder out = new StringBuilder();
         int i = 0;
         while (i < expr.length()) {
