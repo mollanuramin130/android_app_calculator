@@ -1,45 +1,19 @@
 package com.nuramin.calculator.util;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.Locale;
-
 /**
  * Shared number formatting and expression filtering for calculator screens.
+ * Number formatting is delegated to {@link AmountFormatter} for consistent display app-wide.
  */
 public final class CalculatorUtils {
 
-    private static final double LARGE_THRESHOLD = 1e9;
-    private static final double SMALL_THRESHOLD = 1e-3;
-
-    private static final DecimalFormat FORMATTER;
-    private static final DecimalFormat SCIENTIFIC_FORMATTER;
-
-    static {
-        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
-        symbols.setGroupingSeparator(',');
-        FORMATTER = new DecimalFormat("#,###.##", symbols);
-        FORMATTER.setGroupingUsed(true);
-        SCIENTIFIC_FORMATTER = new DecimalFormat("0.####E0", symbols);
-    }
-
+    /** Format a number for display (grouping, scientific when needed). Use everywhere: Basic, Scientific, EMI, Interest, etc. */
     public static String formatNumber(double value) {
-        if (Double.isNaN(value) || Double.isInfinite(value)) {
-            return "Error";
-        }
-        double abs = Math.abs(value);
-        if (abs >= LARGE_THRESHOLD || (abs > 0 && abs < SMALL_THRESHOLD)) {
-            return SCIENTIFIC_FORMATTER.format(value);
-        }
-        if (value == (long) value) {
-            return FORMATTER.format((long) value);
-        }
-        return FORMATTER.format(value);
+        return AmountFormatter.format(value);
     }
 
     /**
      * Keep only characters valid for calculator expression (digits, ., +, −, ×, ÷, (, ), %, ^, !,
-     * letters for sin/cos/tan/sqrt/ln/log/asin/acos/atan, π and e).
+     * letters for sin/cos/tan/sqrt/ln/log/asin/acos/atan, π and e). Commas are not allowed so pasted "1,000" becomes "1000".
      */
     public static String filterExpressionChars(CharSequence s) {
         if (s == null) return "";
@@ -52,7 +26,7 @@ public final class CalculatorUtils {
                 else if (c != ' ') sb.append(c);
             }
         }
-        return sb.toString();
+        return AmountFormatter.stripGrouping(sb);
     }
 
     private CalculatorUtils() {}

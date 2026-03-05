@@ -25,6 +25,7 @@ import com.nuramin.sunsetcoralcalculator.R;
 import com.nuramin.calculator.adapter.HistoryAdapter;
 import com.nuramin.calculator.common.AppConstants;
 import com.nuramin.calculator.model.HistoryEntry;
+import com.nuramin.calculator.util.AmountFormatter;
 import com.nuramin.calculator.util.CalculatorUtils;
 import com.nuramin.calculator.util.ExprParser;
 import com.nuramin.calculator.util.HistoryStorage;
@@ -719,13 +720,14 @@ public class BasicCalculatorScreen {
             tvExpression.setVisibility(View.VISIBLE);
         }
         lastValidLiveResult = resultStr;
+        String resultRaw = AmountFormatter.stripGrouping(resultStr);
         if (tvExpression != null) {
             tvExpression.setText(resultStr);
             tvExpression.setSelection(resultStr.length());
         }
         if (tvResult != null) tvResult.setText("");
         expression.setLength(0);
-        expression.append(resultStr.replace(",", ""));
+        expression.append(resultRaw);
         updatingFromCode = false;
         lastInputIsOperator = false;
         lastInputIsDecimal = false;
@@ -835,10 +837,14 @@ public class BasicCalculatorScreen {
 
     private String formatResult(double value) {
         if (Double.isNaN(value) || Double.isInfinite(value)) return "Error";
-        if (value == Math.rint(value)) return CalculatorUtils.formatNumber((long) value);
+        if (value == Math.rint(value)) return AmountFormatter.format((long) value);
         String s = String.format(java.util.Locale.US, "%.6f", value);
         if (s.contains(".")) s = s.replaceAll("0+$", "").replaceAll("\\.$", "");
-        return s;
+        try {
+            return AmountFormatter.format(Double.parseDouble(s));
+        } catch (NumberFormatException e) {
+            return s;
+        }
     }
 
     /**
@@ -872,9 +878,11 @@ public class BasicCalculatorScreen {
         } else {
             tvExpression.setVisibility(View.VISIBLE);
             updatingFromCode = true;
-            tvExpression.setText(expr);
-            int sel = (pendingSelectionAfterUpdate != null) ? Math.max(0, Math.min(pendingSelectionAfterUpdate, expr.length())) : expr.length();
-            tvExpression.setSelection(sel);
+            String displayExpr = AmountFormatter.formatExpressionForDisplay(expr);
+            tvExpression.setText(displayExpr);
+            int rawSel = (pendingSelectionAfterUpdate != null) ? Math.max(0, Math.min(pendingSelectionAfterUpdate, expr.length())) : expr.length();
+            int displaySel = AmountFormatter.rawIndexToFormattedIndex(displayExpr, expr, rawSel);
+            tvExpression.setSelection(displaySel);
             pendingSelectionAfterUpdate = null;
             updatingFromCode = false;
             String toEval = expandPercentages(expr).replace('×', '*').replace('÷', '/').replace('−', '-').replaceAll("\\s+", "");

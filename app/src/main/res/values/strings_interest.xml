@@ -17,5 +17,6 @@
     <string name="int_simple_interest_label">Simple Interest</string>
     <string name="int_view_breakdown">View Breakdown</string>
     <string name="int_years">Years</string>
+    <string name="int_months">Months</string>
     <string name="int_rupee">₹</string>
 </resources>

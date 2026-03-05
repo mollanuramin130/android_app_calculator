@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.nuramin.calculator.model.HistoryEntry;
+import com.nuramin.calculator.util.AmountFormatter;
 import com.nuramin.sunsetcoralcalculator.R;
 
 import java.util.List;
@@ -67,7 +68,7 @@ public class HistoryAdapter extends ArrayAdapter<HistoryEntry> {
         TextView resultView = row.findViewById(R.id.history_result);
         TextView timeView = row.findViewById(R.id.history_timestamp);
         ImageButton useBtn = row.findViewById(R.id.history_btn_use);
-        if (exprView != null) exprView.setText(exprPart);
+        if (exprView != null) exprView.setText(AmountFormatter.formatExpressionForDisplay(exprPart));
         if (resultView != null) resultView.setText(resultPart);
         if (timeView != null) {
             if (timestamp != null && timestamp > 0) {

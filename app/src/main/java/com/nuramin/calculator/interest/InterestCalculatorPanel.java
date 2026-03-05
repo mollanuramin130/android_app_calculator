@@ -1,9 +1,11 @@
 package com.nuramin.calculator.interest;
 
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -14,10 +16,13 @@ import com.nuramin.calculator.util.CalculatorUtils;
 import com.nuramin.calculator.util.ConverterUiHelper;
 
 /**
- * Interest Calculator: simple/compound, principal, rate, time; calculate; result and breakdown.
+ * Interest Calculator: simple/compound, principal, rate, time (in Years or Months); calculate; result and breakdown.
  * Nav and overflow are handled by the main activity toolbar.
  */
 public final class InterestCalculatorPanel {
+
+    private static final int UNIT_YEARS = 0;
+    private static final int UNIT_MONTHS = 1;
 
     public static void setup(View panel, @Nullable DrawerLayout drawerLayout, @Nullable View.OnClickListener onOverflowClick) {
         if (panel == null) return;
@@ -26,6 +31,7 @@ public final class InterestCalculatorPanel {
         EditText principalEt = panel.findViewById(R.id.interest_principal);
         EditText rateEt = panel.findViewById(R.id.interest_rate);
         EditText timeEt = panel.findViewById(R.id.interest_time);
+        Spinner timeUnitSpinner = panel.findViewById(R.id.interest_time_unit);
         Button calculateBtn = panel.findViewById(R.id.interest_calculate);
         View resultCard = panel.findViewById(R.id.interest_result_card);
         TextView resultTv = panel.findViewById(R.id.interest_result);
@@ -34,14 +40,28 @@ public final class InterestCalculatorPanel {
         TextView breakdownInterestLabelTv = panel.findViewById(R.id.interest_breakdown_interest_label);
         TextView breakdownInterestTv = panel.findViewById(R.id.interest_breakdown_interest);
 
+        if (timeUnitSpinner != null) {
+            String[] units = new String[]{
+                    panel.getContext().getString(R.string.int_years),
+                    panel.getContext().getString(R.string.int_months)
+            };
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(panel.getContext(),
+                    android.R.layout.simple_spinner_item, units);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            timeUnitSpinner.setAdapter(adapter);
+            timeUnitSpinner.setSelection(UNIT_YEARS);
+        }
+
         if (calculateBtn != null && resultCard != null && resultTv != null && totalAmountTv != null
                 && breakdownPrincipalTv != null && breakdownInterestLabelTv != null && breakdownInterestTv != null
                 && principalEt != null && rateEt != null && timeEt != null && interestType != null) {
             calculateBtn.setOnClickListener(v -> {
                 double principal = parseDouble(principalEt.getText(), 50000);
                 double ratePct = parseDouble(rateEt.getText(), 8.5);
-                int years = parseInt(timeEt.getText(), 5);
-                if (principal <= 0 || years <= 0) {
+                double timeValue = parseDouble(timeEt.getText(), 5);
+                boolean isMonths = timeUnitSpinner != null && timeUnitSpinner.getSelectedItemPosition() == UNIT_MONTHS;
+                double yearsForCalc = isMonths ? (timeValue / 12.0) : timeValue;
+                if (principal <= 0 || yearsForCalc <= 0) {
                     resultCard.setVisibility(View.GONE);
                     return;
                 }
@@ -49,10 +69,10 @@ public final class InterestCalculatorPanel {
                 double interest;
                 double totalAmount;
                 if (isCompound) {
-                    totalAmount = principal * Math.pow(1 + ratePct / 100, years);
+                    totalAmount = principal * Math.pow(1 + ratePct / 100, yearsForCalc);
                     interest = totalAmount - principal;
                 } else {
-                    interest = principal * ratePct * years / 100;
+                    interest = principal * ratePct * yearsForCalc / 100;
                     totalAmount = principal + interest;
                 }
                 String rupee = panel.getContext().getString(R.string.int_rupee);

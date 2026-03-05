@@ -218,13 +218,15 @@
                         android:gravity="center_vertical|end"
                         android:paddingStart="8dp"
                         android:paddingEnd="8dp" />
-                    <TextView
+                    <Spinner
+                        android:id="@+id/interest_time_unit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/int_years"
-                        android:textColor="@color/int_text_secondary"
-                        android:textSize="15sp"
-                        android:layout_marginEnd="4dp" />
+                        android:minWidth="80dp"
+                        android:background="@android:color/transparent"
+                        android:spinnerMode="dropdown"
+                        android:paddingStart="4dp"
+                        android:paddingEnd="24dp" />
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
