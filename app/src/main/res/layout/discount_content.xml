@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/discount_screen_bg">
+    android:background="@color/mode_screen_bg">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -49,7 +49,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="$75.00"
+                        android:text="75.00"
                         android:textColor="@color/discount_positive"
                         android:textSize="44sp"
                         android:textStyle="bold" />
@@ -59,7 +59,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="You Save $25.00"
+                        android:text="@string/discount_you_save"
                         android:textColor="@color/discount_accent"
                         android:textSize="16sp" />
 
@@ -94,7 +94,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
-                                android:text="$100.00"
+                                android:text="100.00"
                                 android:textColor="@color/discount_text_primary"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
@@ -138,7 +138,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
-                                android:text="-$25.00"
+                                android:text="-25.00"
                                 android:textColor="@color/discount_text_primary"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
@@ -159,14 +159,6 @@
                 android:paddingEnd="16dp"
                 android:elevation="4dp">
 
-                <TextView
-                    android:layout_width="24dp"
-                    android:layout_height="wrap_content"
-                    android:text="$"
-                    android:textColor="@color/discount_text_secondary"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:layout_marginEnd="8dp" />
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -287,14 +279,6 @@
                 android:elevation="4dp">
 
                 <TextView
-                    android:layout_width="24dp"
-                    android:layout_height="wrap_content"
-                    android:text="$"
-                    android:textColor="@color/discount_text_secondary"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:layout_marginEnd="8dp" />
-                <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -368,7 +352,7 @@
                         android:id="@+id/discount_breakdown_line1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Original Price: $100.00"
+                        android:text="@string/discount_breakdown_original"
                         android:textColor="@color/discount_text_primary"
                         android:textSize="14sp"
                         android:layout_marginBottom="8dp" />
@@ -376,7 +360,7 @@
                         android:id="@+id/discount_breakdown_line2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Discount: -25% -$25.00"
+                        android:text="@string/discount_breakdown_discount"
                         android:textColor="@color/discount_text_primary"
                         android:textSize="14sp"
                         android:layout_marginBottom="8dp" />
@@ -384,7 +368,7 @@
                         android:id="@+id/discount_breakdown_line3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Price Off: -$25.00"
+                        android:text="@string/discount_breakdown_price_off"
                         android:textColor="@color/discount_text_primary"
                         android:textSize="14sp"
                         android:layout_marginBottom="8dp" />
@@ -392,7 +376,7 @@
                         android:id="@+id/discount_breakdown_final"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Final Price: $75.00"
+                        android:text="@string/discount_breakdown_final"
                         android:textColor="@color/discount_positive"
                         android:textSize="14sp"
                         android:textStyle="bold" />

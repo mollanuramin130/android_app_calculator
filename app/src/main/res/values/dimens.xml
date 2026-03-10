@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- App toolbar: same style for Basic Calculator, Temperature, EMI, Interest, Currency, Date, BMI, Discount -->
+    <dimen name="app_toolbar_height">56dp</dimen>
+    <dimen name="app_toolbar_elevation">4dp</dimen>
+    <dimen name="app_toolbar_padding_horizontal">16dp</dimen>
+    <dimen name="app_toolbar_title_text_size">18sp</dimen>
+
     <dimen name="display_corner_radius">20dp</dimen>
     <dimen name="button_corner_radius">16dp</dimen>
     <dimen name="button_elevation">2dp</dimen>

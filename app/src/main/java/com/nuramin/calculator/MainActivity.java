@@ -26,6 +26,9 @@ import com.nuramin.calculator.date.DateCalculatorPanel;
 import com.nuramin.calculator.emi.EmiCalculatorPanel;
 import com.nuramin.calculator.interest.InterestCalculatorPanel;
 import com.nuramin.calculator.temperature.TemperaturePanel;
+import com.nuramin.calculator.memorygame.MemoryNumberGridGameScreen;
+import com.nuramin.calculator.mathspeed.MathSpeedGameController;
+import com.nuramin.calculator.puzzle.NumberTargetPuzzleGameScreen;
 
 /**
  * Main activity: hosts drawer, toolbar, and all mode panels.
@@ -44,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
     private View panelDateCalc;
     private View panelBmi;
     private View panelDiscount;
+    private View panelMemoryGridGame;
+    private View panelNumberTargetPuzzle;
+    private View panelMathSpeedGame;
     private LinearLayout scientificRows;
     /** Currently visible content panel (calculator, temp, emi, etc.). */
     private View currentPanel;
@@ -76,6 +82,9 @@ public class MainActivity extends AppCompatActivity {
         panelDateCalc = findViewById(R.id.panel_date_calc);
         panelBmi = findViewById(R.id.panel_bmi);
         panelDiscount = findViewById(R.id.panel_discount);
+        panelMemoryGridGame = findViewById(R.id.panel_memory_grid_game);
+        panelNumberTargetPuzzle = findViewById(R.id.panel_number_target_puzzle);
+        panelMathSpeedGame = findViewById(R.id.panel_math_speed_game);
         scientificRows = findViewById(R.id.scientific_rows);
 
         basicCalculatorScreen = new BasicCalculatorScreen(this);
@@ -90,6 +99,9 @@ public class MainActivity extends AppCompatActivity {
         DateCalculatorPanel.setup(panelDateCalc, drawerLayout, onOverflowClick);
         BmiCalculatorPanel.setup(panelBmi, drawerLayout, onOverflowClick);
         DiscountCalculatorPanel.setup(panelDiscount, drawerLayout, onOverflowClick);
+        MemoryNumberGridGameScreen.setup(panelMemoryGridGame, drawerLayout, onOverflowClick);
+        NumberTargetPuzzleGameScreen.setup(panelNumberTargetPuzzle, drawerLayout, onOverflowClick);
+        MathSpeedGameController.setup(panelMathSpeedGame, drawerLayout, onOverflowClick);
 
         setupDrawer();
         setupQuickBar();
@@ -111,6 +123,12 @@ public class MainActivity extends AppCompatActivity {
             showPanel(panelBmi, R.string.bmi_calculator_title);
         } else if ("discount".equals(openPanel)) {
             showPanel(panelDiscount, R.string.discount_calculator_title);
+        } else if ("memory_grid_game".equals(openPanel)) {
+            showPanel(panelMemoryGridGame, R.string.mode_memory_number_grid);
+        } else if ("number_target_puzzle".equals(openPanel)) {
+            showPanel(panelNumberTargetPuzzle, R.string.mode_number_target_puzzle);
+        } else if ("math_speed_game".equals(openPanel)) {
+            showPanel(panelMathSpeedGame, R.string.math_speed_game_title);
         } else {
             showPanel(calculatorPanel, 0);
         }
@@ -121,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /** Wire 3-bars (drawer) and drawer items. Toolbar is shared; 3-bars/3-dots work on all panels. */
     private void setupDrawer() {
         ImageButton btnDrawer = findViewById(R.id.btn_drawer);
         if (btnDrawer != null) {
@@ -135,6 +154,9 @@ public class MainActivity extends AppCompatActivity {
         setDrawerItemClick(R.id.drawer_item_date_calc, panelDateCalc, R.string.date_calculator_title);
         setDrawerItemClick(R.id.drawer_item_bmi, panelBmi, R.string.bmi_calculator_title);
         setDrawerItemClick(R.id.drawer_item_discount, panelDiscount, R.string.discount_calculator_title);
+        setDrawerItemClick(R.id.drawer_item_memory_grid_game, panelMemoryGridGame, R.string.mode_memory_number_grid);
+        setDrawerItemClick(R.id.drawer_item_number_target_puzzle, panelNumberTargetPuzzle, R.string.mode_number_target_puzzle);
+        setDrawerItemClick(R.id.drawer_item_math_speed_game, panelMathSpeedGame, R.string.math_speed_game_title);
 
         View historyItem = findViewById(R.id.drawer_item_history);
         if (historyItem != null) {
@@ -156,6 +178,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showPanel(View panel, int titleResId) {
+        if (panelMathSpeedGame != null && currentPanel == panelMathSpeedGame && panel != panelMathSpeedGame) {
+            MathSpeedGameController.pauseWhenPanelHidden(panelMathSpeedGame);
+        }
         calculatorPanel.setVisibility(panel == calculatorPanel ? View.VISIBLE : View.GONE);
         panelTemp.setVisibility(panel == panelTemp ? View.VISIBLE : View.GONE);
         panelEmi.setVisibility(panel == panelEmi ? View.VISIBLE : View.GONE);
@@ -164,8 +189,11 @@ public class MainActivity extends AppCompatActivity {
         panelDateCalc.setVisibility(panel == panelDateCalc ? View.VISIBLE : View.GONE);
         panelBmi.setVisibility(panel == panelBmi ? View.VISIBLE : View.GONE);
         panelDiscount.setVisibility(panel == panelDiscount ? View.VISIBLE : View.GONE);
+        if (panelMemoryGridGame != null) panelMemoryGridGame.setVisibility(panel == panelMemoryGridGame ? View.VISIBLE : View.GONE);
+        if (panelNumberTargetPuzzle != null) panelNumberTargetPuzzle.setVisibility(panel == panelNumberTargetPuzzle ? View.VISIBLE : View.GONE);
+        if (panelMathSpeedGame != null) panelMathSpeedGame.setVisibility(panel == panelMathSpeedGame ? View.VISIBLE : View.GONE);
 
-        // Always show main toolbar (same as Basic Calculator); only title changes per screen.
+        // Single app topbar (app_toolbar.xml): same style for all 8 screens. Only title text changes.
         boolean isBasicCalculator = (panel == calculatorPanel);
         if (mainToolbar != null) {
             mainToolbar.setVisibility(View.VISIBLE);
@@ -214,6 +242,7 @@ public class MainActivity extends AppCompatActivity {
         modeTitle.setText(scientificVisible ? R.string.quick_scientific_mode : R.string.mode_basic_calculator);
     }
 
+    /** Wire quick bar (calculator panel) and 3-dot overflow in app_toolbar; 3-dots work on all panels. */
     private void setupQuickBar() {
         View quickScientific = findViewById(R.id.quick_scientific_toggle_wrapper);
         if (quickScientific != null && scientificRows != null) {

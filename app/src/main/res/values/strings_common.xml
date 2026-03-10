@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Calculator: Sci, EMI, Age, Int</string>
+    <string name="back">Back</string>
     <string name="history">History</string>
     <string name="backspace">Backspace</string>
     <string name="delete">Delete</string>
@@ -55,4 +56,200 @@
     <string name="privacy_policy_title">Privacy Policy</string>
     <string name="privacy_policy_content">Nur\'s Custom Calculator respects your privacy.\n\n• This app does not collect personal data. Calculations are performed on your device only.\n\n• History is stored locally on your device and is not sent to any server.\n\n• If you contact us via Send feedback, we receive only the email content you choose to send (e.g. to mollanuramin130@gmail.com) to respond to your request.\n\n• We do not use analytics or third-party tracking in this app.\n\n• For questions about this policy, email mollanuramin130@gmail.com.</string>
     <string name="feedback_email_subject">Nur\'s Custom Calculator – Feedback</string>
+    <string name="math_speed_game_title">Math Speed Game</string>
+    <string name="math_game_score">Score: %d</string>
+    <string name="math_game_time">Time: %d sec</string>
+    <string name="math_game_start">START GAME</string>
+    <string name="math_game_reset">RESET</string>
+    <string name="math_game_over_title">Game Over</string>
+    <string name="math_game_over_message">Your Score: %1$d\nBest Score: %2$d</string>
+    <string name="math_game_play_again">Play Again</string>
+    <string name="math_game_exit">Exit</string>
+    <string name="mode_math_game">Math Speed Game</string>
+
+    <!-- Vision Test (Eye Visibility) -->
+    <string name="vision_test_title">Eye Visibility Test</string>
+    <string name="vision_test_instruction">Look at the center character and choose the correct option below.\nCharacters will become smaller every round.</string>
+    <string name="vision_test_score">Score: %d</string>
+    <string name="vision_test_round">Round: %d</string>
+    <string name="vision_test_perfect_title">🎉 Perfect Vision!</string>
+    <string name="vision_test_perfect_message">Congratulations! You achieved the highest visibility score of 100.\nYour eyesight clarity is excellent.</string>
+    <string name="vision_test_test_again">Test Again</string>
+    <string name="vision_test_close">Close</string>
+    <string name="vision_test_complete_title">Test Complete</string>
+    <string name="vision_test_your_score">Your Score: %d</string>
+    <string name="vision_test_vision_level">Vision Level:</string>
+    <string name="vision_test_level_low">Low Visibility</string>
+    <string name="vision_test_level_moderate">Moderate Visibility</string>
+    <string name="vision_test_level_good">Good Vision</string>
+    <string name="vision_test_level_excellent">Excellent Vision</string>
+    <string name="vision_test_retry">Retry Test</string>
+    <string name="mode_vision_test">Eye Visibility Test</string>
+    <string name="vision_test_level">Level %d</string>
+    <string name="vision_test_congrats_title">🎉 Congratulations!</string>
+    <string name="vision_test_score_result">Your Vision Score: %1$d / 100</string>
+    <string name="vision_test_share_result">Share Result</string>
+    <string name="vision_test_level3_instruction">Tap the square that is a slightly different color.</string>
+
+    <!-- Electricity Bill Calculator -->
+    <string name="electricity_bill_title">Electricity Bill Calculator</string>
+    <string name="mode_electricity_bill">Electricity Bill Calculator</string>
+    <string name="electricity_bill_estimated_bill">Estimated Bill</string>
+    <string name="electricity_bill_previous_reading">Previous Reading (kWh)</string>
+    <string name="electricity_bill_current_reading">Current Reading (kWh)</string>
+    <string name="electricity_bill_cost_per_unit">Cost Per Unit (₹)</string>
+    <string name="electricity_bill_hint_previous">Enter previous meter reading</string>
+    <string name="electricity_bill_hint_current">Enter current meter reading</string>
+    <string name="electricity_bill_hint_cost">Enter price per unit</string>
+    <string name="electricity_bill_tariff_type">Tariff Type</string>
+    <string name="electricity_bill_tariff_domestic">Domestic</string>
+    <string name="electricity_bill_tariff_commercial">Commercial</string>
+    <string name="electricity_bill_service_charge">Service Charge</string>
+    <string name="electricity_bill_tax_percentage">Tax Percentage</string>
+    <string name="electricity_bill_fuel_surcharge">Fuel Surcharge</string>
+    <string name="electricity_bill_btn_calculate">CALCULATE BILL</string>
+    <string name="electricity_bill_breakdown_units">Units Consumed</string>
+    <string name="electricity_bill_breakdown_energy">Energy Charge</string>
+    <string name="electricity_bill_breakdown_service">Service Charge</string>
+    <string name="electricity_bill_breakdown_tax">Tax Amount</string>
+    <string name="electricity_bill_breakdown_fuel">Fuel Surcharge</string>
+    <string name="electricity_bill_breakdown_final">Final Bill</string>
+    <string name="electricity_bill_units_format">%1$s Units</string>
+    <string name="electricity_bill_error_negative">Please enter valid non-negative numbers. Tax must be 0–100%.</string>
+    <string name="electricity_bill_error_reading_order">Previous reading cannot be greater than current reading.</string>
+
+    <!-- Mental Calculation Challenge -->
+    <string name="mental_calc_title">Mental Calculation Challenge</string>
+    <string name="mode_mental_calculation">Mental Calculation Challenge</string>
+    <string name="mental_calc_score">Score: %d</string>
+    <string name="mental_calc_time">Time: %ds</string>
+    <string name="mental_calc_level">Level: %s</string>
+    <string name="mental_calc_result_title">🎉 Calculation Master!</string>
+    <string name="mental_calc_result_message">Your Final Score: %1$d / 100\n\nMental Speed Level: %2$s</string>
+    <string name="mental_calc_play_again">Play Again</string>
+    <string name="mental_calc_close">Close</string>
+    <string name="mental_calc_instruction">Solve each calculation before time runs out. Wrong answers or time-out cost a life. Reach 100 to win!</string>
+
+    <!-- Number Target Puzzle Game -->
+    <string name="puzzle_title">Number Target Puzzle</string>
+    <string name="puzzle_game_title">Number Target Puzzle 🎯</string>
+    <string name="puzzle_subtitle">Use numbers and operators to reach the target value</string>
+    <string name="mode_number_target_puzzle">Number Target Puzzle</string>
+    <string name="puzzle_score">Score: %d</string>
+    <string name="puzzle_attempts">Attempts: %d</string>
+    <string name="puzzle_target">Target: %d</string>
+    <string name="puzzle_clear">CLEAR</string>
+    <string name="puzzle_submit">SUBMIT</string>
+    <string name="puzzle_incorrect_solution">Incorrect Solution</string>
+    <string name="puzzle_failed">Puzzle Failed</string>
+    <string name="puzzle_complete_title">Puzzle Complete 🎉</string>
+    <string name="puzzle_final_score">Final Score: %d</string>
+    <string name="puzzle_champion_title">🎉 Puzzle Champion!</string>
+    <string name="puzzle_result_message">Your Final Score: %1$d / 100\n\nLogic Skill Level: %2$s</string>
+    <string name="puzzle_play_again">PLAY AGAIN</string>
+    <string name="puzzle_perf_beginner">Beginner</string>
+    <string name="puzzle_perf_player">Puzzle Player</string>
+    <string name="puzzle_perf_expert">Puzzle Expert</string>
+    <string name="puzzle_perf_champion">Puzzle Champion 🏆</string>
+    <string name="puzzle_high_score_label">High Score: %d</string>
+    <string name="puzzle_close">Close</string>
+    <string name="puzzle_instruction">Combine the numbers using + − × ÷ to reach the target. Each number can be used once. 3 attempts per puzzle. Reach 100 to win!</string>
+
+    <!-- Ear Sound Test -->
+    <string name="ear_sound_test_title">Human Ear Sound Test</string>
+    <string name="ear_sound_test_subtitle">Check your hearing sensitivity — from easy to very quiet</string>
+    <string name="ear_sound_test_instruction">A tone will play at each level. Volume starts loud (easy to hear) and gets quieter step by step.\nTap HEARD if you hear it, NOT HEARD if you don’t. Works without headphones.</string>
+    <string name="ear_sound_test_warning">Use headphones in a quiet place for best accuracy. Not required for the test.</string>
+    <string name="ear_sound_test_level_format">Level %1$d — Volume %2$s%%</string>
+    <string name="ear_sound_test_level_placeholder">Level --</string>
+    <string name="ear_sound_test_status_start">Press START to begin hearing test</string>
+    <string name="ear_sound_test_sound_playing">Sound playing</string>
+    <string name="ear_sound_test_start_btn">START TEST</string>
+    <string name="ear_sound_test_heard">HEARD</string>
+    <string name="ear_sound_test_not_heard">NOT HEARD</string>
+    <string name="ear_sound_test_result_title">Hearing Test Result</string>
+    <string name="ear_sound_test_result_score">Minimum volume you could hear: %1$s%%</string>
+    <string name="ear_sound_test_category_excellent">Excellent Hearing</string>
+    <string name="ear_sound_test_category_good">Good Hearing</string>
+    <string name="ear_sound_test_category_average">Average Hearing</string>
+    <string name="ear_sound_test_category_low">Possible hearing limitation</string>
+    <string name="ear_sound_test_retest">RETEST</string>
+    <string name="mode_ear_sound_test">Ear Sound Test</string>
+    <string name="ear_sound_test_safety_title">Hearing Safety</string>
+    <string name="ear_sound_test_safety_message">Keep device volume between 40% - 60%.\nDo not increase to maximum.</string>
+    <string name="ear_sound_test_excellent_title">Excellent Hearing 🎉</string>
+    <string name="ear_sound_test_excellent_message">Your hearing sensitivity is very high!</string>
+
+    <!-- Reaction Time Test -->
+    <string name="reaction_test_title">Reaction Time Test</string>
+    <string name="reaction_test_subtitle">Measure how fast your brain reacts</string>
+    <string name="reaction_test_status_wait">Tap START and wait for the screen to turn GREEN</string>
+    <string name="reaction_test_btn_start">START TEST</string>
+    <string name="reaction_test_result_title">Reaction Result</string>
+    <string name="reaction_test_result_value">Your reaction time: %d ms</string>
+    <string name="reaction_test_rating_excellent">Excellent ⚡</string>
+    <string name="reaction_test_rating_good">Good 👍</string>
+    <string name="reaction_test_rating_average">Average 🙂</string>
+    <string name="reaction_test_rating_slow">Slow 🐢</string>
+    <string name="reaction_test_too_early">Too Early! Wait for green signal</string>
+    <string name="reaction_test_replay">REPLAY</string>
+    <string name="mode_reaction_time_test">Reaction Time Test</string>
+
+    <!-- Color Blindness Test -->
+    <string name="color_blind_test_title">Color Blindness Test</string>
+    <string name="color_blind_test_subtitle">Identify numbers hidden in colored circles</string>
+    <string name="color_blind_test_option_nothing">Nothing</string>
+    <string name="color_blind_test_result_normal">Normal Color Vision 🎉</string>
+    <string name="color_blind_test_result_mild">Mild Color Vision Deficiency ⚠</string>
+    <string name="color_blind_test_result_possible">Possible Color Blindness</string>
+    <string name="color_blind_test_retest">RETEST</string>
+    <string name="mode_color_blindness_test">Color Blindness Test</string>
+
+    <!-- Heart Rate Tap Test -->
+    <string name="heart_rate_test_title">Heart Rate Estimation</string>
+    <string name="heart_rate_test_subtitle">Tap the button according to your heartbeat rhythm</string>
+    <string name="heart_rate_test_btn_tap">TAP WITH HEARTBEAT</string>
+    <string name="heart_rate_test_tap_count">Tap Count: %d</string>
+    <string name="heart_rate_test_time">Time: %d sec</string>
+    <string name="heart_rate_test_result_title">Estimated Heart Rate</string>
+    <string name="heart_rate_test_result_bpm">%d BPM</string>
+    <string name="heart_rate_test_rating_low">Low Heart Rate</string>
+    <string name="heart_rate_test_rating_normal">Normal ❤️</string>
+    <string name="heart_rate_test_rating_elevated">Elevated ⚠</string>
+    <string name="heart_rate_test_rating_high">High Rate 🚨</string>
+    <string name="heart_rate_test_congrats_title">Healthy Heart Rhythm ❤️</string>
+    <string name="heart_rate_test_congrats_message">Your estimated heart rate is in the healthy range.</string>
+    <string name="heart_rate_test_retest">RETEST</string>
+    <string name="mode_heart_rate_test">Heart Rate Estimation</string>
+
+    <!-- Lightning Math Battle -->
+    <string name="lightning_math_title">Lightning Math Battle ⚡</string>
+    <string name="lightning_math_subtitle">Solve as many equations as possible before time runs out</string>
+    <string name="lightning_math_time_left">Time Left: %ds</string>
+    <string name="lightning_math_result_title">Battle Complete ⚡</string>
+    <string name="lightning_math_final_score">Final Score: %d</string>
+    <string name="lightning_math_replay">Replay</string>
+    <string name="lightning_math_instruction">Answer correctly for +10 points, wrong -5. Get 5 correct in a row for +20 combo bonus!</string>
+    <string name="mode_lightning_math_battle">Lightning Math Battle</string>
+
+    <!-- Memory Number Grid Game -->
+    <string name="memory_grid_title">Memory Number Grid 🧩</string>
+    <string name="memory_grid_subtitle">Memorize the numbers before they disappear</string>
+    <string name="memory_grid_level">Level %d</string>
+    <string name="memory_grid_level_format">Level %d</string>
+    <string name="memory_grid_score">Score: %d</string>
+    <string name="memory_grid_score_format">Score: %d</string>
+    <string name="memory_grid_start_btn_text">START MEMORY TEST</string>
+    <string name="memory_grid_result_title">Memory Challenge Result 🧠</string>
+    <string name="memory_grid_game_over_title">Game Over 🧠</string>
+    <string name="memory_grid_your_score">Your Score: %d</string>
+    <string name="memory_grid_play_again">PLAY AGAIN</string>
+    <string name="memory_grid_high_score_label">High Score: %1$d</string>
+    <string name="memory_grid_perf_beginner">Memory Beginner</string>
+    <string name="memory_grid_perf_skilled">Memory Skilled</string>
+    <string name="memory_grid_perf_expert">Memory Expert</string>
+    <string name="memory_grid_perf_master">Memory Master 🧠</string>
+    <string name="memory_grid_restart">Restart</string>
+    <string name="memory_grid_instruction">Memorize the numbers, then tap the cells in order (1, 2, 3…). Wrong tap = game over.</string>
+    <string name="mode_memory_number_grid">Memory Number Grid</string>
 </resources>

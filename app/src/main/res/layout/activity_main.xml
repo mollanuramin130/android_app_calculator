@@ -17,62 +17,10 @@
         android:background="@color/mode_screen_bg"
         android:fitsSystemWindows="true">
 
-    <!-- Top bar: 56dp, 16dp padding (matches Temp/EMI/Interest). 3-bar | title | 3-dots -->
-    <LinearLayout
-        android:id="@+id/main_toolbar"
+    <include
+        layout="@layout/app_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:minHeight="56dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:background="@color/mode_toolbar_bg"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:elevation="4dp">
-
-        <ImageButton
-            android:id="@+id/btn_drawer"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_menu"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Open menu"
-            android:padding="8dp"
-            android:scaleType="centerInside"
-            android:layout_gravity="center_vertical"
-            app:tint="@color/mode_toolbar_icon" />
-
-        <!-- Wrapper keeps space so 3-dots stays right when title is gone (Basic Calculator) -->
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-            <TextView
-                android:id="@+id/mode_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:textColor="@color/mode_toolbar_icon"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:visibility="gone"
-                android:ellipsize="end"
-                android:maxLines="1" />
-        </FrameLayout>
-
-        <ImageButton
-            android:id="@+id/btn_menu"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_more_vert"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Menu"
-            android:padding="8dp"
-            android:scaleType="centerInside"
-            android:layout_gravity="center_vertical"
-            app:tint="@color/mode_toolbar_icon" />
-    </LinearLayout>
+        android:layout_height="@dimen/app_toolbar_height" />
 
     <FrameLayout
         android:id="@+id/content_container"
@@ -643,6 +591,24 @@
     <include
         android:id="@+id/panel_discount"
         layout="@layout/discount_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+    <include
+        android:id="@+id/panel_memory_grid_game"
+        layout="@layout/memory_number_grid_screen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+    <include
+        android:id="@+id/panel_number_target_puzzle"
+        layout="@layout/number_target_puzzle_screen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+    <include
+        android:id="@+id/panel_math_speed_game"
+        layout="@layout/screen_math_speed_game"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" />

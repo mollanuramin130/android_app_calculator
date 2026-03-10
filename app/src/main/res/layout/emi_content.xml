@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/emi_screen_bg">
+    android:background="@color/mode_screen_bg">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:background="@color/emi_screen_bg"
+        android:background="@color/mode_screen_bg"
         android:padding="20dp">
 
         <LinearLayout
@@ -98,7 +98,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/emi_range_10k"
+                        android:text="@string/emi_range_1k"
                         android:textColor="@color/emi_text_secondary"
                         android:textSize="12sp" />
                     <SeekBar

@@ -13,7 +13,7 @@
     <string name="emi_interest">Interest</string>
     <string name="emi_loan_schedule">Loan EMI Schedule</string>
     <string name="emi_rupee_symbol">₹</string>
-    <string name="emi_range_10k">₹ 10k</string>
+    <string name="emi_range_1k">₹ 1k</string>
     <string name="emi_range_1cr">₹ 1 Cr</string>
     <string name="emi_range_1pct">1%</string>
     <string name="emi_range_25pct">25%</string>
