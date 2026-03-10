@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/bmi_screen_bg">
+    android:background="@color/mode_screen_bg">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"

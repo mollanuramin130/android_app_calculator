@@ -3,6 +3,7 @@ package com.nuramin.calculator.util;
 /**
  * Parses and evaluates mathematical expressions: +, -, *, /, ^, !, parentheses,
  * sqrt, sin, cos, tan, asin, acos, atan, ln, log, and constants π, e.
+ * % is handled by BasicCalculatorScreen as percent (e.g. 100%10 = 10) before parsing.
  */
 public final class ExprParser {
     private final String s;

@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/emi_screen_bg">
+    android:background="@color/mode_screen_bg">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:background="@color/emi_screen_bg"
+        android:background="@color/mode_screen_bg"
         android:padding="20dp">
 
         <LinearLayout

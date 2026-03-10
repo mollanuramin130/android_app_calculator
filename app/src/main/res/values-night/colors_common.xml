@@ -21,6 +21,7 @@
     <color name="mode_button_light">#FFB0B0B0</color>
     <color name="mode_button_text_light">#FFFFFFFF</color>
     <color name="mode_button_text_dark">#FF212121</color>
+    <!-- App-wide screen background: same for all screens. Dark theme. -->
     <color name="mode_screen_bg">#FF121212</color>
     <color name="mode_toolbar_icon">#FFFFFFFF</color>
     <color name="mode_toolbar_bg">#FF121212</color>
@@ -44,6 +45,117 @@
     <color name="quick_bar_icon_tint">#FFFFFFFF</color>
     <color name="drawer_header_bg">#FF37474F</color>
     <color name="drawer_header_text">#FFFFFFFF</color>
+
+    <!-- Math Speed Game (falling answers) - dark -->
+    <color name="math_speed_screen_bg">#121212</color>
+    <color name="math_speed_card_bg">#1E1E1E</color>
+    <color name="math_speed_falling_btn_bg">#2B2B2B</color>
+    <color name="math_speed_falling_btn_text">#FFFFFF</color>
+    <color name="math_speed_score_color">#4CAF50</color>
+    <color name="math_speed_timer_color">#FF7043</color>
+    <color name="math_speed_correct">#4CAF50</color>
+    <color name="math_speed_wrong">#EF5350</color>
+    <color name="math_speed_equation_text">#FFFFFF</color>
     <color name="date_card_stroke">#14FFFFFF</color>
     <color name="date_spinner_text">#FFFFFFFF</color>
+
+    <!-- Math Speed Game (dark) -->
+    <color name="math_game_screen_bg">#FF121212</color>
+    <color name="math_game_score_card_bg">#FF1E1E1E</color>
+    <color name="math_game_score_text">#FF4CAF50</color>
+    <color name="math_game_timer_text">#FFFF7043</color>
+    <color name="math_game_falling_btn_bg">#FF2B2B2B</color>
+    <color name="math_game_falling_btn_text">#FFFFFFFF</color>
+    <color name="math_game_equation_card_bg">#FF2A2A2A</color>
+    <color name="math_game_equation_text">#FFFFFFFF</color>
+    <color name="math_game_correct">#FF4CAF50</color>
+    <color name="math_game_wrong">#FFEF5350</color>
+    <color name="math_game_start_btn">#FF4CAF50</color>
+    <color name="math_game_reset_btn">#FFE53935</color>
+
+    <!-- Vision Test (Eye Visibility) - dark -->
+    <color name="vision_test_screen_bg">#FF121212</color>
+    <color name="vision_test_instruction_card_bg">#FF1E1E1E</color>
+    <color name="vision_test_instruction_text">#FFEEEEEE</color>
+    <color name="vision_test_score_text">#FF4CAF50</color>
+    <color name="vision_test_round_text">#FF607D8B</color>
+    <color name="vision_test_character_area_bg">#FF1C1C1C</color>
+    <color name="vision_test_character_text">#FFFFFFFF</color>
+    <color name="vision_test_answer_btn_bg">#FF2A2A2A</color>
+    <color name="vision_test_answer_btn_text">#FFFFFFFF</color>
+    <color name="vision_test_answer_btn_pressed">#FFD7CCC8</color>
+    <color name="vision_test_dialog_primary">#FF4CAF50</color>
+
+    <!-- Vision Test Progressive (same as light for consistency) -->
+    <color name="vision_test_game_bg">#FF0F172A</color>
+    <color name="vision_test_question_card_bg">#FF1E293B</color>
+    <color name="vision_test_option_btn_bg">#FF2563EB</color>
+    <color name="vision_test_progress_color">#FF38BDF8</color>
+    <color name="vision_test_progress_bg">#FF1E293B</color>
+    <color name="vision_test_level3_main">#FF4A90E2</color>
+    <color name="vision_test_level3_different">#FF4C92E4</color>
+    <color name="vision_test_level4_bg">#FFF5F5F5</color>
+    <color name="vision_test_level4_text">#FF8A8A8A</color>
+    <color name="vision_test_level5_text">#FFC7C7C7</color>
+    <color name="vision_test_level5_text_2">#FFC9C9C9</color>
+    <color name="vision_test_level5_text_3">#FFCCCCCC</color>
+    <color name="vision_test_level4_text_2">#FF8F8F8F</color>
+    <color name="vision_test_level4_text_3">#FF949494</color>
+    <color name="vision_test_level2_text">#FF000000</color>
+    <color name="vision_test_level2_text_2">#FF222222</color>
+    <color name="vision_test_level2_text_3">#FF333333</color>
+
+    <!-- Electricity Bill Calculator (dark) -->
+    <color name="electricity_bill_bg">#0F172A</color>
+    <color name="electricity_bill_card_bg">#1E293B</color>
+    <color name="electricity_bill_input_bg">#334155</color>
+    <color name="electricity_bill_primary">#2563EB</color>
+    <color name="electricity_bill_result_highlight">#38BDF8</color>
+    <color name="electricity_bill_label">#94A3B8</color>
+    <color name="electricity_bill_text">#CBD5F5</color>
+    <color name="electricity_bill_white">#FFFFFFFF</color>
+
+    <!-- Mental Calculation Challenge (dark) -->
+    <color name="mental_calc_bg">#0F172A</color>
+    <color name="mental_calc_question_card_bg">#1E293B</color>
+    <color name="mental_calc_question_text">#F9FAFB</color>
+    <color name="mental_calc_score_text">#2563EB</color>
+    <color name="mental_calc_timer_text">#F59E0B</color>
+    <color name="mental_calc_level_text">#10B981</color>
+    <color name="mental_calc_status_text">#E2E8F0</color>
+    <color name="mental_calc_answer_btn_bg">#2563EB</color>
+    <color name="mental_calc_ripple">#93C5FD</color>
+    <color name="mental_calc_correct">#10B981</color>
+    <color name="mental_calc_wrong">#EF4444</color>
+    <color name="mental_calc_result_title">#2563EB</color>
+    <color name="mental_calc_dialog_bg">#1E293B</color>
+
+    <!-- Number Target Puzzle (dark) -->
+    <color name="puzzle_screen_bg">#0F172A</color>
+    <color name="puzzle_status_text">#E2E8F0</color>
+    <color name="puzzle_score_accent">#2563EB</color>
+    <color name="puzzle_target_card_bg">#1E293B</color>
+    <color name="puzzle_target_text">#F9FAFB</color>
+    <color name="puzzle_calc_display_bg">#334155</color>
+    <color name="puzzle_calc_display_text">#E2E8F0</color>
+    <color name="puzzle_number_btn_bg">#2563EB</color>
+    <color name="puzzle_operator_btn_bg">#10B981</color>
+    <color name="puzzle_clear_btn_bg">#F59E0B</color>
+    <color name="puzzle_submit_btn_bg">#EF4444</color>
+    <color name="puzzle_correct">#10B981</color>
+    <color name="puzzle_wrong">#EF4444</color>
+    <color name="puzzle_dialog_bg">#1E293B</color>
+
+    <!-- Ear Sound Test (same gradient/colors for consistency) -->
+    <color name="ear_sound_test_gradient_start">#0F2027</color>
+    <color name="ear_sound_test_gradient_mid">#203A43</color>
+    <color name="ear_sound_test_gradient_end">#2C5364</color>
+    <color name="ear_sound_test_glass_panel">#26FFFFFF</color>
+    <color name="ear_sound_test_warning_bg">#FFF3CD</color>
+    <color name="ear_sound_test_warning_border">#FFB300</color>
+    <color name="ear_sound_test_start_btn_start">#00C6FF</color>
+    <color name="ear_sound_test_start_btn_end">#0072FF</color>
+    <color name="ear_sound_test_heard_btn">#4CAF50</color>
+    <color name="ear_sound_test_not_heard_btn">#E53935</color>
+    <color name="ear_sound_test_restart_btn">#5E35B1</color>
 </resources>

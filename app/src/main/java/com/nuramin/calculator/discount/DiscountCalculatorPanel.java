@@ -15,6 +15,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.snackbar.Snackbar;
 import com.nuramin.sunsetcoralcalculator.R;
+import com.nuramin.calculator.util.CalculatorUtils;
 import com.nuramin.calculator.util.ConverterUiHelper;
 
 /**
@@ -96,9 +97,9 @@ public final class DiscountCalculatorPanel {
                 discountAmount = round2(discountAmount);
                 effectivePercent = round2(effectivePercent);
 
-                String origStr = fmtCurrency(original);
-                String finalStr = fmtCurrency(finalPrice);
-                String offStr = fmtCurrency(discountAmount);
+                String origStr = CalculatorUtils.formatNumber(original);
+                String finalStr = CalculatorUtils.formatNumber(finalPrice);
+                String offStr = CalculatorUtils.formatNumber(discountAmount);
                 String pctStr = String.format("%.1f", effectivePercent);
 
                 mainValue.setText(finalStr);
@@ -137,10 +138,6 @@ public final class DiscountCalculatorPanel {
 
     private static double round2(double value) {
         return Math.round(value * 100) / 100.0;
-    }
-
-    private static String fmtCurrency(double value) {
-        return String.format("$%.2f", value);
     }
 
     private static double parseDouble(CharSequence s, double def) {

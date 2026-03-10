@@ -806,6 +806,31 @@ public class BasicCalculatorScreen {
                     String numStr = expr.substring(start, end);
                     try {
                         Double.parseDouble(numStr);
+                        // If % is followed by a number (e.g. 100%10), treat as "percent of": (100/100)*10 = 10
+                        int nextIdx = i + 1;
+                        if (nextIdx < expr.length()) {
+                            char next = expr.charAt(nextIdx);
+                            if (Character.isDigit(next) || next == '.') {
+                                int num2Start = nextIdx;
+                                while (nextIdx < expr.length()) {
+                                    char ch = expr.charAt(nextIdx);
+                                    if (Character.isDigit(ch) || ch == '.') nextIdx++;
+                                    else break;
+                                }
+                                String num2Str = expr.substring(num2Start, nextIdx);
+                                try {
+                                    Double.parseDouble(num2Str);
+                                    out.setLength(out.length() - (end - start));
+                                    out.append("(").append(numStr).append("/100)*").append(num2Str);
+                                    i = nextIdx;
+                                    continue;
+                                } catch (NumberFormatException ignored) {
+                                    out.append('%');
+                                    i++;
+                                    continue;
+                                }
+                            }
+                        }
                         out.setLength(out.length() - (end - start));
                         out.append("(").append(numStr).append("/100)");
                     } catch (NumberFormatException ignored) {
