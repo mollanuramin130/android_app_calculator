@@ -12,19 +12,19 @@ import com.nuramin.sunsetcoralcalculator.ai.core.AIResult;
 import com.nuramin.sunsetcoralcalculator.ai.core.IntentClassifier;
 
 /**
- * Core logic controller: decides LOCAL AI vs DeepSeek API.
- * - Simple input (EMI, age, discount, GST, or mostly numbers/operators) → existing AIEngine (offline).
- * - Complex input → DeepSeek API when network and API limit allow; else fallback to local AI.
- * Failsafe: no internet or API failure → always fallback to local AI. Never crash.
+ * Core logic controller: LOCAL AI vs cloud (Gemini free first, then DeepSeek).
+ * - Simple input → AIEngine (offline).
+ * - Complex input → Gemini API (free) or DeepSeek when key + network + limit allow; else local.
+ * Failsafe: no internet or API failure → fallback to local AI. Never crash.
  */
 public final class AIHybridManager {
 
     private static final String TAG = "AIHybridManager";
 
-    /** Pattern: mostly digits, spaces, and simple operators (for "simple" expression-like input). */
     private static final java.util.regex.Pattern SIMPLE_EXPRESSION = java.util.regex.Pattern.compile("^[\\d\\s.,+\\-×÷%()]+$", java.util.regex.Pattern.UNICODE_CASE);
 
     private final AIEngine localEngine = new AIEngine();
+    private final GeminiService geminiService = new GeminiService();
     private final DeepSeekService deepSeekService = new DeepSeekService();
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
@@ -64,16 +64,51 @@ public final class AIHybridManager {
             return;
         }
 
-        String apiKey = getApiKey(appContext);
-        if (apiKey == null || apiKey.isEmpty()) {
-            Log.w(TAG, "DeepSeek API key empty. Set it in AI screen menu (⋮) > API key, or add DEEPSEEK_API_KEY to local.properties and Rebuild.");
-            AIResult fallback = localEngine.process(trimmed);
-            AIResult withHint = new AIResult(fallback.getType(), fallback.getTitle(),
-                    fallback.getResultText(), "No API key. Use menu (⋮) > API key to paste your DeepSeek key.", false);
-            mainHandler.post(() -> callback.onResult(withHint));
+        String geminiKey = getGeminiKey(appContext);
+        String deepSeekKey = getDeepSeekKey(appContext);
+
+        if (geminiKey != null && !geminiKey.isEmpty()) {
+            geminiService.chat(trimmed, geminiKey, new GeminiService.Callback() {
+                @Override
+                public void onSuccess(@NonNull String content) {
+                    limiter.increaseCount();
+                    AIResult cloudResult = new AIResult(AIResult.Type.UNKNOWN, "AI", content, "", true);
+                    mainHandler.post(() -> callback.onResult(cloudResult));
+                }
+
+                @Override
+                public void onError(@NonNull String message) {
+                    Log.e(TAG, "Gemini API error: " + message);
+                    tryDeepSeekFallback(trimmed, deepSeekKey, limiter, callback, message);
+                }
+            });
             return;
         }
 
+        if (deepSeekKey != null && !deepSeekKey.isEmpty()) {
+            callDeepSeek(trimmed, deepSeekKey, limiter, callback);
+            return;
+        }
+
+        Log.w(TAG, "No cloud API key. Set Gemini (free) in menu (⋮) > API key, or add GEMINI_API_KEY to local.properties.");
+        AIResult fallback = localEngine.process(trimmed);
+        AIResult withHint = new AIResult(fallback.getType(), fallback.getTitle(),
+                fallback.getResultText(), "No API key. Use menu (⋮) > API key to paste your free Gemini key (aistudio.google.com/apikey).", false);
+        mainHandler.post(() -> callback.onResult(withHint));
+    }
+
+    private void tryDeepSeekFallback(String trimmed, String deepSeekKey, APILimiter limiter, Callback callback, String geminiError) {
+        if (deepSeekKey != null && !deepSeekKey.isEmpty()) {
+            callDeepSeek(trimmed, deepSeekKey, limiter, callback);
+        } else {
+            AIResult fallback = localEngine.process(trimmed);
+            AIResult withError = new AIResult(fallback.getType(), fallback.getTitle(),
+                    fallback.getResultText(), "Cloud failed: " + geminiError, fallback.isSuccess());
+            mainHandler.post(() -> callback.onResult(withError));
+        }
+    }
+
+    private void callDeepSeek(String trimmed, String apiKey, APILimiter limiter, Callback callback) {
         deepSeekService.chat(trimmed, apiKey, new DeepSeekService.Callback() {
             @Override
             public void onSuccess(@NonNull String content) {
@@ -86,9 +121,8 @@ public final class AIHybridManager {
             public void onError(@NonNull String message) {
                 Log.e(TAG, "DeepSeek API error: " + message);
                 AIResult fallback = localEngine.process(trimmed);
-                String errNote = "Cloud failed: " + message;
                 AIResult withError = new AIResult(fallback.getType(), fallback.getTitle(),
-                        fallback.getResultText(), errNote, fallback.isSuccess());
+                        fallback.getResultText(), "Cloud failed: " + message, fallback.isSuccess());
                 mainHandler.post(() -> callback.onResult(withError));
             }
         });
@@ -115,15 +149,21 @@ public final class AIHybridManager {
                 || lower.startsWith("can you") || lower.startsWith("could you");
     }
 
-    /** API key: BuildConfig (from local.properties) first, then SharedPreferences (set in-app via menu). */
-    private static String getApiKey(@NonNull Context context) {
-        String fromBuild = "";
+    private static String getGeminiKey(@NonNull Context context) {
+        try {
+            String k = com.nuramin.sunsetcoralcalculator.BuildConfig.GEMINI_API_KEY;
+            if (k != null && !k.trim().isEmpty()) return k.trim();
+        } catch (Exception ignored) { }
+        String fromPrefs = ApiKeyPrefs.getGemini(context);
+        return fromPrefs != null ? fromPrefs : "";
+    }
+
+    private static String getDeepSeekKey(@NonNull Context context) {
         try {
             String k = com.nuramin.sunsetcoralcalculator.BuildConfig.DEEPSEEK_API_KEY;
-            fromBuild = (k != null ? k.trim() : "");
+            if (k != null && !k.trim().isEmpty()) return k.trim();
         } catch (Exception ignored) { }
-        if (fromBuild.length() > 0) return fromBuild;
-        String fromPrefs = ApiKeyPrefs.get(context);
+        String fromPrefs = ApiKeyPrefs.getDeepSeek(context);
         return fromPrefs != null ? fromPrefs : "";
     }
 }

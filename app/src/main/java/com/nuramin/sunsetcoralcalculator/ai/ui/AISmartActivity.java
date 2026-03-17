@@ -102,7 +102,7 @@ public final class AISmartActivity extends AppCompatActivity {
     private void showApiKeyDialog() {
         String current = ApiKeyPrefs.get(this);
         final EditText edit = new EditText(this);
-        edit.setHint("sk-…");
+        edit.setHint("Paste Gemini key");
         edit.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
         edit.setMinEms(20);
         if (current != null && !current.isEmpty()) {

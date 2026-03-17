@@ -18,8 +18,8 @@
     <string name="ai_timeout_message">Request took too long. Check internet and try again.</string>
     <string name="ai_timeout_fallback">The request timed out. Please check your connection and try again.</string>
     <string name="ai_menu_api_key">API key</string>
-    <string name="ai_api_key_dialog_title">DeepSeek API key</string>
-    <string name="ai_api_key_dialog_message">Paste your API key from platform.deepseek.com. It will be stored on this device only.</string>
+    <string name="ai_api_key_dialog_title">AI API key (free)</string>
+    <string name="ai_api_key_dialog_message">Paste your Gemini API key from aistudio.google.com/apikey — free, no credit card. Stored on this device only.</string>
     <string name="ai_api_key_saved">API key saved. Try asking a question.</string>
     <string name="ai_api_key_cleared">API key cleared.</string>
     <string name="ai_api_key_clear_btn">Clear key</string>

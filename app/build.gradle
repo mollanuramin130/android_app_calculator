@@ -7,6 +7,7 @@ if (rootProject.file("local.properties").exists()) {
     localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 }
 def deepSeekKey = (localProperties.getProperty("DEEPSEEK_API_KEY", "") ?: "").trim()
+def geminiKey = (localProperties.getProperty("GEMINI_API_KEY", "") ?: "").trim()
 
 android {
     namespace 'com.nuramin.sunsetcoralcalculator'
@@ -19,6 +20,7 @@ android {
         versionCode 15
         versionName "v3.0.0"
         buildConfigField "String", "DEEPSEEK_API_KEY", "\"${deepSeekKey}\""
+        buildConfigField "String", "GEMINI_API_KEY", "\"${geminiKey}\""
     }
 
     signingConfigs {
