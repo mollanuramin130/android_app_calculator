@@ -392,12 +392,15 @@ public class BasicCalculatorScreen {
         return c == '+' || c == '−' || c == '×' || c == '÷' || c == '^';
     }
 
-    /** Current cursor/insert position in expression (for insert-at-cursor). */
+    /** Current cursor/insert position in expression (for insert-at-cursor). Display has commas; convert to raw index. */
     private int getInsertPosition() {
         if (tvExpression == null) return expression.length();
-        int sel = tvExpression.getSelectionStart();
-        if (sel < 0) return expression.length();
-        return Math.min(sel, expression.length());
+        int displaySel = tvExpression.getSelectionStart();
+        if (displaySel < 0) return expression.length();
+        CharSequence displayText = tvExpression.getText();
+        if (displayText == null) return expression.length();
+        int rawPos = AmountFormatter.formattedIndexToRawIndex(displayText.toString(), displaySel);
+        return Math.min(Math.max(0, rawPos), expression.length());
     }
 
     /** Insert string at cursor position; keeps cursor after inserted text. */
@@ -466,8 +469,12 @@ public class BasicCalculatorScreen {
         }
         if (pos < len) {
             expression.insert(pos, op);
+            // Normalize so repeated keypress (e.g. ×××, +++ in middle) collapses to one operator
+            String normalized = CalculatorUtils.sanitizeConsecutiveOperators(expression.toString());
+            expression.setLength(0);
+            expression.append(normalized);
             syncStateFromExpression();
-            pendingSelectionAfterUpdate = pos + 1;
+            pendingSelectionAfterUpdate = Math.min(pos + 1, normalized.length());
             updateDisplay();
             return;
         }
@@ -492,8 +499,12 @@ public class BasicCalculatorScreen {
         int pos = getInsertPosition();
         if (pos < expression.length()) {
             expression.insert(pos, ".");
+            String normalized = CalculatorUtils.sanitizeSingleDecimalPerNumber(expression.toString());
+            normalized = CalculatorUtils.sanitizeConsecutiveOperators(normalized);
+            expression.setLength(0);
+            expression.append(normalized);
             syncStateFromExpression();
-            pendingSelectionAfterUpdate = pos + 1;
+            pendingSelectionAfterUpdate = Math.min(pos + 1, normalized.length());
             updateDisplay();
             return;
         }
@@ -643,33 +654,22 @@ public class BasicCalculatorScreen {
     }
 
     // ---- 9. Percentage: like standard calculators ----
-    // On press: append "%" after the last number (e.g. "500+10" -> "500+10%").
+    // On press: insert "%" at cursor (e.g. "123x56|789" -> "123x56%|789"); at end same as before.
     // On = : expand so "A+B%" = A + B% of A, "A−B%" = A - B% of A, "A×B%" = A*(B/100), "A÷B%" = A/(B/100).
     private void handlePercentage() {
         if (isResultDisplayed) {
-            expression.setLength(0);
             isResultDisplayed = false;
+            // Keep current result in expression so % can be applied to it (e.g. 100 = then % -> 100%)
         }
         int len = expression.length();
         if (len == 0) return;
-        int i = len - 1;
-        while (i >= 0) {
-            char c = expression.charAt(i);
-            if (Character.isDigit(c) || c == '.') i--;
-            else break;
-        }
-        int start = i + 1;
-        if (start >= len) return;
-        String numStr = expression.substring(start, len);
-        try {
-            Double.parseDouble(numStr);
-        } catch (NumberFormatException e) {
-            return;
-        }
-        if (len > 0 && expression.charAt(len - 1) == '%') return;
-        expression.append("%");
+        int pos = getInsertPosition();
+        if (pos < 0 || pos > len) return;
+        if (pos > 0 && expression.charAt(pos - 1) == '%') return;
+        expression.insert(pos, "%");
         lastInputIsOperator = false;
         lastInputIsDecimal = false;
+        pendingSelectionAfterUpdate = pos + 1;
         updateDisplay();
     }
 
@@ -914,14 +914,9 @@ public class BasicCalculatorScreen {
 
     private String formatResult(double value) {
         if (Double.isNaN(value) || Double.isInfinite(value)) return "Error";
-        if (value == Math.rint(value)) return AmountFormatter.format((long) value);
-        String s = String.format(java.util.Locale.US, "%.6f", value);
-        if (s.contains(".")) s = s.replaceAll("0+$", "").replaceAll("\\.$", "");
-        try {
-            return AmountFormatter.format(Double.parseDouble(s));
-        } catch (NumberFormatException e) {
-            return s;
-        }
+        if (value == 0) return "0";
+        if (value == Math.rint(value) && Math.abs(value) <= Long.MAX_VALUE) return AmountFormatter.format((long) value);
+        return AmountFormatter.format(value);
     }
 
     /**

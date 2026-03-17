@@ -1,8 +1,12 @@
 package com.nuramin.calculator.emi;
 
+import android.content.Context;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Toast;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
@@ -12,17 +16,44 @@ import androidx.annotation.Nullable;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.nuramin.sunsetcoralcalculator.R;
+import com.nuramin.calculator.util.AmountFormatter;
 import com.nuramin.calculator.util.CalculatorUtils;
 import com.nuramin.calculator.util.ConverterUiHelper;
 
 /**
  * EMI Calculator: principal, rate, tenure with sliders; calculate; result card and pie chart.
- * Loan amount starts from 1k; slider and input stay in sync when user types or moves slider.
+ * Loan amount: min fixed 1k, max fixed 1 L; only the upper value becomes dynamic (steps up) when user enters above 1 L.
+ * Default value 15,000. Amount formats as user types. On clear, range resets to 1k–1 L.
  */
 public final class EmiCalculatorPanel {
 
-    private static final double PRINCIPAL_MIN = 1_000;
-    private static final double PRINCIPAL_MAX = 10_000_000;
+    private static final double PRINCIPAL_DEFAULT_MIN = 1_000;   // 1k
+    private static final double PRINCIPAL_DEFAULT_MAX = 100_000; // 1 Lakh
+
+    /** Steps for slider range: min/max snap to these when user enters value outside current range. */
+    private static final double[] PRINCIPAL_RANGE_STEPS = {
+        1_000,       // 1k
+        5_000,       // 5k
+        10_000,      // 10k
+        25_000,      // 25k
+        50_000,      // 50k
+        100_000,     // 1 L
+        250_000,     // 2.5 L
+        500_000,     // 5 L
+        1_000_000,   // 10 L
+        2_500_000,   // 25 L
+        5_000_000,   // 50 L
+        10_000_000,  // 1 Cr
+        25_000_000,  // 2.5 Cr
+        50_000_000,  // 5 Cr
+        100_000_000, // 10 Cr
+        250_000_000, // 25 Cr
+        500_000_000, // 50 Cr
+        1_000_000_000 // 100 Cr
+    };
+    /** Max digits in loan amount input; beyond this show toast to use slider. */
+    private static final int MAX_PRINCIPAL_DIGITS = 12;
+    private static final double PRINCIPAL_DEFAULT = 15_000;
     private static final double RATE_MIN = 1;
     private static final double RATE_MAX = 25;
     private static final int TENURE_MIN = 6;
@@ -35,6 +66,8 @@ public final class EmiCalculatorPanel {
 
         EditText principalEt = panel.findViewById(R.id.emi_principal);
         SeekBar principalSlider = panel.findViewById(R.id.emi_slider_principal);
+        TextView principalMinLabel = panel.findViewById(R.id.emi_principal_min_label);
+        TextView principalMaxLabel = panel.findViewById(R.id.emi_principal_max_label);
         EditText rateEt = panel.findViewById(R.id.emi_rate);
         SeekBar rateSlider = panel.findViewById(R.id.emi_slider_rate);
         EditText tenureEt = panel.findViewById(R.id.emi_tenure);
@@ -47,20 +80,27 @@ public final class EmiCalculatorPanel {
         EmiPieChartView pieChart = panel.findViewById(R.id.emi_pie_chart);
 
         if (principalSlider != null && principalEt != null) {
+            double[] range = new double[] { PRINCIPAL_DEFAULT_MIN, PRINCIPAL_DEFAULT_MAX };
+            panel.setTag(R.id.emi_principal, range);
             principalSlider.setMax(SLIDER_MAX);
-            principalSlider.setProgress(0);
-            setPrincipalFromProgress(principalEt, 0);
+            setPrincipalValue(principalEt, principalSlider, principalMinLabel, principalMaxLabel, panel, PRINCIPAL_DEFAULT);
+            updatePrincipalRangeLabels(principalMinLabel, principalMaxLabel, range[0], range[1]);
             principalSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    if (fromUser) setPrincipalFromProgress(principalEt, progress);
+                    if (fromUser) {
+                        double[] r = getPrincipalRange(panel);
+                        double value = r[0] + (progress / (double) SLIDER_MAX) * (r[1] - r[0]);
+                        setPrincipalText(principalEt, (long) value);
+                    }
                 }
                 @Override
                 public void onStartTrackingTouch(SeekBar seekBar) {}
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {}
             });
-            syncPrincipalSliderFromInput(principalEt, principalSlider);
+            principalEt.setFilters(new InputFilter[] { new MaxPrincipalDigitsFilter(MAX_PRINCIPAL_DIGITS, panel.getContext()) });
+            syncPrincipalFromInput(principalEt, principalSlider, principalMinLabel, principalMaxLabel, panel);
         }
         if (rateSlider != null && rateEt != null) {
             rateSlider.setMax(RATE_SLIDER_MAX);
@@ -98,7 +138,7 @@ public final class EmiCalculatorPanel {
         if (calculateBtn != null && resultCard != null && resultTv != null && totalInterestTv != null
                 && totalPaymentTv != null && pieChart != null && principalEt != null && rateEt != null && tenureEt != null) {
             calculateBtn.setOnClickListener(v -> {
-                double P = parseDouble(principalEt.getText(), 1000);
+                double P = parseDouble(principalEt.getText(), PRINCIPAL_DEFAULT);
                 double ratePct = parseDouble(rateEt.getText(), 10.5);
                 int n = parseInt(tenureEt.getText(), 24);
                 if (P <= 0 || n <= 0) {
@@ -126,17 +166,56 @@ public final class EmiCalculatorPanel {
         }
     }
 
-    private static void setPrincipalFromProgress(EditText et, int progress) {
-        double v = PRINCIPAL_MIN + (progress / (double) SLIDER_MAX) * (PRINCIPAL_MAX - PRINCIPAL_MIN);
-        et.setText(CalculatorUtils.formatNumber((long) v));
+    @SuppressWarnings("unchecked")
+    private static double[] getPrincipalRange(View panel) {
+        Object tag = panel != null ? panel.getTag(R.id.emi_principal) : null;
+        if (tag instanceof double[] && ((double[]) tag).length >= 2) {
+            return (double[]) tag;
+        }
+        return new double[] { PRINCIPAL_DEFAULT_MIN, PRINCIPAL_DEFAULT_MAX };
     }
 
-    private static int progressFromPrincipal(double value) {
-        double clamped = Math.max(PRINCIPAL_MIN, Math.min(PRINCIPAL_MAX, value));
-        return (int) Math.round((clamped - PRINCIPAL_MIN) / (PRINCIPAL_MAX - PRINCIPAL_MIN) * SLIDER_MAX);
+    private static void setPrincipalValue(EditText et, SeekBar slider, TextView minLabel, TextView maxLabel, View panel, double value) {
+        double[] range = getPrincipalRange(panel);
+        long clamped = (long) Math.max(range[0], Math.min(range[1], value));
+        setPrincipalText(et, clamped);
+        int progress = (int) Math.round((clamped - range[0]) / (range[1] - range[0]) * SLIDER_MAX);
+        progress = Math.max(0, Math.min(SLIDER_MAX, progress));
+        slider.setProgress(progress);
     }
 
-    private static void syncPrincipalSliderFromInput(EditText et, SeekBar slider) {
+    /** Format principal for display: always full digits with grouping, no exponential. */
+    private static void setPrincipalText(EditText et, long value) {
+        String formatted = AmountFormatter.format(value);
+        if (!formatted.equals(et.getText().toString())) {
+            et.setText(formatted);
+            et.setSelection(formatted.length());
+        }
+    }
+
+    private static String formatRangeLabel(double value) {
+        long v = (long) value;
+        if (v >= 10_000_000) return "₹ " + (v / 1_00_00_000) + " Cr";
+        if (v >= 1_00_000) return "₹ " + (v / 1_00_000) + " L";
+        if (v >= 1_000) return "₹ " + (v / 1_000) + "k";
+        return "₹ " + v;
+    }
+
+    private static void updatePrincipalRangeLabels(TextView minLabel, TextView maxLabel, double min, double max) {
+        if (minLabel != null) minLabel.setText(formatRangeLabel(min));
+        if (maxLabel != null) maxLabel.setText(formatRangeLabel(max));
+    }
+
+    /** Smallest step >= value; or value if beyond last step. */
+    private static double nextStepUp(double currentMax, double value) {
+        for (double step : PRINCIPAL_RANGE_STEPS) {
+            if (step >= value) return step;
+        }
+        return value;
+    }
+
+    private static void syncPrincipalFromInput(EditText et, SeekBar slider, TextView minLabel, TextView maxLabel, View panel) {
+        final boolean[] updating = { false };
         et.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -144,11 +223,38 @@ public final class EmiCalculatorPanel {
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(Editable editable) {
-                double v = parseDouble(editable, -1);
-                if (v >= 0) {
-                    int progress = progressFromPrincipal(v);
-                    if (slider.getProgress() != progress) slider.setProgress(progress);
+                if (updating[0]) return;
+                String raw = AmountFormatter.stripGrouping(editable);
+                if (raw.isEmpty() || raw.trim().isEmpty()) {
+                    double[] range = getPrincipalRange(panel);
+                    range[0] = PRINCIPAL_DEFAULT_MIN;
+                    range[1] = PRINCIPAL_DEFAULT_MAX;
+                    updatePrincipalRangeLabels(minLabel, maxLabel, range[0], range[1]);
+                    slider.setProgress(0);
+                    return;
                 }
+                double v = parseDouble(editable, -1);
+                if (v < 0) return;
+                double[] range = getPrincipalRange(panel);
+                range[0] = PRINCIPAL_DEFAULT_MIN; // Min always fixed at 1k
+                boolean rangeChanged = false;
+                if (v > range[1]) {
+                    range[1] = nextStepUp(range[1], v);
+                    rangeChanged = true;
+                }
+                if (rangeChanged) {
+                    updatePrincipalRangeLabels(minLabel, maxLabel, range[0], range[1]);
+                }
+                updating[0] = true;
+                String formatted = AmountFormatter.format((long) v);
+                if (!editable.toString().equals(formatted)) {
+                    et.setText(formatted);
+                    et.setSelection(formatted.length());
+                }
+                updating[0] = false;
+                int progress = (int) Math.round((v - range[0]) / (range[1] - range[0]) * SLIDER_MAX);
+                progress = Math.max(0, Math.min(SLIDER_MAX, progress));
+                if (slider.getProgress() != progress) slider.setProgress(progress);
             }
         });
     }
@@ -222,6 +328,38 @@ public final class EmiCalculatorPanel {
             return Integer.parseInt(s.toString().replace(",", "").trim());
         } catch (NumberFormatException e) {
             return def;
+        }
+    }
+
+    /** Limits loan amount to maxDigits (digits only). When user would exceed, rejects and shows toast to use slider. */
+    private static final class MaxPrincipalDigitsFilter implements InputFilter {
+        private final int maxDigits;
+        private final Context context;
+
+        MaxPrincipalDigitsFilter(int maxDigits, Context context) {
+            this.maxDigits = maxDigits;
+            this.context = context != null ? context.getApplicationContext() : null;
+        }
+
+        private static int countDigits(CharSequence s) {
+            int n = 0;
+            for (int i = 0; i < s.length(); i++) {
+                if (Character.isDigit(s.charAt(i))) n++;
+            }
+            return n;
+        }
+
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+            CharSequence before = dest.subSequence(0, dstart);
+            CharSequence replacement = source.subSequence(start, end);
+            CharSequence after = dest.subSequence(dend, dest.length());
+            StringBuilder sb = new StringBuilder(before).append(replacement).append(after);
+            if (countDigits(sb) <= maxDigits) return null;
+            if (context != null) {
+                Toast.makeText(context, R.string.emi_use_slider_for_large, Toast.LENGTH_SHORT).show();
+            }
+            return "";
         }
     }
 }

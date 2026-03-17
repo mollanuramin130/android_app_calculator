@@ -1,0 +1,430 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > NumberTargetPuzzleGameScreen</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.nuramin.calculator.puzzle</a>
+</div>
+
+<h1>Coverage Summary for Class: NumberTargetPuzzleGameScreen (com.nuramin.calculator.puzzle)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">NumberTargetPuzzleGameScreen</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/21)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/84)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/146)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">NumberTargetPuzzleGameScreen$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/22)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/84)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/147)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.nuramin.calculator.puzzle;
+&nbsp;
+&nbsp;import android.animation.AnimatorSet;
+&nbsp;import android.animation.ObjectAnimator;
+&nbsp;import android.content.Context;
+&nbsp;import android.content.SharedPreferences;
+&nbsp;import android.view.View;
+&nbsp;import android.view.animation.AccelerateDecelerateInterpolator;
+&nbsp;import android.widget.TextView;
+&nbsp;import android.widget.Toast;
+&nbsp;
+&nbsp;import androidx.annotation.Nullable;
+&nbsp;import androidx.appcompat.app.AlertDialog;
+&nbsp;import androidx.drawerlayout.widget.DrawerLayout;
+&nbsp;import androidx.gridlayout.widget.GridLayout;
+&nbsp;
+&nbsp;import com.google.android.material.button.MaterialButton;
+&nbsp;import com.google.android.material.card.MaterialCardView;
+&nbsp;import com.nuramin.sunsetcoralcalculator.R;
+&nbsp;
+&nbsp;/**
+&nbsp; * UI for Number Target Puzzle. Reuses shared app TopBar. Builds expression from number/operator
+&nbsp; * taps, submit/clear, animations, game complete and high score.
+&nbsp; */
+&nbsp;public final class NumberTargetPuzzleGameScreen {
+&nbsp;
+&nbsp;    private static final String PREFS_PUZZLE = &quot;number_target_puzzle_prefs&quot;;
+&nbsp;    private static final String KEY_HIGH_SCORE = &quot;TARGET_PUZZLE_HIGH_SCORE&quot;;
+&nbsp;
+&nbsp;    private final View panel;
+&nbsp;    private final Context context;
+&nbsp;    private final NumberTargetPuzzleEngine engine;
+&nbsp;
+&nbsp;    private TextView targetValue;
+&nbsp;    private TextView expressionText;
+&nbsp;    private TextView scoreText;
+&nbsp;    private MaterialButton[] numButtons;
+&nbsp;    private MaterialButton btnClear;
+&nbsp;    private MaterialButton btnSubmit;
+&nbsp;    private View expressionCard;
+<b class="nc">&nbsp;    private StringBuilder expression = new StringBuilder();</b>
+<b class="nc">&nbsp;    private boolean[] numberUsed = new boolean[NumberTargetPuzzleEngine.NUMBERS_COUNT];</b>
+&nbsp;    private boolean transitionInProgress;
+&nbsp;
+&nbsp;    public static void setup(View panel, @Nullable DrawerLayout drawerLayout,
+&nbsp;                            @Nullable View.OnClickListener onOverflowClick) {
+<b class="nc">&nbsp;        if (panel == null) return;</b>
+<b class="nc">&nbsp;        new NumberTargetPuzzleGameScreen(panel).bind();</b>
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    private NumberTargetPuzzleGameScreen(View panel) {</b>
+<b class="nc">&nbsp;        this.panel = panel;</b>
+<b class="nc">&nbsp;        this.context = panel.getContext();</b>
+<b class="nc">&nbsp;        this.engine = new NumberTargetPuzzleEngine();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void bind() {
+<b class="nc">&nbsp;        targetValue = panel.findViewById(R.id.puzzle_target_value);</b>
+<b class="nc">&nbsp;        expressionText = panel.findViewById(R.id.puzzle_expression_text);</b>
+<b class="nc">&nbsp;        scoreText = panel.findViewById(R.id.puzzle_score_text);</b>
+<b class="nc">&nbsp;        expressionCard = panel.findViewById(R.id.puzzle_expression_card);</b>
+<b class="nc">&nbsp;        btnClear = panel.findViewById(R.id.puzzle_btn_clear);</b>
+<b class="nc">&nbsp;        btnSubmit = panel.findViewById(R.id.puzzle_btn_submit);</b>
+&nbsp;
+<b class="nc">&nbsp;        int[] numIds = { R.id.puzzle_num_0, R.id.puzzle_num_1, R.id.puzzle_num_2, R.id.puzzle_num_3 };</b>
+<b class="nc">&nbsp;        numButtons = new MaterialButton[4];</b>
+<b class="nc">&nbsp;        for (int i = 0; i &lt; 4; i++) {</b>
+<b class="nc">&nbsp;            numButtons[i] = panel.findViewById(numIds[i]);</b>
+<b class="nc">&nbsp;            final int index = i;</b>
+<b class="nc">&nbsp;            if (numButtons[i] != null) {</b>
+<b class="nc">&nbsp;                numButtons[i].setOnClickListener(v -&gt; onNumberTap(index));</b>
+<b class="nc">&nbsp;                numButtons[i].setOnLongClickListener(v -&gt; true);</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        panel.findViewById(R.id.puzzle_op_plus).setOnClickListener(v -&gt; appendOperator(&quot; + &quot;));</b>
+<b class="nc">&nbsp;        panel.findViewById(R.id.puzzle_op_minus).setOnClickListener(v -&gt; appendOperator(&quot; − &quot;));</b>
+<b class="nc">&nbsp;        panel.findViewById(R.id.puzzle_op_multiply).setOnClickListener(v -&gt; appendOperator(&quot; × &quot;));</b>
+<b class="nc">&nbsp;        panel.findViewById(R.id.puzzle_op_divide).setOnClickListener(v -&gt; appendOperator(&quot; ÷ &quot;));</b>
+&nbsp;
+<b class="nc">&nbsp;        if (btnClear != null) btnClear.setOnClickListener(v -&gt; clearExpression());</b>
+<b class="nc">&nbsp;        if (btnSubmit != null) btnSubmit.setOnClickListener(v -&gt; onSubmit());</b>
+&nbsp;
+<b class="nc">&nbsp;        engine.reset();</b>
+<b class="nc">&nbsp;        refreshPuzzleUi();</b>
+<b class="nc">&nbsp;        refreshScoreAndExpression();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void onNumberTap(int index) {
+<b class="nc">&nbsp;        if (transitionInProgress || numberUsed[index]) return;</b>
+<b class="nc">&nbsp;        int n = engine.getCurrentNumbers()[index];</b>
+<b class="nc">&nbsp;        expression.append(n);</b>
+<b class="nc">&nbsp;        numberUsed[index] = true;</b>
+<b class="nc">&nbsp;        numButtons[index].setEnabled(false);</b>
+<b class="nc">&nbsp;        refreshExpressionDisplay();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void appendOperator(String op) {
+<b class="nc">&nbsp;        if (transitionInProgress) return;</b>
+<b class="nc">&nbsp;        if (expression.length() == 0) return;</b>
+<b class="nc">&nbsp;        char last = expression.charAt(expression.length() - 1);</b>
+<b class="nc">&nbsp;        if (last == &#39;+&#39; || last == &#39;−&#39; || last == &#39;×&#39; || last == &#39;÷&#39; || last == &#39; &#39;) return;</b>
+<b class="nc">&nbsp;        expression.append(op);</b>
+<b class="nc">&nbsp;        refreshExpressionDisplay();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void clearExpression() {
+<b class="nc">&nbsp;        if (transitionInProgress) return;</b>
+<b class="nc">&nbsp;        expression.setLength(0);</b>
+<b class="nc">&nbsp;        for (int i = 0; i &lt; numberUsed.length; i++) {</b>
+<b class="nc">&nbsp;            numberUsed[i] = false;</b>
+<b class="nc">&nbsp;            if (numButtons[i] != null) numButtons[i].setEnabled(true);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        refreshExpressionDisplay();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void refreshExpressionDisplay() {
+<b class="nc">&nbsp;        if (expressionText != null) {</b>
+<b class="nc">&nbsp;            String s = expression.toString().trim();</b>
+<b class="nc">&nbsp;            expressionText.setText(s.isEmpty() ? &quot;&quot; : s);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private void refreshPuzzleUi() {
+<b class="nc">&nbsp;        int[] nums = engine.getCurrentNumbers();</b>
+<b class="nc">&nbsp;        for (int i = 0; i &lt; 4 &amp;&amp; i &lt; numButtons.length; i++) {</b>
+<b class="nc">&nbsp;            if (numButtons[i] != null) {</b>
+<b class="nc">&nbsp;                numButtons[i].setText(String.valueOf(nums[i]));</b>
+<b class="nc">&nbsp;                numButtons[i].setEnabled(true);</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        if (targetValue != null) {</b>
+<b class="nc">&nbsp;            targetValue.setText(context.getString(R.string.puzzle_target, engine.getCurrentTarget()));</b>
+&nbsp;        }
+<b class="nc">&nbsp;        clearExpression();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void refreshScoreAndExpression() {
+<b class="nc">&nbsp;        if (scoreText != null) {</b>
+<b class="nc">&nbsp;            scoreText.setText(context.getString(R.string.puzzle_score, engine.getScore()));</b>
+&nbsp;        }
+<b class="nc">&nbsp;        refreshExpressionDisplay();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void setButtonsEnabled(boolean enabled) {
+<b class="nc">&nbsp;        transitionInProgress = !enabled;</b>
+<b class="nc">&nbsp;        for (MaterialButton b : numButtons) {</b>
+<b class="nc">&nbsp;            if (b != null) b.setEnabled(enabled);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (btnClear != null) btnClear.setEnabled(enabled);</b>
+<b class="nc">&nbsp;        if (btnSubmit != null) btnSubmit.setEnabled(enabled);</b>
+<b class="nc">&nbsp;        panel.findViewById(R.id.puzzle_op_plus).setEnabled(enabled);</b>
+<b class="nc">&nbsp;        panel.findViewById(R.id.puzzle_op_minus).setEnabled(enabled);</b>
+<b class="nc">&nbsp;        panel.findViewById(R.id.puzzle_op_multiply).setEnabled(enabled);</b>
+<b class="nc">&nbsp;        panel.findViewById(R.id.puzzle_op_divide).setEnabled(enabled);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void onSubmit() {
+<b class="nc">&nbsp;        if (transitionInProgress) return;</b>
+<b class="nc">&nbsp;        String expr = expression.toString().trim();</b>
+<b class="nc">&nbsp;        if (expr.isEmpty()) {</b>
+<b class="nc">&nbsp;            Toast.makeText(context, R.string.puzzle_incorrect_solution, Toast.LENGTH_SHORT).show();</b>
+&nbsp;            return;
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        NumberTargetPuzzleEngine.SubmitResult result = engine.submitExpression(expr);</b>
+&nbsp;
+<b class="nc">&nbsp;        switch (result) {</b>
+&nbsp;            case CORRECT:
+<b class="nc">&nbsp;                playCorrectAnimation();</b>
+<b class="nc">&nbsp;                scoreText.setText(context.getString(R.string.puzzle_score, engine.getScore()));</b>
+<b class="nc">&nbsp;                if (engine.isGameComplete()) {</b>
+<b class="nc">&nbsp;                    showGameCompleteDialog();</b>
+&nbsp;                } else {
+<b class="nc">&nbsp;                    setButtonsEnabled(false);</b>
+<b class="nc">&nbsp;                    panel.postDelayed(() -&gt; {</b>
+<b class="nc">&nbsp;                        engine.generatePuzzle();</b>
+<b class="nc">&nbsp;                        refreshPuzzleUi();</b>
+<b class="nc">&nbsp;                        setButtonsEnabled(true);</b>
+&nbsp;                    }, 600);
+&nbsp;                }
+&nbsp;                break;
+&nbsp;            case WRONG:
+<b class="nc">&nbsp;                Toast.makeText(context, R.string.puzzle_incorrect_solution, Toast.LENGTH_SHORT).show();</b>
+<b class="nc">&nbsp;                playWrongAnimation();</b>
+&nbsp;                break;
+&nbsp;            case WRONG_ATTEMPTS_EXHAUSTED:
+&nbsp;            case NO_ATTEMPTS_LEFT:
+<b class="nc">&nbsp;                Toast.makeText(context, R.string.puzzle_incorrect_solution, Toast.LENGTH_SHORT).show();</b>
+<b class="nc">&nbsp;                playWrongAnimation();</b>
+<b class="nc">&nbsp;                setButtonsEnabled(false);</b>
+<b class="nc">&nbsp;                panel.postDelayed(() -&gt; {</b>
+<b class="nc">&nbsp;                    engine.generatePuzzle();</b>
+<b class="nc">&nbsp;                    refreshPuzzleUi();</b>
+<b class="nc">&nbsp;                    setButtonsEnabled(true);</b>
+&nbsp;                }, 800);
+&nbsp;                break;
+&nbsp;            case INVALID_EXPRESSION:
+&nbsp;            case INVALID_NUMBERS:
+<b class="nc">&nbsp;                Toast.makeText(context, R.string.puzzle_incorrect_solution, Toast.LENGTH_SHORT).show();</b>
+<b class="nc">&nbsp;                playWrongAnimation();</b>
+&nbsp;                break;
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private void playCorrectAnimation() {
+<b class="nc">&nbsp;        if (expressionCard != null) {</b>
+<b class="nc">&nbsp;            expressionCard.setBackgroundColor(0xFF4CAF50);</b>
+<b class="nc">&nbsp;            ObjectAnimator scaleX = ObjectAnimator.ofFloat(expressionCard, View.SCALE_X, 1f, 1.03f, 1f);</b>
+<b class="nc">&nbsp;            ObjectAnimator scaleY = ObjectAnimator.ofFloat(expressionCard, View.SCALE_Y, 1f, 1.03f, 1f);</b>
+<b class="nc">&nbsp;            scaleX.setDuration(150);</b>
+<b class="nc">&nbsp;            scaleY.setDuration(150);</b>
+<b class="nc">&nbsp;            AnimatorSet set = new AnimatorSet();</b>
+<b class="nc">&nbsp;            set.playTogether(scaleX, scaleY);</b>
+<b class="nc">&nbsp;            set.setInterpolator(new AccelerateDecelerateInterpolator());</b>
+<b class="nc">&nbsp;            set.start();</b>
+<b class="nc">&nbsp;            panel.postDelayed(() -&gt; {</b>
+<b class="nc">&nbsp;                if (expressionCard instanceof MaterialCardView) {</b>
+<b class="nc">&nbsp;                    ((MaterialCardView) expressionCard).setCardBackgroundColor(0xFF455A64);</b>
+<b class="nc">&nbsp;                } else if (expressionCard != null) {</b>
+<b class="nc">&nbsp;                    expressionCard.setBackgroundColor(0xFF455A64);</b>
+&nbsp;                }
+&nbsp;            }, 400);
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private void playWrongAnimation() {
+<b class="nc">&nbsp;        if (expressionCard != null) {</b>
+<b class="nc">&nbsp;            ObjectAnimator shake = ObjectAnimator.ofFloat(expressionCard, View.TRANSLATION_X, 0f, -12f, 12f, -8f, 8f, 0f);</b>
+<b class="nc">&nbsp;            shake.setDuration(350);</b>
+<b class="nc">&nbsp;            shake.start();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private void showGameCompleteDialog() {
+<b class="nc">&nbsp;        int score = engine.getScore();</b>
+<b class="nc">&nbsp;        saveHighScoreIfNeeded(score);</b>
+<b class="nc">&nbsp;        int highScore = getHighScore();</b>
+<b class="nc">&nbsp;        String perf = getPerformanceString(score);</b>
+&nbsp;
+<b class="nc">&nbsp;        String message = context.getString(R.string.puzzle_final_score, score)</b>
+&nbsp;                + &quot;\n\n&quot; + perf
+<b class="nc">&nbsp;                + &quot;\n\n&quot; + context.getString(R.string.puzzle_high_score_label, highScore);</b>
+&nbsp;
+<b class="nc">&nbsp;        setButtonsEnabled(false);</b>
+<b class="nc">&nbsp;        new AlertDialog.Builder(panel.getContext())</b>
+<b class="nc">&nbsp;                .setTitle(R.string.puzzle_complete_title)</b>
+<b class="nc">&nbsp;                .setMessage(message)</b>
+<b class="nc">&nbsp;                .setCancelable(false)</b>
+<b class="nc">&nbsp;                .setPositiveButton(R.string.puzzle_play_again, (dialog, which) -&gt; {</b>
+<b class="nc">&nbsp;                    dialog.dismiss();</b>
+<b class="nc">&nbsp;                    engine.reset();</b>
+<b class="nc">&nbsp;                    refreshPuzzleUi();</b>
+<b class="nc">&nbsp;                    refreshScoreAndExpression();</b>
+<b class="nc">&nbsp;                    setButtonsEnabled(true);</b>
+&nbsp;                })
+<b class="nc">&nbsp;                .setOnDismissListener(dialog -&gt; setButtonsEnabled(true))</b>
+<b class="nc">&nbsp;                .show();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private String getPerformanceString(int score) {
+<b class="nc">&nbsp;        if (score &lt; 40) return context.getString(R.string.puzzle_perf_beginner);</b>
+<b class="nc">&nbsp;        if (score &lt; 70) return context.getString(R.string.puzzle_perf_player);</b>
+<b class="nc">&nbsp;        if (score &lt; 100) return context.getString(R.string.puzzle_perf_expert);</b>
+<b class="nc">&nbsp;        return context.getString(R.string.puzzle_perf_champion);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private int getHighScore() {
+<b class="nc">&nbsp;        return context.getSharedPreferences(PREFS_PUZZLE, Context.MODE_PRIVATE)</b>
+<b class="nc">&nbsp;                .getInt(KEY_HIGH_SCORE, 0);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void saveHighScoreIfNeeded(int score) {
+<b class="nc">&nbsp;        SharedPreferences prefs = context.getSharedPreferences(PREFS_PUZZLE, Context.MODE_PRIVATE);</b>
+<b class="nc">&nbsp;        int current = prefs.getInt(KEY_HIGH_SCORE, 0);</b>
+<b class="nc">&nbsp;        if (score &gt; current) {</b>
+<b class="nc">&nbsp;            prefs.edit().putInt(KEY_HIGH_SCORE, score).apply();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-17 15:16</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,241 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > HistoryAdapter</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.nuramin.calculator.adapter</a>
+</div>
+
+<h1>Coverage Summary for Class: HistoryAdapter (com.nuramin.calculator.adapter)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">HistoryAdapter</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/38)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/40)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">HistoryAdapter$OnDismissListener</td>
+  </tr>
+  <tr>
+    <td class="name">HistoryAdapter$OnUseExpressionListener</td>
+  </tr>
+  <tr>
+    <td class="name">HistoryAdapter$OnUseResultListener</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/38)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/40)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.nuramin.calculator.adapter;
+&nbsp;
+&nbsp;import android.content.Context;
+&nbsp;import android.text.format.DateFormat;
+&nbsp;import android.view.LayoutInflater;
+&nbsp;import android.view.View;
+&nbsp;import android.view.ViewGroup;
+&nbsp;import android.widget.ArrayAdapter;
+&nbsp;import android.widget.ImageButton;
+&nbsp;import android.widget.TextView;
+&nbsp;
+&nbsp;import com.nuramin.calculator.model.HistoryEntry;
+&nbsp;import com.nuramin.calculator.util.AmountFormatter;
+&nbsp;import com.nuramin.sunsetcoralcalculator.R;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;/**
+&nbsp; * Adapter for calculation history list. Shows expression, result, optional timestamp. Notifies when user taps &quot;USE&quot;.
+&nbsp; */
+&nbsp;public class HistoryAdapter extends ArrayAdapter&lt;HistoryEntry&gt; {
+&nbsp;
+&nbsp;    public interface OnUseResultListener {
+&nbsp;        void onUseResult(String resultValue);
+&nbsp;    }
+&nbsp;
+&nbsp;    public interface OnUseExpressionListener {
+&nbsp;        void onUseExpression(String expression);
+&nbsp;    }
+&nbsp;
+&nbsp;    public interface OnDismissListener {
+&nbsp;        void onDismiss(int position);
+&nbsp;    }
+&nbsp;
+&nbsp;    /** 0 = Recent (USE + dismiss), 1 = Old (USE result + USE expression, no dismiss). */
+<b class="nc">&nbsp;    private int currentHistoryTab = 0;</b>
+&nbsp;
+&nbsp;    private final OnUseResultListener useListener;
+&nbsp;    private final OnUseExpressionListener useExpressionListener;
+&nbsp;    private final OnDismissListener dismissListener;
+&nbsp;
+&nbsp;    public HistoryAdapter(Context context, List&lt;HistoryEntry&gt; items,
+&nbsp;                          OnUseResultListener useListener,
+&nbsp;                          OnUseExpressionListener useExpressionListener,
+&nbsp;                          OnDismissListener dismissListener) {
+<b class="nc">&nbsp;        super(context, R.layout.basic_list_item_calc_history, items);</b>
+<b class="nc">&nbsp;        this.useListener = useListener;</b>
+<b class="nc">&nbsp;        this.useExpressionListener = useExpressionListener;</b>
+<b class="nc">&nbsp;        this.dismissListener = dismissListener;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setCurrentHistoryTab(int tab) {
+<b class="nc">&nbsp;        if (currentHistoryTab != tab) {</b>
+<b class="nc">&nbsp;            currentHistoryTab = tab;</b>
+<b class="nc">&nbsp;            notifyDataSetChanged();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public View getView(int position, View convertView, ViewGroup parent) {
+<b class="nc">&nbsp;        View row = convertView != null ? convertView : LayoutInflater.from(getContext()).inflate(R.layout.basic_list_item_calc_history, parent, false);</b>
+<b class="nc">&nbsp;        HistoryEntry item = getItem(position);</b>
+<b class="nc">&nbsp;        String exprPart = item != null ? item.getExpression() : &quot;&quot;;</b>
+<b class="nc">&nbsp;        String resultPart = item != null ? item.getResult() : &quot;&quot;;</b>
+<b class="nc">&nbsp;        Long timestamp = item != null ? item.getTimestamp() : null;</b>
+&nbsp;
+<b class="nc">&nbsp;        TextView exprView = row.findViewById(R.id.history_expression);</b>
+<b class="nc">&nbsp;        TextView resultView = row.findViewById(R.id.history_result);</b>
+<b class="nc">&nbsp;        TextView timeView = row.findViewById(R.id.history_timestamp);</b>
+<b class="nc">&nbsp;        ImageButton useBtn = row.findViewById(R.id.history_btn_use);</b>
+<b class="nc">&nbsp;        if (exprView != null) exprView.setText(AmountFormatter.formatExpressionForDisplay(exprPart));</b>
+<b class="nc">&nbsp;        if (resultView != null) resultView.setText(resultPart);</b>
+<b class="nc">&nbsp;        if (timeView != null) {</b>
+<b class="nc">&nbsp;            if (timestamp != null &amp;&amp; timestamp &gt; 0) {</b>
+<b class="nc">&nbsp;                timeView.setVisibility(View.VISIBLE);</b>
+<b class="nc">&nbsp;                CharSequence formatted = DateFormat.format(&quot;MMM d, yyyy  h:mm a&quot;, timestamp);</b>
+<b class="nc">&nbsp;                timeView.setText(formatted);</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                timeView.setVisibility(View.GONE);</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        boolean isOldTab = (currentHistoryTab == 1);</b>
+<b class="nc">&nbsp;        if (useBtn != null &amp;&amp; useListener != null) {</b>
+<b class="nc">&nbsp;            final String resultToUse = resultPart.replace(&quot;,&quot;, &quot;&quot;);</b>
+<b class="nc">&nbsp;            useBtn.setOnClickListener(v -&gt; useListener.onUseResult(resultToUse));</b>
+&nbsp;        }
+<b class="nc">&nbsp;        ImageButton useExprBtn = row.findViewById(R.id.history_btn_use_expr);</b>
+<b class="nc">&nbsp;        if (useExprBtn != null &amp;&amp; useExpressionListener != null) {</b>
+<b class="nc">&nbsp;            final String exprToUse = exprPart;</b>
+<b class="nc">&nbsp;            useExprBtn.setOnClickListener(v -&gt; useExpressionListener.onUseExpression(exprToUse));</b>
+<b class="nc">&nbsp;            useExprBtn.setVisibility(isOldTab ? View.VISIBLE : View.GONE);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        ImageButton dismissBtn = row.findViewById(R.id.history_btn_dismiss);</b>
+<b class="nc">&nbsp;        if (dismissBtn != null &amp;&amp; dismissListener != null) {</b>
+<b class="nc">&nbsp;            final int pos = position;</b>
+<b class="nc">&nbsp;            dismissBtn.setOnClickListener(v -&gt; dismissListener.onDismiss(pos));</b>
+<b class="nc">&nbsp;            dismissBtn.setVisibility(isOldTab ? View.GONE : View.VISIBLE);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return row;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-17 15:16</div>
+</div>
+</body>
+</html>

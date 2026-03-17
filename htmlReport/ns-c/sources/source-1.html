@@ -1,0 +1,304 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > MemoryGridGameEngine</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.nuramin.calculator.memorygame</a>
+</div>
+
+<h1>Coverage Summary for Class: MemoryGridGameEngine (com.nuramin.calculator.memorygame)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MemoryGridGameEngine</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (13/13)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    55.8%
+  </span>
+  <span class="absValue">
+    (29/52)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    82.1%
+  </span>
+  <span class="absValue">
+    (55/67)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">MemoryGridGameEngine$TapResult</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (15/15)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    55.8%
+  </span>
+  <span class="absValue">
+    (29/52)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    83.3%
+  </span>
+  <span class="absValue">
+    (60/72)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.nuramin.calculator.memorygame;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.Collections;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Random;
+&nbsp;
+&nbsp;/**
+&nbsp; * Pure game logic for Memory Number Grid. Level, score, difficulty, validation.
+&nbsp; * Modular: no Android dependencies; can be unit-tested or reused.
+&nbsp; */
+<b class="fc">&nbsp;public final class MemoryGridGameEngine {</b>
+&nbsp;
+&nbsp;    public static final int GRID_SIZE = 16; // 4x4
+&nbsp;    public static final int CORRECT_TAP_SCORE = 5;
+&nbsp;    public static final int LEVEL_COMPLETE_BONUS = 20;
+&nbsp;
+<b class="fc">&nbsp;    private final Random random = new Random();</b>
+&nbsp;
+<b class="fc">&nbsp;    private int level = 1;</b>
+<b class="fc">&nbsp;    private int score = 0;</b>
+&nbsp;    /** For current level: cell index -&gt; number (1..count), or -1 if empty. */
+<b class="fc">&nbsp;    private int[] cellNumbers = new int[GRID_SIZE];</b>
+&nbsp;    /** Order of cells the user must tap (1, 2, 3, ...). */
+&nbsp;    private int[] tapOrder;
+&nbsp;    /** Next expected tap index in tapOrder (0-based). */
+&nbsp;    private int nextTapIndex;
+&nbsp;    private boolean gameOver;
+&nbsp;    private boolean levelComplete;
+&nbsp;
+&nbsp;    public int getLevel() {
+<b class="fc">&nbsp;        return level;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public int getScore() {
+<b class="fc">&nbsp;        return score;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean isGameOver() {
+<b class="fc">&nbsp;        return gameOver;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean isLevelComplete() {
+<b class="fc">&nbsp;        return levelComplete;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /** Number of numbers to show for current level (3..10). */
+&nbsp;    public int getNumbersCount() {
+<b class="fc">&nbsp;        if (level &lt;= 1) return 3;</b>
+<b class="pc">&nbsp;        if (level == 2) return 4;</b>
+<b class="nc">&nbsp;        if (level == 3) return 5;</b>
+<b class="nc">&nbsp;        if (level == 4) return 6;</b>
+<b class="nc">&nbsp;        if (level == 5) return 7;</b>
+<b class="nc">&nbsp;        if (level == 6) return 8;</b>
+<b class="nc">&nbsp;        if (level == 7) return 9;</b>
+<b class="nc">&nbsp;        return 10; // 8+</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /** Display time in milliseconds for current level. */
+&nbsp;    public long getDisplayTimeMs() {
+<b class="fc">&nbsp;        if (level &lt;= 1) return 3000;</b>
+<b class="pc">&nbsp;        if (level == 2) return 3000;</b>
+<b class="nc">&nbsp;        if (level == 3) return 2500;</b>
+<b class="nc">&nbsp;        if (level == 4) return 2000;</b>
+<b class="nc">&nbsp;        if (level == 5) return 1800;</b>
+<b class="nc">&nbsp;        if (level == 6) return 1600;</b>
+<b class="nc">&nbsp;        if (level == 7) return 1400;</b>
+<b class="nc">&nbsp;        return 1200; // 8+</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /** Reset state and prepare for a new game (level 1, score 0). */
+&nbsp;    public void reset() {
+<b class="fc">&nbsp;        level = 1;</b>
+<b class="fc">&nbsp;        score = 0;</b>
+<b class="fc">&nbsp;        gameOver = false;</b>
+<b class="fc">&nbsp;        levelComplete = false;</b>
+<b class="fc">&nbsp;        cellNumbers = new int[GRID_SIZE];</b>
+<b class="fc">&nbsp;        tapOrder = null;</b>
+<b class="fc">&nbsp;        nextTapIndex = 0;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Start the current level: fill random cells with 1..N, build tap order.
+&nbsp;     * Call after reset() or after completing previous level.
+&nbsp;     */
+&nbsp;    public void startLevel() {
+<b class="fc">&nbsp;        gameOver = false;</b>
+<b class="fc">&nbsp;        levelComplete = false;</b>
+<b class="fc">&nbsp;        int count = getNumbersCount();</b>
+<b class="fc">&nbsp;        for (int i = 0; i &lt; GRID_SIZE; i++) {</b>
+<b class="fc">&nbsp;            cellNumbers[i] = -1;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        List&lt;Integer&gt; indices = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        for (int i = 0; i &lt; GRID_SIZE; i++) indices.add(i);</b>
+<b class="fc">&nbsp;        Collections.shuffle(indices, random);</b>
+<b class="fc">&nbsp;        tapOrder = new int[count];</b>
+<b class="fc">&nbsp;        for (int n = 0; n &lt; count; n++) {</b>
+<b class="fc">&nbsp;            int cellIndex = indices.get(n);</b>
+<b class="fc">&nbsp;            cellNumbers[cellIndex] = n + 1; // 1, 2, 3, ...</b>
+<b class="fc">&nbsp;            tapOrder[n] = cellIndex;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        nextTapIndex = 0;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /** Get number at cell (1-based) or -1 if empty. */
+&nbsp;    public int getNumberAtCell(int cellIndex) {
+<b class="fc">&nbsp;        if (cellIndex &lt; 0 || cellIndex &gt;= GRID_SIZE) return -1;</b>
+<b class="fc">&nbsp;        return cellNumbers[cellIndex];</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Validate user tap. Returns TapResult (CORRECT, WRONG, LEVEL_COMPLETE after last correct).
+&nbsp;     */
+&nbsp;    public TapResult onCellTapped(int cellIndex) {
+<b class="pc">&nbsp;        if (gameOver || nextTapIndex &gt;= tapOrder.length) {</b>
+<b class="fc">&nbsp;            return TapResult.IGNORED;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        int expectedCell = tapOrder[nextTapIndex];</b>
+<b class="fc">&nbsp;        if (cellIndex == expectedCell) {</b>
+<b class="fc">&nbsp;            score += CORRECT_TAP_SCORE;</b>
+<b class="fc">&nbsp;            nextTapIndex++;</b>
+<b class="fc">&nbsp;            if (nextTapIndex &gt;= tapOrder.length) {</b>
+<b class="fc">&nbsp;                levelComplete = true;</b>
+<b class="fc">&nbsp;                score += LEVEL_COMPLETE_BONUS;</b>
+<b class="fc">&nbsp;                return TapResult.LEVEL_COMPLETE;</b>
+&nbsp;            }
+<b class="fc">&nbsp;            return TapResult.CORRECT;</b>
+&nbsp;        } else {
+<b class="fc">&nbsp;            gameOver = true;</b>
+<b class="fc">&nbsp;            return TapResult.WRONG;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /** Call after level complete to advance to next level and start it. */
+&nbsp;    public void advanceLevel() {
+<b class="fc">&nbsp;        level++;</b>
+<b class="fc">&nbsp;        startLevel();</b>
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    public enum TapResult {</b>
+<b class="fc">&nbsp;        CORRECT,</b>
+<b class="fc">&nbsp;        WRONG,</b>
+<b class="fc">&nbsp;        LEVEL_COMPLETE,</b>
+<b class="fc">&nbsp;        IGNORED</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /** Performance label from score (before game over). */
+&nbsp;    public static String getPerformanceLevel(int score) {
+<b class="fc">&nbsp;        if (score &lt; 40) return &quot;Memory Beginner&quot;;</b>
+<b class="fc">&nbsp;        if (score &lt;= 80) return &quot;Memory Skilled&quot;;</b>
+<b class="fc">&nbsp;        if (score &lt;= 150) return &quot;Memory Expert&quot;;</b>
+<b class="fc">&nbsp;        return &quot;Memory Master 🧠&quot;;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-17 15:16</div>
+</div>
+</body>
+</html>

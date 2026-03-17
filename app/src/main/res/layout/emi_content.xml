@@ -96,6 +96,7 @@
                     android:gravity="center_vertical"
                     android:layout_marginBottom="20dp">
                     <TextView
+                        android:id="@+id/emi_principal_min_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/emi_range_1k"
@@ -113,9 +114,10 @@
                         android:progressDrawable="@drawable/emi_slider_progress"
                         android:thumb="@drawable/emi_slider_thumb" />
                     <TextView
+                        android:id="@+id/emi_principal_max_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/emi_range_1cr"
+                        android:text="@string/emi_range_1l"
                         android:textColor="@color/emi_text_secondary"
                         android:textSize="12sp" />
                 </LinearLayout>

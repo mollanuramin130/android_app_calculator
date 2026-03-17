@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.SunsetCoralCalculator" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="android:statusBarColor">@color/mode_screen_bg</item>
-        <item name="android:navigationBarColor">@color/mode_screen_bg</item>
         <item name="android:windowBackground">@color/mode_screen_bg</item>
         <item name="android:windowLightStatusBar">true</item>
         <!-- Use coral as primary so no purple appears -->

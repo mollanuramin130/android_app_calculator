@@ -2,9 +2,14 @@ package com.nuramin.calculator;
 
 import com.nuramin.sunsetcoralcalculator.R;
 
+import android.app.ActivityManager;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -12,7 +17,13 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -55,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     private View currentPanel;
 
     private BasicCalculatorScreen basicCalculatorScreen;
+    private UpdateHelper updateHelper;
 
     private static final String PREFS_NAME = "calculator_prefs";
     private static final String KEY_THEME = "theme_mode"; // 0=light, 1=dark, 2=system
@@ -68,8 +80,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         applySavedTheme();
         setContentView(R.layout.activity_main);
+
+        setTaskDescriptionForRecents();
 
         drawerLayout = findViewById(R.id.drawer_layout);
         mainToolbar = findViewById(R.id.main_toolbar);
@@ -106,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
         setupDrawer();
         setupQuickBar();
         setupBackPress();
+        setupInAppUpdate();
 
         // If launched from Date Calculator drawer, open the requested panel
         String openPanel = getIntent() != null ? getIntent().getStringExtra(EXTRA_OPEN_PANEL) : null;
@@ -137,6 +153,67 @@ public class MainActivity extends AppCompatActivity {
         if (getIntent() != null && getIntent().getBooleanExtra(EXTRA_CLEAR_HISTORY, false)) {
             if (basicCalculatorScreen != null) basicCalculatorScreen.clearHistory();
         }
+
+        // Auto update check on start (flexible: show popup once per session)
+        if (updateHelper != null) {
+            updateHelper.checkForUpdateOnStart();
+        }
+    }
+
+    /**
+     * Set task label and icon so recent apps / shortcut center show app name and icon
+     * instead of package name and default Android icon.
+     */
+    private void setTaskDescriptionForRecents() {
+        String label = getString(R.string.app_name);
+        int colorPrimary = 0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            setTaskDescription(new ActivityManager.TaskDescription(label, R.drawable.ic_launcher, colorPrimary));
+        } else {
+            Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+            if (icon != null) {
+                setTaskDescription(new ActivityManager.TaskDescription(label, icon, colorPrimary));
+            }
+        }
+    }
+
+    /**
+     * In-app update: register result launcher and create UpdateHelper.
+     * Update flow result is handled in the launcher callback.
+     */
+    private void setupInAppUpdate() {
+        View updateSnackbarAnchor = drawerLayout != null ? drawerLayout : findViewById(android.R.id.content);
+        updateHelper = new UpdateHelper(this, updateSnackbarAnchor);
+
+        ActivityResultLauncher<IntentSenderRequest> updateLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartIntentSenderForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() != Activity.RESULT_OK && updateHelper != null) {
+                            // User cancelled or update failed; optional: retry or fallback
+                        }
+                    }
+                }
+        );
+        updateHelper.setUpdateResultLauncher(updateLauncher);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (updateHelper != null) {
+            updateHelper.onResume();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (updateHelper != null) {
+            updateHelper.onDestroy();
+            updateHelper = null;
+        }
+        super.onDestroy();
     }
 
     /** Wire 3-bars (drawer) and drawer items. Toolbar is shared; 3-bars/3-dots work on all panels. */
@@ -281,6 +358,13 @@ public class MainActivity extends AppCompatActivity {
             clearHistory.setOnClickListener(v -> {
                 popup.dismiss();
                 if (basicCalculatorScreen != null) basicCalculatorScreen.clearHistory();
+            });
+        }
+        View checkForUpdates = menuView.findViewById(R.id.menu_check_for_updates);
+        if (checkForUpdates != null) {
+            checkForUpdates.setOnClickListener(v -> {
+                popup.dismiss();
+                if (updateHelper != null) updateHelper.checkForUpdateManual();
             });
         }
         View chooseTheme = menuView.findViewById(R.id.menu_choose_theme);

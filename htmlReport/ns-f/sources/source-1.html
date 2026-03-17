@@ -1,0 +1,143 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > ExpressionService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.nuramin.calculator.service</a>
+</div>
+
+<h1>Coverage Summary for Class: ExpressionService (com.nuramin.calculator.service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ExpressionService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.nuramin.calculator.service;
+&nbsp;
+&nbsp;import com.nuramin.calculator.util.CalculatorUtils;
+&nbsp;import com.nuramin.calculator.util.ExprParser;
+&nbsp;
+&nbsp;/**
+&nbsp; * Service for evaluating mathematical expressions.
+&nbsp; */
+&nbsp;public final class ExpressionService {
+&nbsp;
+&nbsp;    public static Double evaluate(String expression) {
+<b class="fc">&nbsp;        if (expression == null) return null;</b>
+<b class="fc">&nbsp;        String s = expression.trim().replaceAll(&quot;\\s+&quot;, &quot;&quot;);</b>
+<b class="fc">&nbsp;        if (s.isEmpty()) return null;</b>
+&nbsp;        try {
+<b class="fc">&nbsp;            return new ExprParser(s).parse();</b>
+&nbsp;        } catch (Exception e) {
+<b class="fc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public static String formatResult(double value) {
+<b class="fc">&nbsp;        return CalculatorUtils.formatNumber(value);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private ExpressionService() {}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-17 15:16</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,658 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > MathSpeedGameController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.nuramin.calculator.mathspeed</a>
+</div>
+
+<h1>Coverage Summary for Class: MathSpeedGameController (com.nuramin.calculator.mathspeed)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MathSpeedGameController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/21)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/120)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/186)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">MathSpeedGameController$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/13)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">MathSpeedGameController$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">MathSpeedGameController$3</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">MathSpeedGameController$4</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/30)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/148)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/219)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.nuramin.calculator.mathspeed;
+&nbsp;
+&nbsp;import android.animation.Animator;
+&nbsp;import android.animation.AnimatorListenerAdapter;
+&nbsp;import android.animation.ObjectAnimator;
+&nbsp;import android.app.Activity;
+&nbsp;import android.content.Context;
+&nbsp;import android.content.SharedPreferences;
+&nbsp;import android.os.CountDownTimer;
+&nbsp;import android.os.Handler;
+&nbsp;import android.os.Looper;
+&nbsp;import android.util.TypedValue;
+&nbsp;import android.view.Gravity;
+&nbsp;import android.view.View;
+&nbsp;import android.view.animation.LinearInterpolator;
+&nbsp;import android.widget.FrameLayout;
+&nbsp;import android.widget.TextView;
+&nbsp;import androidx.annotation.Nullable;
+&nbsp;import androidx.appcompat.app.AlertDialog;
+&nbsp;import androidx.drawerlayout.widget.DrawerLayout;
+&nbsp;import com.google.android.material.button.MaterialButton;
+&nbsp;import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+&nbsp;import com.nuramin.sunsetcoralcalculator.R;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Random;
+&nbsp;
+&nbsp;/**
+&nbsp; * UI controller for Math Speed Game (falling answers).
+&nbsp; * Reuses app TopBar; handles spawn loop, falling animation, taps, timer, lives, game over.
+&nbsp; */
+&nbsp;public final class MathSpeedGameController {
+&nbsp;
+&nbsp;    private static final String PREFS_NAME = &quot;math_speed_prefs&quot;;
+&nbsp;    private static final String KEY_HIGH_SCORE = &quot;math_speed_high_score&quot;;
+&nbsp;    private static final int MAX_FALLING_BUTTONS = 5;
+&nbsp;    private static final int SPAWN_INTERVAL_MS = 800;
+&nbsp;    private static final int EQUATION_TIMEOUT_MS = 5000;
+&nbsp;    private static final int FALL_DURATION_MIN_MS = 3000;
+&nbsp;    private static final int FALL_DURATION_MAX_MS = 5000;
+&nbsp;    private static final int BUTTON_WIDTH_DP = 100;
+&nbsp;    private static final int BUTTON_HEIGHT_DP = 48;
+&nbsp;    private static final int FALL_START_OFFSET_DP = 60;
+&nbsp;
+&nbsp;    private final View panel;
+&nbsp;    private final Context context;
+&nbsp;    private final MathSpeedGameEngine engine;
+<b class="nc">&nbsp;    private final Handler handler = new Handler(Looper.getMainLooper());</b>
+<b class="nc">&nbsp;    private final Random random = new Random();</b>
+&nbsp;    private final float density;
+&nbsp;
+&nbsp;    private TextView scoreLabel;
+&nbsp;    private TextView timerLabel;
+&nbsp;    private View live1;
+&nbsp;    private View live2;
+&nbsp;    private View live3;
+&nbsp;    private FrameLayout playArea;
+&nbsp;    private TextView equationText;
+&nbsp;    private View startBtn;
+&nbsp;    private View resetBtn;
+&nbsp;
+&nbsp;    private CountDownTimer gameTimer;
+&nbsp;    private Runnable spawnRunnable;
+&nbsp;    private Runnable equationTimeoutRunnable;
+<b class="nc">&nbsp;    private final List&lt;View&gt; activeFallingViews = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;    private final List&lt;ObjectAnimator&gt; activeAnimators = new ArrayList&lt;&gt;();</b>
+&nbsp;
+&nbsp;    public static void setup(View panel, @Nullable DrawerLayout drawerLayout,
+&nbsp;                             @Nullable View.OnClickListener onOverflowClick) {
+<b class="nc">&nbsp;        if (panel == null) return;</b>
+<b class="nc">&nbsp;        MathSpeedGameController c = new MathSpeedGameController(panel);</b>
+<b class="nc">&nbsp;        c.bind();</b>
+<b class="nc">&nbsp;        panel.setTag(c);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /** Call when user navigates away from Math Speed Game so the game stops and no dialog is shown. */
+&nbsp;    public static void pauseWhenPanelHidden(View mathSpeedPanel) {
+<b class="nc">&nbsp;        if (mathSpeedPanel == null) return;</b>
+<b class="nc">&nbsp;        Object tag = mathSpeedPanel.getTag();</b>
+<b class="nc">&nbsp;        if (tag instanceof MathSpeedGameController) {</b>
+<b class="nc">&nbsp;            ((MathSpeedGameController) tag).pauseGameWithoutDialog();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /** True if panel and context are still valid (activity not finishing). */
+&nbsp;    private boolean isContextValid() {
+<b class="nc">&nbsp;        if (context == null) return false;</b>
+<b class="nc">&nbsp;        if (context instanceof Activity) {</b>
+<b class="nc">&nbsp;            Activity a = (Activity) context;</b>
+<b class="nc">&nbsp;            if (a.isFinishing() || a.isDestroyed()) return false;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private boolean isPanelAttached() {
+<b class="nc">&nbsp;        return panel != null &amp;&amp; panel.getParent() != null;</b>
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    private MathSpeedGameController(View panel) {</b>
+<b class="nc">&nbsp;        this.panel = panel;</b>
+<b class="nc">&nbsp;        this.context = panel.getContext();</b>
+<b class="nc">&nbsp;        this.engine = new MathSpeedGameEngine();</b>
+<b class="nc">&nbsp;        this.density = context.getResources().getDisplayMetrics().density;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void bind() {
+<b class="nc">&nbsp;        scoreLabel = panel.findViewById(R.id.math_speed_score_label);</b>
+<b class="nc">&nbsp;        timerLabel = panel.findViewById(R.id.math_speed_timer_label);</b>
+<b class="nc">&nbsp;        live1 = panel.findViewById(R.id.math_speed_live_1);</b>
+<b class="nc">&nbsp;        live2 = panel.findViewById(R.id.math_speed_live_2);</b>
+<b class="nc">&nbsp;        live3 = panel.findViewById(R.id.math_speed_live_3);</b>
+<b class="nc">&nbsp;        playArea = panel.findViewById(R.id.math_speed_play_area);</b>
+<b class="nc">&nbsp;        equationText = panel.findViewById(R.id.math_speed_equation_text);</b>
+<b class="nc">&nbsp;        startBtn = panel.findViewById(R.id.math_speed_start_btn);</b>
+<b class="nc">&nbsp;        resetBtn = panel.findViewById(R.id.math_speed_reset_btn);</b>
+&nbsp;
+<b class="nc">&nbsp;        if (playArea == null || equationText == null || startBtn == null) return;</b>
+&nbsp;
+<b class="nc">&nbsp;        updateStatusUi();</b>
+<b class="nc">&nbsp;        equationText.setText(engine.getCurrentEquationText());</b>
+&nbsp;
+<b class="nc">&nbsp;        startBtn.setOnClickListener(v -&gt; startGame());</b>
+<b class="nc">&nbsp;        resetBtn.setOnClickListener(v -&gt; resetGame());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void startGame() {
+<b class="nc">&nbsp;        stopGame();</b>
+<b class="nc">&nbsp;        engine.reset();</b>
+<b class="nc">&nbsp;        updateStatusUi();</b>
+<b class="nc">&nbsp;        equationText.setText(engine.getCurrentEquationText());</b>
+<b class="nc">&nbsp;        startBtn.setVisibility(View.GONE);</b>
+&nbsp;
+<b class="nc">&nbsp;        startGameTimer();</b>
+<b class="nc">&nbsp;        startSpawnLoop();</b>
+<b class="nc">&nbsp;        startEquationTimeout();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void stopGame() {
+<b class="nc">&nbsp;        if (gameTimer != null) {</b>
+<b class="nc">&nbsp;            gameTimer.cancel();</b>
+<b class="nc">&nbsp;            gameTimer = null;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (spawnRunnable != null) {</b>
+<b class="nc">&nbsp;            handler.removeCallbacks(spawnRunnable);</b>
+<b class="nc">&nbsp;            spawnRunnable = null;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (equationTimeoutRunnable != null) {</b>
+<b class="nc">&nbsp;            handler.removeCallbacks(equationTimeoutRunnable);</b>
+<b class="nc">&nbsp;            equationTimeoutRunnable = null;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        clearFallingButtons();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /** Stops the game without showing the Game Over dialog. Used when user leaves the screen. */
+&nbsp;    private void pauseGameWithoutDialog() {
+<b class="nc">&nbsp;        stopGame();</b>
+<b class="nc">&nbsp;        if (startBtn != null) startBtn.setVisibility(View.VISIBLE);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void resetGame() {
+<b class="nc">&nbsp;        stopGame();</b>
+<b class="nc">&nbsp;        engine.reset();</b>
+<b class="nc">&nbsp;        updateStatusUi();</b>
+<b class="nc">&nbsp;        if (equationText != null) equationText.setText(engine.getCurrentEquationText());</b>
+<b class="nc">&nbsp;        if (startBtn != null) startBtn.setVisibility(View.VISIBLE);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void startGameTimer() {
+<b class="nc">&nbsp;        refreshGameTimer();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /** Restart countdown timer to match engine&#39;s current time (e.g. after time bonus). */
+&nbsp;    private void refreshGameTimer() {
+<b class="nc">&nbsp;        if (gameTimer != null) {</b>
+<b class="nc">&nbsp;            gameTimer.cancel();</b>
+<b class="nc">&nbsp;            gameTimer = null;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        long remainingMs = engine.getTimeRemainingSec() * 1000L;</b>
+<b class="nc">&nbsp;        if (remainingMs &lt;= 0) {</b>
+<b class="nc">&nbsp;            updateStatusUi();</b>
+<b class="nc">&nbsp;            onGameOver();</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="nc">&nbsp;        gameTimer = new CountDownTimer(remainingMs, 1000) {</b>
+&nbsp;            @Override
+&nbsp;            public void onTick(long millisUntilFinished) {
+<b class="nc">&nbsp;                if (!isContextValid()) return;</b>
+<b class="nc">&nbsp;                boolean ended = engine.tickTimer();</b>
+<b class="nc">&nbsp;                updateStatusUi();</b>
+<b class="nc">&nbsp;                if (ended) {</b>
+<b class="nc">&nbsp;                    cancel();</b>
+<b class="nc">&nbsp;                    gameTimer = null;</b>
+<b class="nc">&nbsp;                    onGameOver();</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;
+&nbsp;            @Override
+&nbsp;            public void onFinish() {
+<b class="nc">&nbsp;                if (!isContextValid()) return;</b>
+<b class="nc">&nbsp;                if (engine.isGameRunning()) engine.tickTimer();</b>
+<b class="nc">&nbsp;                gameTimer = null;</b>
+<b class="nc">&nbsp;                updateStatusUi();</b>
+<b class="nc">&nbsp;                onGameOver();</b>
+&nbsp;            }
+&nbsp;        };
+<b class="nc">&nbsp;        gameTimer.start();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void startSpawnLoop() {
+<b class="nc">&nbsp;        spawnRunnable = new Runnable() {</b>
+&nbsp;            @Override
+&nbsp;            public void run() {
+<b class="nc">&nbsp;                if (!isContextValid() || !isPanelAttached()) return;</b>
+<b class="nc">&nbsp;                if (!engine.isGameRunning()) return;</b>
+<b class="nc">&nbsp;                if (activeFallingViews.size() &lt; MAX_FALLING_BUTTONS) {</b>
+<b class="nc">&nbsp;                    spawnFallingButton();</b>
+&nbsp;                }
+<b class="nc">&nbsp;                handler.postDelayed(this, SPAWN_INTERVAL_MS);</b>
+&nbsp;            }
+&nbsp;        };
+<b class="nc">&nbsp;        handler.postDelayed(spawnRunnable, SPAWN_INTERVAL_MS);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void startEquationTimeout() {
+<b class="nc">&nbsp;        if (equationTimeoutRunnable != null) {</b>
+<b class="nc">&nbsp;            handler.removeCallbacks(equationTimeoutRunnable);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        equationTimeoutRunnable = new Runnable() {</b>
+&nbsp;            @Override
+&nbsp;            public void run() {
+<b class="nc">&nbsp;                if (!isContextValid() || !engine.isGameRunning()) return;</b>
+<b class="nc">&nbsp;                engine.generateEquation();</b>
+<b class="nc">&nbsp;                if (equationText != null) {</b>
+<b class="nc">&nbsp;                    equationText.setText(engine.getCurrentEquationText());</b>
+&nbsp;                }
+<b class="nc">&nbsp;                startEquationTimeout();</b>
+&nbsp;            }
+&nbsp;        };
+<b class="nc">&nbsp;        handler.postDelayed(equationTimeoutRunnable, EQUATION_TIMEOUT_MS);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void spawnFallingButton() {
+<b class="nc">&nbsp;        if (!isContextValid() || playArea == null || playArea.getParent() == null || !engine.isGameRunning()) return;</b>
+<b class="nc">&nbsp;        List&lt;Integer&gt; options = engine.getOptionValues();</b>
+<b class="nc">&nbsp;        if (options.isEmpty()) return;</b>
+&nbsp;
+<b class="nc">&nbsp;        int value = options.get(random.nextInt(options.size()));</b>
+<b class="nc">&nbsp;        MaterialButton button = createFallingButton(value);</b>
+&nbsp;
+<b class="nc">&nbsp;        int wPx = (int) (BUTTON_WIDTH_DP * density);</b>
+<b class="nc">&nbsp;        int hPx = (int) (BUTTON_HEIGHT_DP * density);</b>
+<b class="nc">&nbsp;        int startOffsetPx = (int) (FALL_START_OFFSET_DP * density);</b>
+&nbsp;
+<b class="nc">&nbsp;        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(wPx, hPx);</b>
+<b class="nc">&nbsp;        int maxLeft = Math.max(0, playArea.getWidth() - wPx);</b>
+<b class="nc">&nbsp;        lp.leftMargin = maxLeft &gt; 0 ? random.nextInt(maxLeft + 1) : 0;</b>
+<b class="nc">&nbsp;        lp.topMargin = -startOffsetPx;</b>
+<b class="nc">&nbsp;        lp.gravity = Gravity.TOP | Gravity.START;</b>
+<b class="nc">&nbsp;        playArea.addView(button, lp);</b>
+<b class="nc">&nbsp;        button.bringToFront();</b>
+&nbsp;
+<b class="nc">&nbsp;        int playHeight = playArea.getHeight();</b>
+<b class="nc">&nbsp;        if (playHeight &lt;= 0) playHeight = (int) (400 * density);</b>
+<b class="nc">&nbsp;        float endTranslationY = playHeight + startOffsetPx;</b>
+&nbsp;
+<b class="nc">&nbsp;        ObjectAnimator anim = ObjectAnimator.ofFloat(button, View.TRANSLATION_Y, 0f, endTranslationY);</b>
+<b class="nc">&nbsp;        int duration = FALL_DURATION_MIN_MS + random.nextInt(FALL_DURATION_MAX_MS - FALL_DURATION_MIN_MS + 1);</b>
+<b class="nc">&nbsp;        anim.setDuration(duration);</b>
+<b class="nc">&nbsp;        anim.setInterpolator(new LinearInterpolator());</b>
+<b class="nc">&nbsp;        activeFallingViews.add(button);</b>
+<b class="nc">&nbsp;        activeAnimators.add(anim);</b>
+<b class="nc">&nbsp;        anim.addListener(new AnimatorListenerAdapter() {</b>
+&nbsp;            @Override
+&nbsp;            public void onAnimationEnd(Animator animation) {
+<b class="nc">&nbsp;                if (!isContextValid()) return;</b>
+<b class="nc">&nbsp;                int idx = activeAnimators.indexOf(anim);</b>
+<b class="nc">&nbsp;                if (idx &lt; 0 || idx &gt;= activeFallingViews.size()) return;</b>
+<b class="nc">&nbsp;                View v = activeFallingViews.get(idx);</b>
+<b class="nc">&nbsp;                activeAnimators.remove(idx);</b>
+<b class="nc">&nbsp;                activeFallingViews.remove(idx);</b>
+<b class="nc">&nbsp;                removeButtonFromParent(v);</b>
+&nbsp;            }
+&nbsp;        });
+<b class="nc">&nbsp;        anim.start();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private MaterialButton createFallingButton(int value) {
+<b class="nc">&nbsp;        MaterialButton button = new MaterialButton(context, null, com.google.android.material.R.attr.materialButtonOutlinedStyle);</b>
+<b class="nc">&nbsp;        int wPx = (int) (BUTTON_WIDTH_DP * density);</b>
+<b class="nc">&nbsp;        int hPx = (int) (BUTTON_HEIGHT_DP * density);</b>
+<b class="nc">&nbsp;        button.setLayoutParams(new FrameLayout.LayoutParams(wPx, hPx));</b>
+<b class="nc">&nbsp;        button.setText(String.valueOf(value));</b>
+<b class="nc">&nbsp;        button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);</b>
+<b class="nc">&nbsp;        button.setAllCaps(false);</b>
+<b class="nc">&nbsp;        button.setGravity(Gravity.CENTER);</b>
+<b class="nc">&nbsp;        button.setCornerRadius((int) (24 * density));</b>
+&nbsp;        try {
+<b class="nc">&nbsp;            button.setBackgroundColor(context.getResources().getColor(R.color.math_speed_falling_btn_bg, context.getTheme()));</b>
+<b class="nc">&nbsp;            button.setTextColor(context.getResources().getColor(R.color.math_speed_falling_btn_text, context.getTheme()));</b>
+&nbsp;        } catch (Exception ignored) { }
+<b class="nc">&nbsp;        button.setTag(value);</b>
+<b class="nc">&nbsp;        button.setClickable(true);</b>
+<b class="nc">&nbsp;        button.setFocusable(false);</b>
+<b class="nc">&nbsp;        button.setFocusableInTouchMode(false);</b>
+<b class="nc">&nbsp;        button.setElevation(16f);</b>
+&nbsp;
+<b class="nc">&nbsp;        button.setOnClickListener(v -&gt; {</b>
+<b class="nc">&nbsp;            Object tag = v.getTag();</b>
+<b class="nc">&nbsp;            if (tag == null || !engine.isGameRunning()) return;</b>
+&nbsp;            int val;
+&nbsp;            try {
+<b class="nc">&nbsp;                val = tag instanceof Integer ? (Integer) tag : Integer.parseInt(String.valueOf(tag));</b>
+&nbsp;            } catch (NumberFormatException e) {
+&nbsp;                return;
+&nbsp;            }
+<b class="nc">&nbsp;            boolean correct = engine.submitAnswer(val);</b>
+&nbsp;
+<b class="nc">&nbsp;            int idx = activeFallingViews.indexOf(v);</b>
+<b class="nc">&nbsp;            if (idx &gt;= 0 &amp;&amp; idx &lt; activeAnimators.size()) {</b>
+<b class="nc">&nbsp;                ObjectAnimator toCancel = activeAnimators.get(idx);</b>
+<b class="nc">&nbsp;                if (toCancel != null) toCancel.cancel();</b>
+<b class="nc">&nbsp;                activeAnimators.remove(idx);</b>
+<b class="nc">&nbsp;                activeFallingViews.remove(idx);</b>
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            if (!isContextValid()) return;</b>
+<b class="nc">&nbsp;            if (correct) {</b>
+&nbsp;                try {
+<b class="nc">&nbsp;                    v.setBackgroundColor(context.getResources().getColor(R.color.math_speed_correct, context.getTheme()));</b>
+<b class="nc">&nbsp;                    ((MaterialButton) v).setTextColor(context.getResources().getColor(android.R.color.white, context.getTheme()));</b>
+&nbsp;                } catch (Exception ignored) { }
+<b class="nc">&nbsp;                engine.addTimeBonus(5);</b>
+<b class="nc">&nbsp;                refreshGameTimer();</b>
+<b class="nc">&nbsp;                if (equationTimeoutRunnable != null) handler.removeCallbacks(equationTimeoutRunnable);</b>
+<b class="nc">&nbsp;                if (equationText != null) equationText.setText(engine.getCurrentEquationText());</b>
+<b class="nc">&nbsp;                startEquationTimeout();</b>
+&nbsp;            } else {
+&nbsp;                try {
+<b class="nc">&nbsp;                    v.setBackgroundColor(context.getResources().getColor(R.color.math_speed_wrong, context.getTheme()));</b>
+<b class="nc">&nbsp;                    ((MaterialButton) v).setTextColor(context.getResources().getColor(android.R.color.white, context.getTheme()));</b>
+&nbsp;                } catch (Exception ignored) { }
+<b class="nc">&nbsp;                if (engine.isGameOver()) {</b>
+<b class="nc">&nbsp;                    stopGame();</b>
+<b class="nc">&nbsp;                    onGameOver();</b>
+<b class="nc">&nbsp;                    removeButtonFromParent(v);</b>
+<b class="nc">&nbsp;                    updateStatusUi();</b>
+&nbsp;                    return;
+&nbsp;                }
+&nbsp;            }
+<b class="nc">&nbsp;            updateStatusUi();</b>
+<b class="nc">&nbsp;            removeButtonFromParent(v);</b>
+&nbsp;        });
+&nbsp;
+<b class="nc">&nbsp;        return button;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void removeButtonFromParent(View v) {
+<b class="nc">&nbsp;        if (v == null) return;</b>
+&nbsp;        try {
+<b class="nc">&nbsp;            if (v.getParent() instanceof android.view.ViewGroup) {</b>
+<b class="nc">&nbsp;                ((android.view.ViewGroup) v.getParent()).removeView(v);</b>
+&nbsp;            }
+&nbsp;        } catch (Exception ignored) { }
+&nbsp;    }
+&nbsp;
+&nbsp;    private void clearFallingButtons() {
+<b class="nc">&nbsp;        for (int i = activeFallingViews.size() - 1; i &gt;= 0; i--) {</b>
+<b class="nc">&nbsp;            View v = i &lt; activeFallingViews.size() ? activeFallingViews.get(i) : null;</b>
+<b class="nc">&nbsp;            ObjectAnimator a = i &lt; activeAnimators.size() ? activeAnimators.get(i) : null;</b>
+<b class="nc">&nbsp;            if (a != null) a.cancel();</b>
+<b class="nc">&nbsp;            removeButtonFromParent(v);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        activeFallingViews.clear();</b>
+<b class="nc">&nbsp;        activeAnimators.clear();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void updateStatusUi() {
+<b class="nc">&nbsp;        if (!isContextValid()) return;</b>
+&nbsp;        try {
+<b class="nc">&nbsp;            if (scoreLabel != null) {</b>
+<b class="nc">&nbsp;                scoreLabel.setText(context.getString(R.string.math_game_score, engine.getScore()));</b>
+&nbsp;            }
+<b class="nc">&nbsp;            if (timerLabel != null) {</b>
+<b class="nc">&nbsp;                timerLabel.setText(context.getString(R.string.math_game_time, engine.getTimeRemainingSec()));</b>
+&nbsp;            }
+<b class="nc">&nbsp;            int lives = engine.getLives();</b>
+<b class="nc">&nbsp;            if (live1 != null) live1.setVisibility(lives &gt;= 1 ? View.VISIBLE : View.INVISIBLE);</b>
+<b class="nc">&nbsp;            if (live2 != null) live2.setVisibility(lives &gt;= 2 ? View.VISIBLE : View.INVISIBLE);</b>
+<b class="nc">&nbsp;            if (live3 != null) live3.setVisibility(lives &gt;= 3 ? View.VISIBLE : View.INVISIBLE);</b>
+&nbsp;        } catch (Exception ignored) { }
+&nbsp;    }
+&nbsp;
+&nbsp;    private void onGameOver() {
+<b class="nc">&nbsp;        if (startBtn != null) startBtn.setVisibility(View.VISIBLE);</b>
+<b class="nc">&nbsp;        if (!isContextValid()) return;</b>
+<b class="nc">&nbsp;        if (panel == null || panel.getVisibility() != View.VISIBLE || !panel.isShown()) {</b>
+&nbsp;            return;
+&nbsp;        }
+<b class="nc">&nbsp;        int score = engine.getScore();</b>
+&nbsp;        try {
+<b class="nc">&nbsp;            SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);</b>
+<b class="nc">&nbsp;            int previousBest = prefs.getInt(KEY_HIGH_SCORE, 0);</b>
+<b class="nc">&nbsp;            if (score &gt; previousBest) {</b>
+<b class="nc">&nbsp;                prefs.edit().putInt(KEY_HIGH_SCORE, score).apply();</b>
+<b class="nc">&nbsp;                previousBest = score;</b>
+&nbsp;            }
+<b class="nc">&nbsp;            int bestScore = previousBest;</b>
+<b class="nc">&nbsp;            new MaterialAlertDialogBuilder(context)</b>
+<b class="nc">&nbsp;                    .setTitle(R.string.math_game_over_title)</b>
+<b class="nc">&nbsp;                    .setMessage(context.getString(R.string.math_game_over_message, score, bestScore))</b>
+<b class="nc">&nbsp;                    .setPositiveButton(R.string.math_game_play_again, (d, w) -&gt; startGame())</b>
+<b class="nc">&nbsp;                    .setNegativeButton(R.string.math_game_exit, (d, w) -&gt; resetGame())</b>
+<b class="nc">&nbsp;                    .setCancelable(false)</b>
+<b class="nc">&nbsp;                    .show();</b>
+&nbsp;        } catch (Exception e) {
+&nbsp;            // Avoid crash if activity is finishing (e.g. BadTokenException)
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-17 15:16</div>
+</div>
+</body>
+</html>

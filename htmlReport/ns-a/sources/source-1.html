@@ -1,0 +1,226 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > InterestCalculatorPanel</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.nuramin.calculator.interest</a>
+</div>
+
+<h1>Coverage Summary for Class: InterestCalculatorPanel (com.nuramin.calculator.interest)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">InterestCalculatorPanel</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/46)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/53)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.nuramin.calculator.interest;
+&nbsp;
+&nbsp;import android.view.View;
+&nbsp;import android.widget.ArrayAdapter;
+&nbsp;import android.widget.Button;
+&nbsp;import android.widget.EditText;
+&nbsp;import android.widget.RadioGroup;
+&nbsp;import android.widget.Spinner;
+&nbsp;import android.widget.TextView;
+&nbsp;
+&nbsp;import androidx.annotation.Nullable;
+&nbsp;import androidx.drawerlayout.widget.DrawerLayout;
+&nbsp;
+&nbsp;import com.nuramin.sunsetcoralcalculator.R;
+&nbsp;import com.nuramin.calculator.util.CalculatorUtils;
+&nbsp;import com.nuramin.calculator.util.ConverterUiHelper;
+&nbsp;
+&nbsp;/**
+&nbsp; * Interest Calculator: simple/compound, principal, rate, time (in Years or Months); calculate; result and breakdown.
+&nbsp; * Nav and overflow are handled by the main activity toolbar.
+&nbsp; */
+<b class="nc">&nbsp;public final class InterestCalculatorPanel {</b>
+&nbsp;
+&nbsp;    private static final int UNIT_YEARS = 0;
+&nbsp;    private static final int UNIT_MONTHS = 1;
+&nbsp;
+&nbsp;    public static void setup(View panel, @Nullable DrawerLayout drawerLayout, @Nullable View.OnClickListener onOverflowClick) {
+<b class="nc">&nbsp;        if (panel == null) return;</b>
+&nbsp;
+<b class="nc">&nbsp;        RadioGroup interestType = panel.findViewById(R.id.interest_type);</b>
+<b class="nc">&nbsp;        EditText principalEt = panel.findViewById(R.id.interest_principal);</b>
+<b class="nc">&nbsp;        EditText rateEt = panel.findViewById(R.id.interest_rate);</b>
+<b class="nc">&nbsp;        EditText timeEt = panel.findViewById(R.id.interest_time);</b>
+<b class="nc">&nbsp;        Spinner timeUnitSpinner = panel.findViewById(R.id.interest_time_unit);</b>
+<b class="nc">&nbsp;        Button calculateBtn = panel.findViewById(R.id.interest_calculate);</b>
+<b class="nc">&nbsp;        View resultCard = panel.findViewById(R.id.interest_result_card);</b>
+<b class="nc">&nbsp;        TextView resultTv = panel.findViewById(R.id.interest_result);</b>
+<b class="nc">&nbsp;        TextView totalAmountTv = panel.findViewById(R.id.interest_total_amount);</b>
+<b class="nc">&nbsp;        TextView breakdownPrincipalTv = panel.findViewById(R.id.interest_breakdown_principal);</b>
+<b class="nc">&nbsp;        TextView breakdownInterestLabelTv = panel.findViewById(R.id.interest_breakdown_interest_label);</b>
+<b class="nc">&nbsp;        TextView breakdownInterestTv = panel.findViewById(R.id.interest_breakdown_interest);</b>
+&nbsp;
+<b class="nc">&nbsp;        if (timeUnitSpinner != null) {</b>
+<b class="nc">&nbsp;            String[] units = new String[]{</b>
+<b class="nc">&nbsp;                    panel.getContext().getString(R.string.int_years),</b>
+<b class="nc">&nbsp;                    panel.getContext().getString(R.string.int_months)</b>
+&nbsp;            };
+<b class="nc">&nbsp;            ArrayAdapter&lt;String&gt; adapter = new ArrayAdapter&lt;&gt;(panel.getContext(),</b>
+&nbsp;                    android.R.layout.simple_spinner_item, units);
+<b class="nc">&nbsp;            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);</b>
+<b class="nc">&nbsp;            timeUnitSpinner.setAdapter(adapter);</b>
+<b class="nc">&nbsp;            timeUnitSpinner.setSelection(UNIT_YEARS);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        if (calculateBtn != null &amp;&amp; resultCard != null &amp;&amp; resultTv != null &amp;&amp; totalAmountTv != null</b>
+&nbsp;                &amp;&amp; breakdownPrincipalTv != null &amp;&amp; breakdownInterestLabelTv != null &amp;&amp; breakdownInterestTv != null
+&nbsp;                &amp;&amp; principalEt != null &amp;&amp; rateEt != null &amp;&amp; timeEt != null &amp;&amp; interestType != null) {
+<b class="nc">&nbsp;            calculateBtn.setOnClickListener(v -&gt; {</b>
+<b class="nc">&nbsp;                double principal = parseDouble(principalEt.getText(), 50000);</b>
+<b class="nc">&nbsp;                double ratePct = parseDouble(rateEt.getText(), 8.5);</b>
+<b class="nc">&nbsp;                double timeValue = parseDouble(timeEt.getText(), 5);</b>
+<b class="nc">&nbsp;                boolean isMonths = timeUnitSpinner != null &amp;&amp; timeUnitSpinner.getSelectedItemPosition() == UNIT_MONTHS;</b>
+<b class="nc">&nbsp;                double yearsForCalc = isMonths ? (timeValue / 12.0) : timeValue;</b>
+<b class="nc">&nbsp;                if (principal &lt;= 0 || yearsForCalc &lt;= 0) {</b>
+<b class="nc">&nbsp;                    resultCard.setVisibility(View.GONE);</b>
+&nbsp;                    return;
+&nbsp;                }
+<b class="nc">&nbsp;                boolean isCompound = interestType.getCheckedRadioButtonId() == R.id.interest_compound;</b>
+&nbsp;                double interest;
+&nbsp;                double totalAmount;
+<b class="nc">&nbsp;                if (isCompound) {</b>
+<b class="nc">&nbsp;                    totalAmount = principal * Math.pow(1 + ratePct / 100, yearsForCalc);</b>
+<b class="nc">&nbsp;                    interest = totalAmount - principal;</b>
+&nbsp;                } else {
+<b class="nc">&nbsp;                    interest = principal * ratePct * yearsForCalc / 100;</b>
+<b class="nc">&nbsp;                    totalAmount = principal + interest;</b>
+&nbsp;                }
+<b class="nc">&nbsp;                String rupee = panel.getContext().getString(R.string.int_rupee);</b>
+<b class="nc">&nbsp;                resultTv.setText(rupee + &quot; &quot; + CalculatorUtils.formatNumber(interest));</b>
+<b class="nc">&nbsp;                totalAmountTv.setText(panel.getContext().getString(R.string.int_total_amount, rupee + &quot; &quot; + CalculatorUtils.formatNumber(totalAmount)));</b>
+<b class="nc">&nbsp;                breakdownPrincipalTv.setText(rupee + &quot; &quot; + CalculatorUtils.formatNumber(principal));</b>
+<b class="nc">&nbsp;                breakdownInterestLabelTv.setText(panel.getContext().getString(</b>
+<b class="nc">&nbsp;                        isCompound ? R.string.int_compound_interest_label : R.string.int_simple_interest_label));</b>
+<b class="nc">&nbsp;                breakdownInterestTv.setText(rupee + &quot; &quot; + CalculatorUtils.formatNumber(interest));</b>
+<b class="nc">&nbsp;                resultCard.setVisibility(View.VISIBLE);</b>
+<b class="nc">&nbsp;                ConverterUiHelper.hideSoftKeyboard(panel);</b>
+<b class="nc">&nbsp;                ConverterUiHelper.scrollToShowResult(panel, resultCard);</b>
+&nbsp;            });
+&nbsp;        }
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    private static double parseDouble(CharSequence s, double def) {
+<b class="nc">&nbsp;        if (s == null) return def;</b>
+&nbsp;        try {
+<b class="nc">&nbsp;            return Double.parseDouble(s.toString().replace(&quot;,&quot;, &quot;&quot;).trim());</b>
+&nbsp;        } catch (NumberFormatException e) {
+<b class="nc">&nbsp;            return def;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private static int parseInt(CharSequence s, int def) {
+<b class="nc">&nbsp;        if (s == null) return def;</b>
+&nbsp;        try {
+<b class="nc">&nbsp;            return Integer.parseInt(s.toString().replace(&quot;,&quot;, &quot;&quot;).trim());</b>
+&nbsp;        } catch (NumberFormatException e) {
+<b class="nc">&nbsp;            return def;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-03-17 15:16</div>
+</div>
+</body>
+</html>

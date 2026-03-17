@@ -14,10 +14,12 @@
     <string name="emi_loan_schedule">Loan EMI Schedule</string>
     <string name="emi_rupee_symbol">₹</string>
     <string name="emi_range_1k">₹ 1k</string>
+    <string name="emi_range_1l">₹ 1 L</string>
     <string name="emi_range_1cr">₹ 1 Cr</string>
     <string name="emi_range_1pct">1%</string>
     <string name="emi_range_25pct">25%</string>
     <string name="emi_range_6m">6M</string>
     <string name="emi_range_360m">360M</string>
     <string name="emi_months">Months</string>
+    <string name="emi_use_slider_for_large">Use the slider for very large amounts</string>
 </resources>
