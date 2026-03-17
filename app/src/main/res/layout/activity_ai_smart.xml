@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="?android:attr/colorBackground"
+    android:fitsSystemWindows="true">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/ai_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/ai_toolbar_bg"
+        android:elevation="4dp"
+        app:title="@string/ai_smart_title"
+        app:titleTextColor="@color/ai_toolbar_title"
+        app:navigationIcon="@drawable/ic_arrow_back_ai"
+        app:navigationIconTint="@color/ai_toolbar_title"
+        app:menu="@menu/menu_ai_smart" />
+
+    <!-- Chat messages + loading overlay -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ai_chat_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:scrollbars="vertical" />
+
+        <FrameLayout
+            android:id="@+id/ai_loading_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="#80000000">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminateTint="@color/white" />
+        </FrameLayout>
+    </FrameLayout>
+
+    <!-- Input bar (fixed at bottom, like chat) -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/ai_input_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="12dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="@color/ai_input_bg">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp">
+
+            <!-- Suggestion chips -->
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/ai_chip_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleLine="false"
+                app:chipSpacingHorizontal="6dp"
+                app:chipSpacingVertical="4dp">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/ai_chip_emi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ai_chip_emi" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/ai_chip_age"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ai_chip_age" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/ai_chip_gst"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ai_chip_gst" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/ai_chip_discount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ai_chip_discount" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="8dp"
+                android:paddingEnd="4dp">
+
+                <EditText
+                    android:id="@+id/ai_input"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:minHeight="44dp"
+                    android:hint="@string/ai_input_hint"
+                    android:inputType="textCapSentences|textAutoComplete"
+                    android:imeOptions="actionSend"
+                    android:maxLines="3"
+                    android:background="@android:color/transparent"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="8dp"
+                    android:textColor="@color/ai_input_text"
+                    android:textColorHint="@color/ai_input_hint_color" />
+
+                <ImageButton
+                    android:id="@+id/ai_mic"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:contentDescription="@string/ai_mic_desc"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_mic_ai"
+                    app:tint="@color/ai_accent" />
+
+                <ImageButton
+                    android:id="@+id/ai_send"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:contentDescription="@string/ai_send_desc"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_send_ai"
+                    app:tint="@color/ai_accent" />
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ai_smart_title">AI Smart Calculator 🤖</string>
+    <string name="ai_input_hint">Ask anything…</string>
+    <string name="ai_mic_desc">Voice input</string>
+    <string name="ai_send_desc">Send</string>
+    <string name="ai_suggestions_label">Quick try</string>
+    <string name="ai_chip_emi">EMI</string>
+    <string name="ai_chip_age">Age</string>
+    <string name="ai_chip_gst">GST</string>
+    <string name="ai_chip_discount">Discount</string>
+    <string name="ai_empty_try">Try: 5000 loan at 8% for 5 years</string>
+    <string name="ai_welcome_result">Ask me anything — EMI, age, discount, GST…</string>
+    <string name="mode_ai_smart">AI Mode 🤖</string>
+    <string name="ai_voice_retry">Voice failed. Tap mic to retry.</string>
+    <string name="ai_share_app">Share app</string>
+    <string name="ai_share_message">Try this amazing calculator app: https://play.google.com/store/apps/details?id=com.nuramin.sunsetcoralcalculator</string>
+    <string name="ai_timeout_message">Request took too long. Check internet and try again.</string>
+    <string name="ai_timeout_fallback">The request timed out. Please check your connection and try again.</string>
+    <string name="ai_menu_api_key">API key</string>
+    <string name="ai_api_key_dialog_title">DeepSeek API key</string>
+    <string name="ai_api_key_dialog_message">Paste your API key from platform.deepseek.com. It will be stored on this device only.</string>
+    <string name="ai_api_key_saved">API key saved. Try asking a question.</string>
+    <string name="ai_api_key_cleared">API key cleared.</string>
+    <string name="ai_api_key_clear_btn">Clear key</string>
+</resources>

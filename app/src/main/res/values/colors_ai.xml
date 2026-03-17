@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ai_toolbar_bg">#FFE5E2DC</color>
+    <color name="ai_toolbar_title">#FF1A1A1A</color>
+    <color name="ai_input_bg">#FFF5F5F5</color>
+    <color name="ai_input_text">#FF212121</color>
+    <color name="ai_input_hint_color">#FF757575</color>
+    <color name="ai_accent">#FFD97A5F</color>
+    <color name="ai_card_bg">#FFFFFFFF</color>
+    <color name="ai_chat_user_bubble">#FFD97A5F</color>
+    <color name="ai_chat_user_text">#FFFFFFFF</color>
+    <color name="ai_bot_title">#FF5D4037</color>
+    <color name="ai_bot_primary">#FF212121</color>
+    <color name="ai_bot_secondary">#FF424242</color>
+</resources>

@@ -235,6 +235,14 @@ public class MainActivity extends AppCompatActivity {
         setDrawerItemClick(R.id.drawer_item_number_target_puzzle, panelNumberTargetPuzzle, R.string.mode_number_target_puzzle);
         setDrawerItemClick(R.id.drawer_item_math_speed_game, panelMathSpeedGame, R.string.math_speed_game_title);
 
+        View aiSmartItem = findViewById(R.id.drawer_item_ai_smart);
+        if (aiSmartItem != null && drawerLayout != null) {
+            aiSmartItem.setOnClickListener(v -> {
+                drawerLayout.closeDrawer(Gravity.START);
+                startActivity(new Intent(this, com.nuramin.sunsetcoralcalculator.ai.ui.AISmartActivity.class));
+            });
+        }
+
         View historyItem = findViewById(R.id.drawer_item_history);
         if (historyItem != null) {
             historyItem.setOnClickListener(v -> {

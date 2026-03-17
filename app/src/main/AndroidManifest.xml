@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:allowBackup="true"
@@ -25,6 +26,11 @@
         </activity>
         <activity
             android:name="com.nuramin.calculator.date.DateCalculatorActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.SunsetCoralCalculator" />
+        <activity
+            android:name="com.nuramin.sunsetcoralcalculator.ai.ui.AISmartActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.SunsetCoralCalculator" />
