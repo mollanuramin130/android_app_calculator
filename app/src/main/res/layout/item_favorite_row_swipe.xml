@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.nuramin.calculator.favorites.SwipeRevealFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fav_swipe_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginBottom="10dp"
+    android:minHeight="72dp"
+    android:clipChildren="false"
+    android:clipToPadding="false">
+
+    <!-- Left underlay: pin -->
+    <FrameLayout
+        android:id="@+id/fav_left_pin_bg"
+        android:layout_width="76dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/fav_swipe_pin_bg">
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/favorites_pin"
+            android:src="@drawable/ic_favorite_star"
+            app:tint="@color/fav_pin_icon_tint" />
+    </FrameLayout>
+
+    <!-- Right underlay: delete -->
+    <FrameLayout
+        android:id="@+id/fav_right_delete_bg"
+        android:layout_width="76dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/fav_swipe_delete_bg">
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/favorites_delete"
+            android:src="@android:drawable/ic_menu_delete"
+            app:tint="@color/white" />
+    </FrameLayout>
+
+    <!-- Foreground: MaterialCardView clips children to rounded corners (fixes underlay bleeding at corners). -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/fav_foreground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardBackgroundColor="@color/fav_card_bg"
+        app:cardCornerRadius="@dimen/fav_row_corner_radius"
+        app:cardElevation="3dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="false"
+        app:rippleColor="?attr/colorControlHighlight"
+        app:strokeColor="@color/fav_card_stroke"
+        app:strokeWidth="1dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:minHeight="56dp"
+            android:orientation="horizontal"
+            android:paddingStart="14dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="6dp"
+            android:paddingBottom="12dp">
+
+            <View
+                android:id="@+id/fav_priority_strip"
+                android:layout_width="5dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="12dp"
+                android:background="@color/fav_priority_medium" />
+
+            <LinearLayout
+                android:id="@+id/fav_row_text_column"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/fav_row_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:letterSpacing="0.01"
+                        android:maxLines="1"
+                        android:textColor="@color/mode_button_text_light"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/fav_row_badge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:includeFontPadding="false"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/fav_row_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:ellipsize="end"
+                    android:lineSpacingMultiplier="1.12"
+                    android:maxLines="2"
+                    android:textColor="@color/history_timestamp_text"
+                    android:textSize="12.5sp" />
+
+                <TextView
+                    android:id="@+id/fav_row_countdown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:letterSpacing="0.02"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/fav_row_pin_inline"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="2dp"
+                android:contentDescription="@string/favorites_pinned"
+                android:src="@drawable/ic_favorite_star"
+                android:visibility="gone"
+                app:tint="@color/coral_dark" />
+
+            <ImageButton
+                android:id="@+id/fav_row_menu"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/favorites_more"
+                android:padding="10dp"
+                android:src="@drawable/ic_more_vert"
+                app:tint="@color/mode_toolbar_icon" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</com.nuramin.calculator.favorites.SwipeRevealFrameLayout>

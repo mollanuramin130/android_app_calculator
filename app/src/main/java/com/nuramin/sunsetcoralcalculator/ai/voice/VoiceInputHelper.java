@@ -3,6 +3,8 @@ package com.nuramin.sunsetcoralcalculator.ai.voice;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -10,6 +12,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.nuramin.sunsetcoralcalculator.R;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -28,12 +32,25 @@ public final class VoiceInputHelper {
     }
 
     private final Context context;
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private SpeechRecognizer speechRecognizer;
     private Callback callback;
     private boolean listening;
 
     public VoiceInputHelper(@NonNull Context context) {
         this.context = context.getApplicationContext();
+    }
+
+    private void dispatchResult(@NonNull String text) {
+        mainHandler.post(() -> {
+            if (callback != null) callback.onResult(text);
+        });
+    }
+
+    private void dispatchError(@Nullable String message) {
+        mainHandler.post(() -> {
+            if (callback != null) callback.onError(message);
+        });
     }
 
     public void setCallback(@Nullable Callback callback) {
@@ -51,11 +68,11 @@ public final class VoiceInputHelper {
                 speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context);
             } catch (Exception e) {
                 Log.e(TAG, "createSpeechRecognizer", e);
-                if (callback != null) callback.onError("Voice input isn't available on this device. Please type your question.");
+                dispatchError(context.getString(R.string.ai_voice_unavailable));
                 return;
             }
             if (speechRecognizer == null) {
-                if (callback != null) callback.onError("Voice input isn't available on this device. Please type your question.");
+                dispatchError(context.getString(R.string.ai_voice_unavailable));
                 return;
             }
             speechRecognizer.setRecognitionListener(new RecognitionListener() {
@@ -78,23 +95,27 @@ public final class VoiceInputHelper {
                 public void onError(int error) {
                     listening = false;
                     if (error == SpeechRecognizer.ERROR_SERVER || error == SpeechRecognizer.ERROR_NETWORK) {
-                        if (callback != null) callback.onError("Voice isn't available. Please type your question above.");
+                        dispatchError(context.getString(R.string.ai_voice_service_unavailable));
                         return;
                     }
                     if (error == SpeechRecognizer.ERROR_NO_MATCH) {
-                        if (callback != null) callback.onError("No speech heard. Try again or type your question.");
+                        dispatchError(context.getString(R.string.ai_voice_no_speech));
                         return;
                     }
                     if (error == SpeechRecognizer.ERROR_CLIENT) return; // User cancelled, no toast
-                    if (callback != null) callback.onError("Voice input isn't available. Please type your question above.");
+                    dispatchError(context.getString(R.string.ai_voice_unavailable));
                 }
 
                 @Override
                 public void onResults(Bundle results) {
                     listening = false;
-                    ArrayList<String> list = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-                    if (list != null && !list.isEmpty() && callback != null) {
-                        callback.onResult(list.get(0).trim());
+                    ArrayList<String> list = results != null
+                            ? results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                            : null;
+                    if (list != null && !list.isEmpty()) {
+                        dispatchResult(list.get(0).trim());
+                    } else {
+                        Log.d(TAG, "onResults: empty list (no toast)");
                     }
                 }
 
@@ -114,7 +135,7 @@ public final class VoiceInputHelper {
             speechRecognizer.startListening(intent);
         } catch (Exception e) {
             Log.e(TAG, "startListening", e);
-            if (callback != null) callback.onError("Retry");
+            dispatchError(context.getString(R.string.ai_voice_retry));
         }
     }
 
@@ -127,6 +148,7 @@ public final class VoiceInputHelper {
 
     public void destroy() {
         stopListening();
+        mainHandler.removeCallbacksAndMessages(null);
         if (speechRecognizer != null) {
             try { speechRecognizer.destroy(); } catch (Exception ignored) { }
             speechRecognizer = null;

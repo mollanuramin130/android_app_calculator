@@ -25,6 +25,7 @@ import com.nuramin.sunsetcoralcalculator.R;
 import com.nuramin.calculator.util.ConverterUiHelper;
 
 import java.text.DateFormatSymbols;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -622,13 +623,19 @@ public final class DateCalculatorPanel {
     private static Calendar toCalendar(Spinner daySpinner, Spinner monthSpinner, EditText yearEt) {
         if (daySpinner == null || monthSpinner == null || yearEt == null) return null;
         int d = getSpinnerDay(daySpinner);
-        int m = getSpinnerMonth(monthSpinner) - 1;
+        int month1Based = getSpinnerMonth(monthSpinner);
         int y = parseInt(yearEt.getText(), Calendar.getInstance().get(Calendar.YEAR));
-        if (y < MIN_YEAR || y > MAX_YEAR || m < 0 || m > 11 || d < 1 || d > 31) return null;
+        if (y < MIN_YEAR || y > MAX_YEAR || month1Based < 1 || month1Based > 12) return null;
+        int maxD = getMaxDays(month1Based, y);
+        if (d < 1 || d > maxD) return null;
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, y);
-        cal.set(Calendar.MONTH, m);
-        cal.set(Calendar.DAY_OF_MONTH, Math.min(d, cal.getActualMaximum(Calendar.DAY_OF_MONTH)));
+        cal.set(Calendar.MONTH, month1Based - 1);
+        cal.set(Calendar.DAY_OF_MONTH, d);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
         return cal;
     }
 
@@ -668,9 +675,10 @@ public final class DateCalculatorPanel {
         long mins = (totalSeconds % 3600) / 60;
         long secs = totalSeconds % 60;
         String totalMonthsStr = ctx.getString(R.string.date_result_total_months, totalMonths);
-        String totalHoursStr = ctx.getString(R.string.date_result_total_hours, String.format(Locale.US, "%,d", totalHours));
-        String totalMinsStr = ctx.getString(R.string.date_result_total_minutes, String.format(Locale.US, "%,d", totalMinutes));
-        String totalSecsStr = ctx.getString(R.string.date_result_total_seconds, String.format(Locale.US, "%,d", totalSeconds));
+        NumberFormat localized = NumberFormat.getNumberInstance(Locale.getDefault());
+        String totalHoursStr = ctx.getString(R.string.date_result_total_hours, localized.format(totalHours));
+        String totalMinsStr = ctx.getString(R.string.date_result_total_minutes, localized.format(totalMinutes));
+        String totalSecsStr = ctx.getString(R.string.date_result_total_seconds, localized.format(totalSeconds));
         String hmsStr = ctx.getString(R.string.date_result_hms_format, (int) hours, (int) mins, (int) secs);
         String detail = ctx.getString(R.string.date_result_detail_title) + "\n" + totalMonthsStr + "\n" + totalHoursStr + "\n" + totalMinsStr + "\n" + totalSecsStr + "\n" + hmsStr;
 

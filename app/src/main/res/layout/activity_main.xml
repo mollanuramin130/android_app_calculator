@@ -403,16 +403,16 @@
                     android:orientation="horizontal"
                     android:baselineAligned="false"
                     android:layout_marginBottom="@dimen/mode_key_margin">
-                    <Button android:id="@+id/btn_deg" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="DEG"
+                    <Button android:id="@+id/btn_deg" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="@string/calc_key_deg"
                         android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
                         android:layout_marginEnd="@dimen/mode_key_margin" />
-                    <Button android:id="@+id/btn_sin" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="sin"
+                    <Button android:id="@+id/btn_sin" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="@string/calc_key_sin"
                         android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
                         android:layout_marginEnd="@dimen/mode_key_margin" />
-                    <Button android:id="@+id/btn_cos" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="cos"
+                    <Button android:id="@+id/btn_cos" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="@string/calc_key_cos"
                         android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
                         android:layout_marginEnd="@dimen/mode_key_margin" />
-                    <Button android:id="@+id/btn_tan" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="tan"
+                    <Button android:id="@+id/btn_tan" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="@string/calc_key_tan"
                         android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
                 </LinearLayout>
                 <!-- Row: Inv e ln log -->
@@ -423,16 +423,16 @@
                     android:orientation="horizontal"
                     android:baselineAligned="false"
                     android:layout_marginBottom="@dimen/mode_key_margin">
-                    <Button android:id="@+id/btn_inv" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="INV"
+                    <Button android:id="@+id/btn_inv" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="@string/calc_key_inv"
                         android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
                         android:layout_marginEnd="@dimen/mode_key_margin" />
                     <Button android:id="@+id/btn_e" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="e"
                         android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
                         android:layout_marginEnd="@dimen/mode_key_margin" />
-                    <Button android:id="@+id/btn_ln" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="ln"
+                    <Button android:id="@+id/btn_ln" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="@string/calc_key_ln"
                         android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
                         android:layout_marginEnd="@dimen/mode_key_margin" />
-                    <Button android:id="@+id/btn_log" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="log"
+                    <Button android:id="@+id/btn_log" style="@style/Widget.CalculatorButton.KeypadScientific" android:text="@string/calc_key_log"
                         android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
                 </LinearLayout>
             </LinearLayout>
@@ -445,7 +445,7 @@
                 android:orientation="horizontal"
                 android:baselineAligned="false"
                 android:layout_marginBottom="@dimen/mode_key_margin">
-                <Button android:id="@+id/btn_clear" style="@style/Widget.CalculatorButton.KeypadAccent" android:text="AC"
+                <Button android:id="@+id/btn_clear" style="@style/Widget.CalculatorButton.KeypadAccent" android:text="@string/calc_key_ac"
                     android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
                     android:layout_marginEnd="@dimen/mode_key_margin" />
                 <Button android:id="@+id/btn_lparen" style="@style/Widget.CalculatorButton.KeypadStandard" android:text="( )"
@@ -571,6 +571,12 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
     <include
+        android:id="@+id/panel_tax"
+        layout="@layout/tax_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+    <include
         android:id="@+id/panel_currency"
         layout="@layout/currency_content"
         android:layout_width="match_parent"
@@ -591,6 +597,12 @@
     <include
         android:id="@+id/panel_discount"
         layout="@layout/discount_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+    <include
+        android:id="@+id/panel_unit_converter"
+        layout="@layout/unit_converter_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" />

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tax_calculator_title">Tax Calculator</string>
+    <string name="mode_tax_calculator">Tax Calculator</string>
+    <string name="tax_enter_details">Enter Tax Details</string>
+    <string name="tax_mode_exclusive">Add Tax</string>
+    <string name="tax_mode_inclusive">Extract Tax</string>
+    <string name="tax_amount_label">Amount</string>
+    <string name="tax_amount_hint">@string/hint_enter_amount</string>
+    <string name="tax_rate_label">Tax Rate (%)</string>
+    <string name="tax_rate_hint">18</string>
+    <string name="tax_ui_hint">Choose mode, enter amount and tax rate, then calculate.</string>
+    <string name="tax_calculate">Calculate Tax</string>
+    <string name="tax_result_title">Tax Result</string>
+    <string name="tax_breakdown_tax_part">Tax Amount</string>
+    <string name="tax_breakdown_total_amount">Total Amount</string>
+    <string name="tax_breakdown_base_amount">Base Amount</string>
+    <string name="tax_note_exclusive">Total = Amount + Tax</string>
+    <string name="tax_note_inclusive">Base = Amount - Tax part (from tax-inclusive total)</string>
+    <string name="tax_error_amount_required">Enter a valid amount.</string>
+    <string name="tax_error_rate_required">Enter a valid tax rate.</string>
+    <string name="tax_error_amount_non_negative">Amount cannot be negative.</string>
+    <string name="tax_error_rate_range">Tax rate must be between 0 and 100.</string>
+</resources>
+

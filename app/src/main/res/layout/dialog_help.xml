@@ -62,11 +62,18 @@
     <Button
         android:id="@+id/help_contact_developer"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:gravity="center"
+        android:maxLines="2"
         android:text="@string/help_contact_developer"
+        android:textAllCaps="false"
         android:textColor="@color/white"
         android:background="@drawable/button_feedback_primary"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        />
+        android:textSize="14sp"
+        android:textStyle="bold" />
 </LinearLayout>

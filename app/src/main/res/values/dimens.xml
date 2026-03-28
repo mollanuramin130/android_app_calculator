@@ -5,6 +5,27 @@
     <dimen name="app_toolbar_elevation">4dp</dimen>
     <dimen name="app_toolbar_padding_horizontal">16dp</dimen>
     <dimen name="app_toolbar_title_text_size">18sp</dimen>
+    <!-- 3-dot overflow popup: readable width, Material touch target -->
+    <dimen name="overflow_menu_min_width">260dp</dimen>
+    <dimen name="overflow_menu_icon_size">24dp</dimen>
+
+    <!-- Mode panels (drawer + Screen_UI ic_nav_*): one system for padding & icon sizes -->
+    <dimen name="mode_content_scroll_padding">16dp</dimen>
+    <dimen name="mode_content_scroll_padding_wide">20dp</dimen>
+    <dimen name="mode_content_icon_hero">48dp</dimen>
+    <dimen name="mode_content_icon_section">32dp</dimen>
+    <dimen name="mode_content_icon_section_small">28dp</dimen>
+    <dimen name="mode_content_icon_row">36dp</dimen>
+    <dimen name="mode_content_icon_margin_end_title">12dp</dimen>
+    <dimen name="mode_content_icon_margin_end_section">10dp</dimen>
+    <dimen name="mode_content_hero_margin_bottom">12dp</dimen>
+
+    <!-- Discount calculator: amount rows align with EMI/currency pattern -->
+    <dimen name="discount_input_row_min_height">56dp</dimen>
+    <dimen name="discount_input_row_padding_h">14dp</dimen>
+    <dimen name="discount_input_row_padding_v">10dp</dimen>
+    <dimen name="discount_input_icon_size">24dp</dimen>
+    <dimen name="discount_stepper_size">36dp</dimen>
 
     <dimen name="display_corner_radius">20dp</dimen>
     <dimen name="button_corner_radius">16dp</dimen>
@@ -43,4 +64,82 @@
     <dimen name="date_month_min_width">64dp</dimen>
     <dimen name="date_spinner_padding_end">26dp</dimen>
     <dimen name="date_card_radius">16dp</dimen>
+
+    <!-- Favourites swipe row card (must match fav_row_foreground_bg corner radius) -->
+    <dimen name="fav_row_corner_radius">16dp</dimen>
+
+    <!-- Currency converter — 56dp = Material single-line field / touch alignment -->
+    <dimen name="currency_field_height">56dp</dimen>
+    <dimen name="currency_card_padding">@dimen/mode_content_scroll_padding_wide</dimen>
+    <dimen name="currency_picker_search_min_height">48dp</dimen>
+    <dimen name="currency_picker_search_text_size">16sp</dimen>
+    <dimen name="currency_picker_list_margin_top">8dp</dimen>
+    <dimen name="currency_picker_list_max_height">320dp</dimen>
+    <dimen name="currency_picker_row_min_height">56dp</dimen>
+    <dimen name="currency_picker_row_padding_h">12dp</dimen>
+    <dimen name="currency_picker_row_padding_v">10dp</dimen>
+    <dimen name="currency_picker_row_text_margin_start">12dp</dimen>
+    <dimen name="currency_picker_code_text_size">16sp</dimen>
+    <dimen name="currency_picker_subtitle_text_size">13sp</dimen>
+
+    <!-- Currency premium UI -->
+    <dimen name="currency_ui_corner_large">16dp</dimen>
+    <dimen name="currency_ui_corner_medium">12dp</dimen>
+    <dimen name="currency_ui_card_elevation">4dp</dimen>
+    <dimen name="currency_ui_card_elevation_raised">8dp</dimen>
+    <dimen name="currency_ui_section_gap">12dp</dimen>
+    <dimen name="currency_ui_inner_gap">8dp</dimen>
+    <dimen name="currency_ui_block_gap">4dp</dimen>
+    <dimen name="currency_ui_card_padding_uniform">12dp</dimen>
+    <dimen name="currency_ui_amount_margin_h">10dp</dimen>
+    <dimen name="currency_ui_amount_margin_v">6dp</dimen>
+    <dimen name="currency_ui_row_min_height">48dp</dimen>
+    <dimen name="currency_ui_handle_width">36dp</dimen>
+    <dimen name="currency_ui_handle_height">4dp</dimen>
+    <dimen name="currency_ui_handle_radius">2dp</dimen>
+    <dimen name="currency_ui_swap_size">48dp</dimen>
+    <dimen name="currency_ui_result_value">28sp</dimen>
+    <dimen name="currency_ui_result_rate">14sp</dimen>
+    <dimen name="currency_ui_section_label">11sp</dimen>
+    <!-- Flag chip: 4×3 SVG assets; frame = outer size; render = inner drawable (4:3) -->
+    <dimen name="currency_flag_corner_radius">8dp</dimen>
+    <dimen name="currency_flag_elevation">3dp</dimen>
+    <dimen name="currency_flag_frame_width_main">54dp</dimen>
+    <dimen name="currency_flag_frame_height_main">42dp</dimen>
+    <dimen name="currency_flag_frame_inset">3dp</dimen>
+    <dimen name="currency_flag_render_width_main">48dp</dimen>
+    <dimen name="currency_flag_render_height_main">36dp</dimen>
+    <dimen name="currency_flag_frame_width_picker">36dp</dimen>
+    <dimen name="currency_flag_frame_height_picker">28dp</dimen>
+    <dimen name="currency_flag_frame_inset_picker">2dp</dimen>
+    <dimen name="currency_flag_render_width_picker">32dp</dimen>
+    <dimen name="currency_flag_render_height_picker">24dp</dimen>
+    <dimen name="currency_ui_flag_in_card">44dp</dimen>
+    <dimen name="currency_ui_hero_icon">44dp</dimen>
+
+    <!-- Currency wireframe (360–420dp width) — explicit grid -->
+    <dimen name="currency_wire_outer_padding">16dp</dimen>
+    <dimen name="currency_wire_row_gap">16dp</dimen>
+    <dimen name="currency_wire_row1_height">120dp</dimen>
+    <dimen name="currency_wire_row2_height">140dp</dimen>
+    <dimen name="currency_wire_row3_convert_height">60dp</dimen>
+    <dimen name="currency_wire_row4_height">140dp</dimen>
+    <dimen name="currency_wire_card_corner">16dp</dimen>
+    <dimen name="currency_wire_card_elevation">4dp</dimen>
+    <dimen name="currency_wire_card_padding_outer">16dp</dimen>
+    <dimen name="currency_wire_card_padding_inner">12dp</dimen>
+    <dimen name="currency_wire_element_gap">12dp</dimen>
+    <dimen name="currency_wire_amount_edittext_margin_top">16dp</dimen>
+    <dimen name="currency_wire_edittext_height">56dp</dimen>
+    <dimen name="currency_wire_amount_text_size">18sp</dimen>
+    <dimen name="currency_wire_currency_card_inner_height">120dp</dimen>
+    <dimen name="currency_wire_flag_size">40dp</dimen>
+    <dimen name="currency_wire_swap_size">56dp</dimen>
+    <dimen name="currency_wire_swap_elevation">6dp</dimen>
+    <dimen name="currency_wire_code_text_size">18sp</dimen>
+    <dimen name="currency_wire_name_text_size">14sp</dimen>
+    <dimen name="currency_wire_convert_corner_radius">30dp</dimen>
+    <dimen name="currency_wire_convert_text_size">16sp</dimen>
+    <dimen name="currency_wire_result_value_size">28sp</dimen>
+    <dimen name="currency_wire_rate_text_size">14sp</dimen>
 </resources>

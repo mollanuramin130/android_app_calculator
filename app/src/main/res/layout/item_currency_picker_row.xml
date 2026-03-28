@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/currency_ui_block_gap"
+    android:layout_marginEnd="@dimen/currency_ui_block_gap"
+    android:layout_marginBottom="@dimen/currency_ui_block_gap"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardBackgroundColor="@color/currency_card_bg"
+    app:cardCornerRadius="@dimen/currency_ui_corner_medium"
+    app:cardElevation="1dp"
+    app:rippleColor="?attr/colorControlHighlight"
+    app:strokeColor="@color/currency_outline_muted"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/currency_picker_row_min_height"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/currency_picker_row_padding_h"
+        android:paddingTop="@dimen/currency_picker_row_padding_v"
+        android:paddingEnd="@dimen/currency_picker_row_padding_h"
+        android:paddingBottom="@dimen/currency_picker_row_padding_v">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="@dimen/currency_flag_frame_width_picker"
+            android:layout_height="@dimen/currency_flag_frame_height_picker"
+            android:layout_gravity="center_vertical"
+            app:cardBackgroundColor="@android:color/white"
+            app:cardCornerRadius="@dimen/currency_flag_corner_radius"
+            app:cardElevation="@dimen/currency_flag_elevation"
+            app:cardPreventCornerOverlap="false"
+            app:cardUseCompatPadding="false"
+            app:strokeColor="@color/currency_outline_muted"
+            app:strokeWidth="0.5dp">
+
+            <ImageView
+                android:id="@+id/currency_picker_flag"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:importantForAccessibility="no"
+                android:padding="@dimen/currency_flag_frame_inset_picker"
+                android:scaleType="fitCenter"
+                tools:src="@drawable/ic_flag_us" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/currency_picker_row_text_margin_start"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/currency_picker_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/currency_input_text"
+                android:textSize="@dimen/currency_picker_code_text_size"
+                android:textStyle="bold"
+                tools:text="EUR" />
+
+            <TextView
+                android:id="@+id/currency_picker_subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/currency_label_text"
+                android:textSize="@dimen/currency_picker_subtitle_text_size"
+                tools:text="United States Dollar · United States" />
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

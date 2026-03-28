@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Outlined CTA so Loan EMI Schedule reads as tappable, not disabled. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/emi_card_bg" />
+    <corners android:radius="20dp" />
+    <stroke
+        android:width="1.5dp"
+        android:color="@color/emi_slider_active" />
+</shape>

@@ -15,8 +15,8 @@ public class CalculatorUtilsTest {
     @Test
     public void filterExpressionChars_allowsValid() {
         assertEquals("123+456", CalculatorUtils.filterExpressionChars("123+456"));
-        // * and / are normalized to × and ÷; minus stays as ASCII -
-        assertEquals("12-34×56÷78", CalculatorUtils.filterExpressionChars("12-34*56/78"));
+        // * and / are normalized to × and ÷; ASCII hyphen is normalized to minus sign U+2212
+        assertEquals("12−34×56÷78", CalculatorUtils.filterExpressionChars("12-34*56/78"));
         assertEquals("1.5+2.06", CalculatorUtils.filterExpressionChars("1.5+2.06"));
         assertEquals("sin(30)", CalculatorUtils.filterExpressionChars("sin(30)"));
         assertEquals("", CalculatorUtils.filterExpressionChars(null));

@@ -1,6 +1,6 @@
 package com.nuramin.sunsetcoralcalculator.ai.ui;
 
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,14 +12,14 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.nuramin.sunsetcoralcalculator.R;
-import com.nuramin.sunsetcoralcalculator.ai.cloud.ApiKeyPrefs;
+import com.nuramin.sunsetcoralcalculator.ai.system.ShareController;
 import com.nuramin.sunsetcoralcalculator.ai.cloud.AIHybridManager;
 import com.nuramin.sunsetcoralcalculator.ai.core.AIResult;
 import com.nuramin.sunsetcoralcalculator.ai.voice.VoiceInputHelper;
@@ -31,10 +31,13 @@ import android.os.Handler;
 import android.os.Looper;
 
 /**
- * AI Smart Calculator – chat-style UI with hybrid AI (local + DeepSeek when needed).
- * Shows loading state while API runs; share button in toolbar. Voice when available.
+ * AI Smart Calculator – chat-style UI with hybrid AI (local + cloud when needed).
+ * Voice input is supported when available.
  */
 public final class AISmartActivity extends AppCompatActivity {
+
+    private static final String PREFS_NAME = "calculator_prefs";
+    private static final String KEY_THEME = "theme_mode";
 
     private EditText input;
     private RecyclerView chatList;
@@ -51,6 +54,7 @@ public final class AISmartActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        applySavedTheme();
         setContentView(R.layout.activity_ai_smart);
 
         hybridManager = new AIHybridManager();
@@ -71,6 +75,23 @@ public final class AISmartActivity extends AppCompatActivity {
         setupVoice();
     }
 
+    /** Same prefs as MainActivity so Light / Dark / System applies here too. */
+    private void applySavedTheme() {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        int mode = Math.max(0, Math.min(2, prefs.getInt(KEY_THEME, 2)));
+        switch (mode) {
+            case 0:
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                break;
+            case 1:
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                break;
+            default:
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                break;
+        }
+    }
+
     private void addWelcomeMessage() {
         chatAdapter.addBotMessage(new AIResult(AIResult.Type.UNKNOWN, getString(R.string.ai_smart_title),
                 getString(R.string.ai_welcome_result),
@@ -89,50 +110,10 @@ public final class AISmartActivity extends AppCompatActivity {
     private boolean onToolbarMenuItemClick(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.ai_menu_share) {
-            shareApp();
-            return true;
-        }
-        if (id == R.id.ai_menu_api_key) {
-            showApiKeyDialog();
+            ShareController.shareApp(this, getString(R.string.share_via_chooser));
             return true;
         }
         return false;
-    }
-
-    private void showApiKeyDialog() {
-        String current = ApiKeyPrefs.get(this);
-        final EditText edit = new EditText(this);
-        edit.setHint("Paste Gemini key");
-        edit.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        edit.setMinEms(20);
-        if (current != null && !current.isEmpty()) {
-            edit.setText(current);
-            edit.setSelection(edit.getText().length());
-        }
-        new MaterialAlertDialogBuilder(this)
-                .setTitle(R.string.ai_api_key_dialog_title)
-                .setMessage(R.string.ai_api_key_dialog_message)
-                .setView(edit)
-                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                    String key = edit.getText() != null ? edit.getText().toString().trim() : "";
-                    ApiKeyPrefs.set(AISmartActivity.this, key.isEmpty() ? null : key);
-                    Toast.makeText(AISmartActivity.this,
-                            key.isEmpty() ? R.string.ai_api_key_cleared : R.string.ai_api_key_saved,
-                            Toast.LENGTH_SHORT).show();
-                })
-                .setNegativeButton(android.R.string.cancel, null)
-                .setNeutralButton(getString(R.string.ai_api_key_clear_btn), (dialog, which) -> {
-                    ApiKeyPrefs.set(AISmartActivity.this, null);
-                    Toast.makeText(AISmartActivity.this, R.string.ai_api_key_cleared, Toast.LENGTH_SHORT).show();
-                })
-                .show();
-    }
-
-    private void shareApp() {
-        Intent share = new Intent(Intent.ACTION_SEND);
-        share.setType("text/plain");
-        share.putExtra(Intent.EXTRA_TEXT, getString(R.string.ai_share_message));
-        startActivity(Intent.createChooser(share, getString(R.string.ai_share_app)));
     }
 
     private void setupSendAndInput() {
@@ -146,10 +127,10 @@ public final class AISmartActivity extends AppCompatActivity {
     }
 
     private void setupChips() {
-        setChipClick(R.id.ai_chip_emi, "5 lakh loan at 8% for 5 years");
-        setChipClick(R.id.ai_chip_age, "age from 15 March 1990");
-        setChipClick(R.id.ai_chip_gst, "1000 with 18% GST");
-        setChipClick(R.id.ai_chip_discount, "500 with 20% discount");
+        setChipClick(R.id.ai_chip_emi, getString(R.string.ai_prompt_emi_example));
+        setChipClick(R.id.ai_chip_age, getString(R.string.ai_prompt_age_example));
+        setChipClick(R.id.ai_chip_gst, getString(R.string.ai_prompt_tax_example));
+        setChipClick(R.id.ai_chip_discount, getString(R.string.ai_prompt_discount_example));
     }
 
     private void setChipClick(int id, String text) {
@@ -200,19 +181,20 @@ public final class AISmartActivity extends AppCompatActivity {
         setLoading(true);
         cancelLoadingTimeout();
         loadingTimeout = () -> {
-            if (!loading) return;
+            if (!loading || isFinishing() || isDestroyed()) return;
             setLoading(false);
             Toast.makeText(AISmartActivity.this, R.string.ai_timeout_message, Toast.LENGTH_LONG).show();
-            chatAdapter.addBotMessage(new AIResult(AIResult.Type.UNKNOWN, "Timeout",
+            chatAdapter.addBotMessage(new AIResult(AIResult.Type.UNKNOWN, getString(R.string.ai_timeout_title),
                     getString(R.string.ai_timeout_fallback), "", false));
             scrollToBottom();
         };
         mainHandler.postDelayed(loadingTimeout, LOADING_TIMEOUT_MS);
 
-        hybridManager.processAsync(text, this, new AIHybridManager.Callback() {
+        hybridManager.processAsync(text, getApplicationContext(), new AIHybridManager.Callback() {
             @Override
             public void onResult(@NonNull AIResult result) {
                 runOnUiThread(() -> {
+                    if (isFinishing() || isDestroyed()) return;
                     cancelLoadingTimeout();
                     setLoading(false);
                     chatAdapter.addBotMessage(result);
@@ -240,9 +222,13 @@ public final class AISmartActivity extends AppCompatActivity {
     }
 
     private void scrollToBottom() {
-        if (chatList != null && chatAdapter != null) {
-            chatList.post(() -> chatList.smoothScrollToPosition(chatAdapter.getItemCount() - 1));
-        }
+        if (chatList == null || chatAdapter == null) return;
+        int n = chatAdapter.getItemCount();
+        if (n <= 0) return;
+        chatList.post(() -> {
+            if (isFinishing() || isDestroyed()) return;
+            chatList.smoothScrollToPosition(n - 1);
+        });
     }
 
     @Override

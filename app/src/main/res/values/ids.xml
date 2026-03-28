@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="currency_flag_load_tag" type="id" />
+    <item name="emi_last_calc_snapshot" type="id" />
+</resources>

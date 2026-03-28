@@ -2,6 +2,7 @@ package com.nuramin.calculator.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.nuramin.calculator.model.HistoryEntry;
 
@@ -17,6 +18,7 @@ import java.util.List;
  */
 public final class HistoryStorage {
 
+    private static final String TAG = "HistoryStorage";
     private static final String PREFS_NAME = "calculator_history";
     private static final String KEY_OLD_HISTORY = "old_history";
     private static final int MAX_OLD_ITEMS = 200;
@@ -33,13 +35,15 @@ public final class HistoryStorage {
         try {
             JSONArray arr = new JSONArray(json);
             for (int i = 0; i < arr.length(); i++) {
-                JSONObject o = arr.getJSONObject(i);
+                JSONObject o = arr.optJSONObject(i);
+                if (o == null) continue;
                 String expr = o.optString("expr", "");
                 String result = o.optString("result", "");
                 long time = o.optLong("time", 0L);
                 list.add(new HistoryEntry(expr, result, time));
             }
-        } catch (JSONException ignored) {
+        } catch (JSONException e) {
+            Log.w(TAG, "Corrupt history JSON; starting with empty old history", e);
         }
         return list;
     }

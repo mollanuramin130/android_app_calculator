@@ -12,6 +12,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.nuramin.sunsetcoralcalculator.R;
 import com.nuramin.calculator.util.CalculatorUtils;
 import com.nuramin.calculator.util.ConverterUiHelper;
+import com.nuramin.calculator.util.LocaleFormatManager;
 
 /**
  * Temperature Converter: from/to units, convert button, result, formula, quick swap.
@@ -67,11 +68,9 @@ public final class TemperaturePanel {
 
     private static void performConvert(EditText input, Spinner fromSpinner, Spinner toSpinner,
                                       TextView result, TextView formula) {
-        double value;
-        try {
-            String s = input.getText() != null ? input.getText().toString().trim() : "";
-            value = s.isEmpty() ? 0 : Double.parseDouble(s);
-        } catch (NumberFormatException e) {
+        String s = input.getText() != null ? input.getText().toString().trim() : "";
+        double value = s.isEmpty() ? 0 : LocaleFormatManager.parseLocalizedNumber(s, Double.NaN);
+        if (Double.isNaN(value) || Double.isInfinite(value)) {
             result.setText("—");
             formula.setText("");
             return;
@@ -82,6 +81,11 @@ public final class TemperaturePanel {
         if (to < 0) to = UNIT_F;
         double celsius = toCelsius(value, from);
         double out = fromCelsius(celsius, to);
+        if (!Double.isFinite(celsius) || !Double.isFinite(out)) {
+            result.setText("—");
+            formula.setText("");
+            return;
+        }
         result.setText(CalculatorUtils.formatNumber(out));
         formula.setText(getFormula(value, from, out, to));
     }

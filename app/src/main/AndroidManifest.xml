@@ -6,17 +6,18 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@drawable/ic_launcher"
+        android:enableOnBackInvokedCallback="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/launcher_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SunsetCoralCalculator">
         <activity
             android:name="com.nuramin.calculator.MainActivity"
             android:exported="true"
-            android:icon="@drawable/ic_launcher"
-            android:label="@string/app_name"
-            android:roundIcon="@drawable/ic_launcher"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/launcher_name"
+            android:roundIcon="@mipmap/ic_launcher_round"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:theme="@style/Theme.SunsetCoralCalculator">
             <intent-filter>
@@ -34,6 +35,16 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.SunsetCoralCalculator" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

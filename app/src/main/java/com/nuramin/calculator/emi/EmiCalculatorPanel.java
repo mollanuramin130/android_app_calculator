@@ -19,6 +19,7 @@ import com.nuramin.sunsetcoralcalculator.R;
 import com.nuramin.calculator.util.AmountFormatter;
 import com.nuramin.calculator.util.CalculatorUtils;
 import com.nuramin.calculator.util.ConverterUiHelper;
+import com.nuramin.calculator.util.LocaleFormatManager;
 
 /**
  * EMI Calculator: principal, rate, tenure with sliders; calculate; result card and pie chart.
@@ -78,6 +79,8 @@ public final class EmiCalculatorPanel {
         TextView totalInterestTv = panel.findViewById(R.id.emi_total_interest);
         TextView totalPaymentTv = panel.findViewById(R.id.emi_total_payment);
         EmiPieChartView pieChart = panel.findViewById(R.id.emi_pie_chart);
+        View scheduleCard = panel.findViewById(R.id.emi_schedule_card);
+        panel.setTag(R.id.emi_last_calc_snapshot, null);
 
         if (principalSlider != null && principalEt != null) {
             double[] range = new double[] { PRINCIPAL_DEFAULT_MIN, PRINCIPAL_DEFAULT_MAX };
@@ -143,27 +146,50 @@ public final class EmiCalculatorPanel {
                 int n = parseInt(tenureEt.getText(), 24);
                 if (P <= 0 || n <= 0) {
                     resultCard.setVisibility(View.GONE);
+                    clearEmiSnapshot(panel);
                     return;
                 }
-                double r = ratePct / 12 / 100;
-                double emi;
-                if (r <= 0) {
-                    emi = P / n;
-                } else {
-                    double factor = Math.pow(1 + r, n);
-                    emi = P * r * factor / (factor - 1);
+                double emi = EmiCalculatorMath.monthlyEmi(P, ratePct, n);
+                if (Double.isNaN(emi)) {
+                    resultCard.setVisibility(View.GONE);
+                    clearEmiSnapshot(panel);
+                    return;
                 }
                 double totalPayment = emi * n;
                 double totalInterest = totalPayment - P;
-                resultTv.setText(panel.getContext().getString(R.string.emi_rupee_symbol) + " " + CalculatorUtils.formatNumber(emi) + " " + panel.getContext().getString(R.string.emi_per_month));
-                totalInterestTv.setText(panel.getContext().getString(R.string.emi_total_interest, "₹ " + CalculatorUtils.formatNumber(totalInterest)));
-                totalPaymentTv.setText(panel.getContext().getString(R.string.emi_total_payment, "₹ " + CalculatorUtils.formatNumber(totalPayment)));
+                String emiAmount = LocaleFormatManager.formatCurrency(panel.getContext(), emi);
+                String totalInterestAmount = LocaleFormatManager.formatCurrency(panel.getContext(), totalInterest);
+                String totalPaymentAmount = LocaleFormatManager.formatCurrency(panel.getContext(), totalPayment);
+                resultTv.setText(emiAmount + " " + panel.getContext().getString(R.string.emi_per_month));
+                totalInterestTv.setText(panel.getContext().getString(R.string.emi_total_interest, totalInterestAmount));
+                totalPaymentTv.setText(panel.getContext().getString(R.string.emi_total_payment, totalPaymentAmount));
                 pieChart.setAmounts(P, totalInterest);
                 resultCard.setVisibility(View.VISIBLE);
+                panel.setTag(R.id.emi_last_calc_snapshot, new EmiLoanSnapshot(P, ratePct, n));
                 ConverterUiHelper.hideSoftKeyboard(panel);
                 ConverterUiHelper.scrollToShowResult(panel, resultCard);
             });
         }
+        if (scheduleCard != null) {
+            scheduleCard.setOnClickListener(v -> {
+                Object tag = panel.getTag(R.id.emi_last_calc_snapshot);
+                if (!(tag instanceof EmiLoanSnapshot)) {
+                    Toast.makeText(panel.getContext(), R.string.emi_calculate_first_schedule, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                EmiScheduleDialogHelper.show(panel.getContext(), (EmiLoanSnapshot) tag);
+            });
+        }
+        if (resultTv != null) {
+            resultTv.setOnLongClickListener(v -> {
+                LocaleFormatManager.showCurrencyPickerDialog(panel.getContext(), null);
+                return true;
+            });
+        }
+    }
+
+    private static void clearEmiSnapshot(View panel) {
+        panel.setTag(R.id.emi_last_calc_snapshot, null);
     }
 
     @SuppressWarnings("unchecked")
@@ -195,10 +221,7 @@ public final class EmiCalculatorPanel {
 
     private static String formatRangeLabel(double value) {
         long v = (long) value;
-        if (v >= 10_000_000) return "₹ " + (v / 1_00_00_000) + " Cr";
-        if (v >= 1_00_000) return "₹ " + (v / 1_00_000) + " L";
-        if (v >= 1_000) return "₹ " + (v / 1_000) + "k";
-        return "₹ " + v;
+        return LocaleFormatManager.formatCurrency(null, v);
     }
 
     private static void updatePrincipalRangeLabels(TextView minLabel, TextView maxLabel, double min, double max) {
@@ -314,21 +337,11 @@ public final class EmiCalculatorPanel {
     }
 
     private static double parseDouble(CharSequence s, double def) {
-        if (s == null) return def;
-        try {
-            return Double.parseDouble(s.toString().replace(",", "").trim());
-        } catch (NumberFormatException e) {
-            return def;
-        }
+        return LocaleFormatManager.parseLocalizedNumber(s, def);
     }
 
     private static int parseInt(CharSequence s, int def) {
-        if (s == null) return def;
-        try {
-            return Integer.parseInt(s.toString().replace(",", "").trim());
-        } catch (NumberFormatException e) {
-            return def;
-        }
+        return LocaleFormatManager.parseLocalizedInt(s, def);
     }
 
     /** Limits loan amount to maxDigits (digits only). When user would exceed, rejects and shows toast to use slider. */

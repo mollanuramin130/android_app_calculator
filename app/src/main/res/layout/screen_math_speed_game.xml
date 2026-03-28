@@ -4,19 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:padding="@dimen/mode_content_scroll_padding"
     android:background="@color/math_speed_screen_bg">
+
+    <ImageView
+        android:id="@+id/math_speed_hero_icon"
+        android:layout_width="@dimen/mode_content_icon_hero"
+        android:layout_height="@dimen/mode_content_icon_hero"
+        android:contentDescription="@null"
+        android:importantForAccessibility="no"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_nav_math_speed"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Score / Timer / Lives card -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/math_speed_status_card"
         android:layout_width="0dp"
         android:layout_height="56dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         app:cardCornerRadius="16dp"
         app:cardElevation="4dp"
         app:cardBackgroundColor="@color/math_speed_card_bg"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/math_speed_hero_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 

@@ -168,4 +168,22 @@
     <color name="memory_grid_cell_bg">#455A64</color>
     <color name="memory_grid_correct">#4CAF50</color>
     <color name="memory_grid_wrong">#E53935</color>
+
+    <!-- Favorites: priority strip & urgency -->
+    <color name="fav_priority_low">#FF757575</color>
+    <color name="fav_priority_medium">#FF1565C0</color>
+    <color name="fav_priority_high">#FFC62828</color>
+    <color name="fav_priority_custom">#FF6A1B9A</color>
+    <color name="fav_urgency_safe_text">#FF546E7A</color>
+    <color name="fav_urgency_warning_text">#FFE65100</color>
+    <color name="fav_urgency_critical_text">#FFC62828</color>
+    <color name="fav_urgency_warning_overlay">#33FF9800</color>
+    <color name="fav_urgency_critical_overlay">#44E53935</color>
+    <color name="fav_card_bg">#FFFFFFFF</color>
+    <color name="fav_card_stroke">#1A8B3A20</color>
+    <color name="fav_swipe_pin_start">#FFFFECB3</color>
+    <color name="fav_swipe_pin_end">#FFFFCA28</color>
+    <color name="fav_swipe_delete_start">#FFFFCDD2</color>
+    <color name="fav_swipe_delete_end">#FFE57373</color>
+    <color name="fav_pin_icon_tint">#FF5D4037</color>
 </resources>

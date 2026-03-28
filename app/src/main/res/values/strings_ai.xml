@@ -7,10 +7,10 @@
     <string name="ai_suggestions_label">Quick try</string>
     <string name="ai_chip_emi">EMI</string>
     <string name="ai_chip_age">Age</string>
-    <string name="ai_chip_gst">GST</string>
+    <string name="ai_chip_gst">Tax</string>
     <string name="ai_chip_discount">Discount</string>
     <string name="ai_empty_try">Try: 5000 loan at 8% for 5 years</string>
-    <string name="ai_welcome_result">Ask me anything — EMI, age, discount, GST…</string>
+    <string name="ai_welcome_result">Ask me anything - EMI, age, discount, tax…</string>
     <string name="mode_ai_smart">AI Mode 🤖</string>
     <string name="ai_voice_retry">Voice failed. Tap mic to retry.</string>
     <string name="ai_share_app">Share app</string>
@@ -23,4 +23,13 @@
     <string name="ai_api_key_saved">API key saved. Try asking a question.</string>
     <string name="ai_api_key_cleared">API key cleared.</string>
     <string name="ai_api_key_clear_btn">Clear key</string>
+    <string name="ai_hint_paste_gemini_key">Paste Gemini key</string>
+    <string name="ai_prompt_emi_example">5000 loan at 8% for 5 years</string>
+    <string name="ai_prompt_age_example">age from 15 March 1990</string>
+    <string name="ai_prompt_tax_example">1000 with 18% tax</string>
+    <string name="ai_prompt_discount_example">500 with 20% discount</string>
+    <string name="ai_timeout_title">Timeout</string>
+    <string name="ai_voice_unavailable">Voice input is not available on this device. Please type your question.</string>
+    <string name="ai_voice_service_unavailable">Voice service is not available. Please type your question above.</string>
+    <string name="ai_voice_no_speech">No speech heard. Try again or type your question.</string>
 </resources>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -10,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
+        android:paddingStart="@dimen/mode_content_scroll_padding"
+        android:paddingEnd="@dimen/mode_content_scroll_padding"
         android:paddingTop="16dp"
         android:paddingBottom="24dp">
 
@@ -20,366 +21,603 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- 1. Result Summary Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/discount_result_card"
+            <ImageView
+                android:layout_width="@dimen/mode_content_icon_hero"
+                android:layout_height="@dimen/mode_content_icon_hero"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="8dp"
+                android:contentDescription="@null"
+                android:importantForAccessibility="no"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_nav_discount" />
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="6dp"
+                android:layout_marginBottom="@dimen/mode_content_hero_margin_bottom"
+                android:gravity="center_horizontal"
+                android:text="@string/discount_calculator_title"
+                android:textColor="@color/discount_text_primary"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <!-- Inputs: amounts use generic currency icon; order = inputs → calculate → results -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 app:cardBackgroundColor="@color/discount_card_primary"
-                android:padding="20dp">
+                app:cardCornerRadius="20dp"
+                app:cardElevation="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:gravity="center_horizontal">
+                    android:padding="20dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="@dimen/mode_content_icon_section"
+                            android:layout_height="@dimen/mode_content_icon_section"
+                            android:layout_marginEnd="@dimen/mode_content_icon_margin_end_section"
+                            android:contentDescription="@string/cd_currency_indicator"
+                            android:importantForAccessibility="no"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_generic_currency"
+                            app:tint="@color/discount_accent" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/discount_enter_values"
+                            android:textColor="@color/discount_text_primary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Original price (amount) -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="@string/discount_original_price"
+                        android:textColor="@color/discount_text_secondary"
+                        android:textSize="14sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="@dimen/discount_input_row_min_height"
+                        android:background="@drawable/discount_input_card"
+                        android:elevation="2dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="@dimen/discount_input_row_padding_h"
+                        android:paddingTop="@dimen/discount_input_row_padding_v"
+                        android:paddingEnd="@dimen/discount_input_row_padding_h"
+                        android:paddingBottom="@dimen/discount_input_row_padding_v">
+
+                        <ImageView
+                            android:layout_width="@dimen/discount_input_icon_size"
+                            android:layout_height="@dimen/discount_input_icon_size"
+                            android:layout_marginEnd="10dp"
+                            android:contentDescription="@string/cd_currency_indicator"
+                            android:importantForAccessibility="no"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_generic_currency"
+                            app:tint="@color/discount_text_secondary" />
+
+                        <EditText
+                            android:id="@+id/discount_original"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:gravity="end|center_vertical"
+                            android:hint="@string/hint_enter_amount"
+                            android:importantForAutofill="no"
+                            android:inputType="numberDecimal"
+                            android:minHeight="40dp"
+                            android:textAlignment="viewEnd"
+                            android:textColor="@color/discount_text_primary"
+                            android:textColorHint="@color/discount_text_secondary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <ImageButton
+                            android:id="@+id/discount_original_minus"
+                            android:layout_width="@dimen/discount_stepper_size"
+                            android:layout_height="@dimen/discount_stepper_size"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="4dp"
+                            android:background="@drawable/discount_btn_plus"
+                            android:contentDescription="@string/discount_step_decrease"
+                            android:src="@drawable/ic_bmi_minus"
+                            app:tint="@color/discount_text_primary" />
+
+                        <ImageButton
+                            android:id="@+id/discount_original_plus"
+                            android:layout_width="@dimen/discount_stepper_size"
+                            android:layout_height="@dimen/discount_stepper_size"
+                            android:background="@drawable/discount_btn_plus"
+                            android:contentDescription="@string/discount_step_increase"
+                            android:src="@android:drawable/ic_input_add"
+                            app:tint="@color/discount_text_primary" />
+                    </LinearLayout>
+
+                    <!-- Discount % -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="@string/discount_percentage"
+                        android:textColor="@color/discount_text_secondary"
+                        android:textSize="14sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="@dimen/discount_input_row_min_height"
+                        android:background="@drawable/discount_input_card"
+                        android:elevation="2dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="@dimen/discount_input_row_padding_h"
+                        android:paddingTop="@dimen/discount_input_row_padding_v"
+                        android:paddingEnd="@dimen/discount_input_row_padding_h"
+                        android:paddingBottom="@dimen/discount_input_row_padding_v">
+
+                        <EditText
+                            android:id="@+id/discount_percent"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:gravity="end|center_vertical"
+                            android:hint="0"
+                            android:importantForAutofill="no"
+                            android:inputType="numberDecimal"
+                            android:minHeight="40dp"
+                            android:textAlignment="viewEnd"
+                            android:textColor="@color/discount_text_primary"
+                            android:textColorHint="@color/discount_text_secondary"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            tools:text="25" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="8dp"
+                            android:text="%"
+                            android:textColor="@color/discount_text_secondary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <ImageButton
+                            android:id="@+id/discount_percent_minus"
+                            android:layout_width="@dimen/discount_stepper_size"
+                            android:layout_height="@dimen/discount_stepper_size"
+                            android:layout_marginEnd="4dp"
+                            android:background="@drawable/discount_btn_plus"
+                            android:contentDescription="@string/discount_step_decrease"
+                            android:src="@drawable/ic_bmi_minus"
+                            app:tint="@color/discount_text_primary" />
+
+                        <ImageButton
+                            android:id="@+id/discount_percent_plus"
+                            android:layout_width="@dimen/discount_stepper_size"
+                            android:layout_height="@dimen/discount_stepper_size"
+                            android:background="@drawable/discount_btn_plus"
+                            android:contentDescription="@string/discount_step_increase"
+                            android:src="@android:drawable/ic_input_add"
+                            app:tint="@color/discount_text_primary" />
+                    </LinearLayout>
+
+                    <!-- Extra discount (optional): off the price after main % discount -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="@string/discount_extra_discount"
+                        android:textColor="@color/discount_text_secondary"
+                        android:textSize="14sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="@dimen/discount_input_row_min_height"
+                        android:background="@drawable/discount_input_card"
+                        android:elevation="2dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="@dimen/discount_input_row_padding_h"
+                        android:paddingTop="@dimen/discount_input_row_padding_v"
+                        android:paddingEnd="@dimen/discount_input_row_padding_h"
+                        android:paddingBottom="@dimen/discount_input_row_padding_v">
+
+                        <ImageView
+                            android:layout_width="@dimen/discount_input_icon_size"
+                            android:layout_height="@dimen/discount_input_icon_size"
+                            android:layout_marginEnd="10dp"
+                            android:contentDescription="@string/cd_currency_indicator"
+                            android:importantForAccessibility="no"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_generic_currency"
+                            app:tint="@color/discount_text_secondary" />
+
+                        <EditText
+                            android:id="@+id/discount_extra_discount"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:gravity="end|center_vertical"
+                            android:hint="@string/discount_hint_extra_optional"
+                            android:importantForAutofill="no"
+                            android:inputType="numberDecimal"
+                            android:minHeight="40dp"
+                            android:textAlignment="viewEnd"
+                            android:textColor="@color/discount_text_primary"
+                            android:textColorHint="@color/discount_text_secondary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <ImageButton
+                            android:id="@+id/discount_extra_minus"
+                            android:layout_width="@dimen/discount_stepper_size"
+                            android:layout_height="@dimen/discount_stepper_size"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="4dp"
+                            android:background="@drawable/discount_btn_plus"
+                            android:contentDescription="@string/discount_step_decrease"
+                            android:src="@drawable/ic_bmi_minus"
+                            app:tint="@color/discount_text_primary" />
+
+                        <ImageButton
+                            android:id="@+id/discount_extra_plus"
+                            android:layout_width="@dimen/discount_stepper_size"
+                            android:layout_height="@dimen/discount_stepper_size"
+                            android:background="@drawable/discount_btn_plus"
+                            android:contentDescription="@string/discount_step_increase"
+                            android:src="@android:drawable/ic_input_add"
+                            app:tint="@color/discount_text_primary" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <Button
+                android:id="@+id/discount_calculate_btn"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/discount_btn_calculate"
+                android:elevation="8dp"
+                android:letterSpacing="0.06"
+                android:text="@string/discount_calculate_btn"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <!-- Result (shown after calculate) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/discount_result_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="@color/discount_card_primary"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="6dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:letterSpacing="0.03"
                         android:text="@string/discount_label_discounted_price"
                         android:textColor="@color/discount_text_secondary"
-                        android:textSize="16sp"
-                        android:letterSpacing="0.03" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/discount_main_value"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="75.00"
+                        android:gravity="center_horizontal"
+                        android:maxLines="2"
                         android:textColor="@color/discount_positive"
-                        android:textSize="44sp"
-                        android:textStyle="bold" />
+                        android:textSize="40sp"
+                        android:textStyle="bold"
+                        tools:text="75.00" />
 
                     <TextView
                         android:id="@+id/discount_you_save"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
+                        android:gravity="center_horizontal"
+                        android:maxLines="2"
                         android:text="@string/discount_you_save"
                         android:textColor="@color/discount_accent"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        tools:text="You Save 25.00" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginTop="16dp"
-                        android:background="@color/discount_text_secondary"
-                        android:alpha="0.3" />
+                        android:alpha="0.3"
+                        android:background="@color/discount_text_secondary" />
 
-                    <!-- Mini row: Original | Discount | Price Off -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:orientation="horizontal"
-                        android:gravity="center">
+                        android:baselineAligned="false"
+                        android:orientation="horizontal">
+
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center">
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:gravity="center_horizontal"
+                                android:maxLines="2"
                                 android:text="@string/discount_label_original"
                                 android:textColor="@color/discount_text_secondary"
                                 android:textSize="12sp" />
+
                             <TextView
                                 android:id="@+id/discount_summary_original"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
-                                android:text="100.00"
+                                android:ellipsize="end"
+                                android:gravity="center_horizontal"
+                                android:maxLines="2"
                                 android:textColor="@color/discount_text_primary"
                                 android:textSize="14sp"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+                                tools:text="100.00" />
                         </LinearLayout>
+
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center">
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:gravity="center_horizontal"
+                                android:maxLines="2"
                                 android:text="@string/discount_label_discount"
                                 android:textColor="@color/discount_text_secondary"
                                 android:textSize="12sp" />
+
                             <TextView
                                 android:id="@+id/discount_summary_pct"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
-                                android:text="-25%"
+                                android:ellipsize="end"
+                                android:gravity="center_horizontal"
+                                android:maxLines="2"
                                 android:textColor="@color/discount_text_primary"
                                 android:textSize="14sp"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+                                tools:text="-25%" />
                         </LinearLayout>
+
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center">
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@string/discount_label_price_off"
+                                android:ellipsize="end"
+                                android:gravity="center_horizontal"
+                                android:maxLines="2"
+                                android:text="@string/discount_label_total_savings"
                                 android:textColor="@color/discount_text_secondary"
                                 android:textSize="12sp" />
+
                             <TextView
                                 android:id="@+id/discount_summary_off"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
-                                android:text="-25.00"
+                                android:ellipsize="end"
+                                android:gravity="center_horizontal"
+                                android:maxLines="2"
                                 android:textColor="@color/discount_text_primary"
                                 android:textSize="14sp"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+                                tools:text="-25.00" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- 2. Original Price Input Card -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:layout_marginTop="20dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:background="@drawable/discount_input_card"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:elevation="4dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/discount_original_price"
-                    android:textColor="@color/discount_text_secondary"
-                    android:textSize="14sp" />
-                <EditText
-                    android:id="@+id/discount_original"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minWidth="80dp"
-                    android:inputType="numberDecimal"
-                    android:hint="0"
-                    android:text="100"
-                    android:textColor="@color/discount_text_primary"
-                    android:textColorHint="@color/discount_text_secondary"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:background="@null"
-                    android:layout_marginEnd="8dp" />
-                <ImageButton
-                    android:id="@+id/discount_original_minus"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="@drawable/discount_btn_plus"
-                    android:src="@drawable/ic_bmi_minus"
-                    android:contentDescription="Decrease"
-                    app:tint="@color/discount_text_primary"
-                    android:layout_marginEnd="4dp" />
-                <ImageButton
-                    android:id="@+id/discount_original_plus"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="@drawable/discount_btn_plus"
-                    android:src="@android:drawable/ic_input_add"
-                    android:contentDescription="Increase"
-                    app:tint="@color/discount_text_primary" />
-            </LinearLayout>
-
-            <!-- 3. Discount Percentage Input Card -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:background="@drawable/discount_input_card"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:elevation="4dp">
-
-                <TextView
-                    android:layout_width="24dp"
-                    android:layout_height="wrap_content"
-                    android:text="%"
-                    android:textColor="@color/discount_text_secondary"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:layout_marginEnd="8dp" />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/discount_percentage"
-                    android:textColor="@color/discount_text_secondary"
-                    android:textSize="14sp" />
-                <EditText
-                    android:id="@+id/discount_percent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minWidth="60dp"
-                    android:inputType="numberDecimal"
-                    android:hint="0"
-                    android:text="25"
-                    android:textColor="@color/discount_text_primary"
-                    android:textColorHint="@color/discount_text_secondary"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:background="@null"
-                    android:layout_marginEnd="4dp" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="%"
-                    android:textColor="@color/discount_text_secondary"
-                    android:textSize="16sp"
-                    android:layout_marginEnd="8dp" />
-                <ImageButton
-                    android:id="@+id/discount_percent_minus"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="@drawable/discount_btn_plus"
-                    android:src="@drawable/ic_bmi_minus"
-                    android:contentDescription="Decrease"
-                    app:tint="@color/discount_text_primary"
-                    android:layout_marginEnd="4dp" />
-                <ImageButton
-                    android:id="@+id/discount_percent_plus"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="@drawable/discount_btn_plus"
-                    android:src="@android:drawable/ic_input_add"
-                    android:contentDescription="Increase"
-                    app:tint="@color/discount_text_primary" />
-            </LinearLayout>
-
-            <!-- 4. Discount Amount Input Card (optional) -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:background="@drawable/discount_input_card"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:elevation="4dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/discount_amount"
-                    android:textColor="@color/discount_text_secondary"
-                    android:textSize="14sp" />
-                <EditText
-                    android:id="@+id/discount_amount_input"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minWidth="80dp"
-                    android:inputType="numberDecimal"
-                    android:hint="0"
-                    android:text=""
-                    android:textColor="@color/discount_text_primary"
-                    android:textColorHint="@color/discount_text_secondary"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:background="@null"
-                    android:layout_marginEnd="8dp" />
-                <ImageButton
-                    android:id="@+id/discount_amount_minus"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="@drawable/discount_btn_plus"
-                    android:src="@drawable/ic_bmi_minus"
-                    android:contentDescription="Decrease"
-                    app:tint="@color/discount_text_primary"
-                    android:layout_marginEnd="4dp" />
-                <ImageButton
-                    android:id="@+id/discount_amount_plus"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="@drawable/discount_btn_plus"
-                    android:src="@android:drawable/ic_input_add"
-                    android:contentDescription="Increase"
-                    app:tint="@color/discount_text_primary" />
-            </LinearLayout>
-
-            <!-- 5. Calculate Button -->
-            <Button
-                android:id="@+id/discount_calculate_btn"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="24dp"
-                android:background="@drawable/discount_btn_calculate"
-                android:text="@string/discount_calculate_btn"
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.06"
-                android:elevation="8dp" />
-
-            <!-- 6. Detailed Breakdown Card -->
+            <!-- Breakdown (label | value) -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/discount_breakdown_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="4dp"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
                 app:cardBackgroundColor="@color/discount_card_primary"
-                android:padding="16dp">
+                app:cardCornerRadius="20dp"
+                app:cardElevation="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="18dp">
 
                     <TextView
-                        android:id="@+id/discount_breakdown_line1"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/discount_breakdown_original"
+                        android:layout_marginBottom="12dp"
+                        android:text="@string/discount_breakdown_title"
                         android:textColor="@color/discount_text_primary"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="8dp" />
-                    <TextView
-                        android:id="@+id/discount_breakdown_line2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/discount_breakdown_discount"
-                        android:textColor="@color/discount_text_primary"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="8dp" />
-                    <TextView
-                        android:id="@+id/discount_breakdown_line3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/discount_breakdown_price_off"
-                        android:textColor="@color/discount_text_primary"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="8dp" />
-                    <TextView
-                        android:id="@+id/discount_breakdown_final"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/discount_breakdown_final"
-                        android:textColor="@color/discount_positive"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:maxLines="2"
+                            android:text="@string/discount_breakdown_row_original"
+                            android:textColor="@color/discount_text_secondary"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/discount_breakdown_value_original"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:ellipsize="end"
+                            android:gravity="end"
+                            android:maxLines="3"
+                            android:textColor="@color/discount_text_primary"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            tools:text="100.00" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:maxLines="2"
+                            android:text="@string/discount_breakdown_row_discount"
+                            android:textColor="@color/discount_text_secondary"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/discount_breakdown_value_discount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:ellipsize="end"
+                            android:gravity="end"
+                            android:maxLines="3"
+                            android:textColor="@color/discount_text_primary"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            tools:text="25.0% · 25.00" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:maxLines="2"
+                            android:text="@string/discount_breakdown_row_extra"
+                            android:textColor="@color/discount_text_secondary"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/discount_breakdown_value_extra"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:ellipsize="end"
+                            android:gravity="end"
+                            android:maxLines="3"
+                            android:textColor="@color/discount_text_primary"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            tools:text="-25.00" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:maxLines="2"
+                            android:text="@string/discount_breakdown_row_final"
+                            android:textColor="@color/discount_text_primary"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/discount_breakdown_value_final"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:ellipsize="end"
+                            android:gravity="end"
+                            android:maxLines="3"
+                            android:textColor="@color/discount_positive"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            tools:text="75.00" />
+                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>

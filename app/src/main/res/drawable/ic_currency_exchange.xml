@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Material currency_exchange: indicates currency selection / money (no symbol). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="@color/mode_button_text_light"
+        android:pathData="M12.5,6.9c1.78,0 2.9,0.55 3.88,1.8l1.43,-1.43c-0.9,-1.16 -2.01,-2.05 -3.38,-2.51V4h-2v2.09c-0.39,-0.09 -0.79,-0.15 -1.21,-0.15c-1.5,0 -2.85,0.65 -3.79,1.69L5.5,8.5c0.93,-0.99 2.24,-1.61 3.68,-1.61c0.5,0 0.97,0.07 1.4,0.18V12h-2V9.41l-3,3V20h2v-5.59l1.59,-1.59L11,16.59V20h2v-3.42l-1.59,-1.59L13,13.41V9.18c0.43,-0.11 0.9,-0.18 1.4,-0.18m-1.33,-1.67c-0.62,-0.34 -1.33,-0.5 -2.05,-0.5c-1.93,0 -3.68,0.79 -4.95,2.05l1.43,1.43c0.9,-0.9 2.14,-1.45 3.52,-1.45c0.5,0 0.97,0.07 1.4,0.18V6.23z" />
+</vector>

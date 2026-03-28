@@ -6,7 +6,7 @@
     <string name="date_select_mode">Select Calculation Mode</string>
     <string name="date_mode_age">📅 Age Calculator</string>
     <string name="date_mode_difference">Date Difference</string>
-    <string name="date_dob_label">🎂 Date of Birth</string>
+    <string name="date_dob_label">🎂 Birth Date</string>
     <string name="date_todays_date_label">📆 Today\'s Date</string>
     <string name="date_end_date_label">End Date</string>
     <string name="date_start_date_label">Start Date</string>
@@ -29,7 +29,7 @@
     <string name="date_error_invalid_day">Day must be 1–31</string>
     <string name="date_error_invalid_month">Month must be 1–12</string>
     <string name="date_error_invalid_year">Year must be 1900–2100</string>
-    <string name="date_error_future_dob">Date of birth cannot be in the future</string>
+    <string name="date_error_future_dob">Birth date cannot be in the future</string>
     <string name="date_error_end_before_start">End date must be after start date</string>
     <string name="date_error_fill_all">Please fill all date fields</string>
 </resources>

@@ -1,219 +1,302 @@
 package com.nuramin.calculator.currency;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.material.button.MaterialButton;
 import com.nuramin.sunsetcoralcalculator.R;
 import com.nuramin.calculator.util.CalculatorUtils;
 import com.nuramin.calculator.util.ConverterUiHelper;
 
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
 
 /**
- * Currency Converter: from/to spinners with country flags, amount, swap, result.
- * Fetches live rates from Frankfurter API; uses sample data and shows warning when offline or API fails.
+ * Currency converter: searchable picker, drawable flags, live rates from open.er-api.com,
+ * persisted cache, last selection in {@link CurrencyPreferences}.
  */
 public final class CurrencyPanel {
 
-    private static final String[] CODES = {"USD", "EUR", "GBP", "INR", "BDT"};
-    /** Sample rates (1 unit = this many USD). BDT not in API so always sample. */
-    private static final double[] SAMPLE_RATES_TO_USD = {1.0, 1.08, 1.27, 0.012, 0.0085};
-    private static final int[] FLAG_IDS = {
-            R.drawable.ic_flag_us,
-            R.drawable.ic_flag_eur,
-            R.drawable.ic_flag_gb,
-            R.drawable.ic_flag_in,
-            R.drawable.ic_flag_bd
-    };
-    private static final String API_URL = "https://api.frankfurter.app/latest?from=USD&to=EUR,GBP,INR";
-
-    /** Current rates (1 unit = this many USD). Updated from API or sample. */
-    private static double[] sRatesToUsd = SAMPLE_RATES_TO_USD.clone();
-    private static boolean sUsingSampleData = true;
-    private static View sPanel;
-    private static Runnable sRefreshRunnable;
+    private static volatile boolean sLastFetchWasLive;
 
     public static void setup(View panel, @Nullable DrawerLayout drawerLayout, @Nullable View.OnClickListener onOverflowClick) {
         if (panel == null) return;
-        sPanel = panel;
+        Context ctx = panel.getContext();
+        CurrencyRatesRepository.loadCacheFromPrefs(ctx);
+        CurrencyRatesRepository.notifyRegistryOfRateCodes(ctx);
+        sLastFetchWasLive = false;
 
-        Spinner fromSpinner = panel.findViewById(R.id.currency_from);
-        Spinner toSpinner = panel.findViewById(R.id.currency_to);
+        List<CurrencyItem> catalog = CurrencyRegistry.getAllWithSvgFlags(ctx);
+
+        MaterialButton fromBtn = panel.findViewById(R.id.currency_from);
+        MaterialButton toBtn = panel.findViewById(R.id.currency_to);
         EditText amountEt = panel.findViewById(R.id.currency_amount);
         ImageButton swapBtn = panel.findViewById(R.id.currency_swap);
         TextView resultTv = panel.findViewById(R.id.currency_result);
         TextView indicativeTv = panel.findViewById(R.id.currency_indicative_text);
         TextView warningTv = panel.findViewById(R.id.currency_warning_text);
+        TextView amountErrorTv = panel.findViewById(R.id.currency_amount_error);
         ImageView fromFlag = panel.findViewById(R.id.currency_from_flag);
         ImageView toFlag = panel.findViewById(R.id.currency_to_flag);
 
-        if (fromSpinner != null && toSpinner != null) {
-            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(panel.getContext(),
-                    R.array.currency_codes, android.R.layout.simple_spinner_item);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            fromSpinner.setAdapter(adapter);
-            toSpinner.setAdapter(adapter);
-            fromSpinner.setSelection(0);
-            toSpinner.setSelection(3);
-        }
+        final CurrencyItem[] fromSel = new CurrencyItem[1];
+        final CurrencyItem[] toSel = new CurrencyItem[1];
+        fromSel[0] = resolveItem(ctx, catalog, CurrencyPreferences.getFromCode(ctx, "USD"), "USD");
+        toSel[0] = resolveItem(ctx, catalog, CurrencyPreferences.getToCode(ctx, "INR"), "INR");
 
-        Runnable updateFlags = () -> {
-            if (fromFlag != null && fromSpinner != null) {
-                int pos = fromSpinner.getSelectedItemPosition();
-                if (pos >= 0 && pos < FLAG_IDS.length) fromFlag.setImageResource(FLAG_IDS[pos]);
-            }
-            if (toFlag != null && toSpinner != null) {
-                int pos = toSpinner.getSelectedItemPosition();
-                if (pos >= 0 && pos < FLAG_IDS.length) toFlag.setImageResource(FLAG_IDS[pos]);
-            }
+        Runnable updateLabels = () -> {
+            setCurrencyButton(fromBtn, fromSel[0]);
+            setCurrencyButton(toBtn, toSel[0]);
+            setFlagImage(ctx, fromFlag, fromSel[0]);
+            setFlagImage(ctx, toFlag, toSel[0]);
         };
 
         Runnable updateResult = () -> {
-            if (amountEt == null || resultTv == null || indicativeTv == null || fromSpinner == null || toSpinner == null) return;
-            double amount;
-            try {
-                String s = amountEt.getText() != null ? amountEt.getText().toString().replace(",", "").trim() : "";
-                amount = s.isEmpty() ? 0 : Double.parseDouble(s);
-            } catch (NumberFormatException e) {
+            if (amountEt == null || resultTv == null || indicativeTv == null) return;
+            if (fromSel[0] == null || toSel[0] == null) return;
+
+            String raw = amountEt.getText() != null ? amountEt.getText().toString() : "";
+
+            if (CurrencyConversion.isBlankAmount(raw)) {
                 resultTv.setText("—");
                 indicativeTv.setText("—");
-                if (warningTv != null) warningTv.setVisibility(sUsingSampleData ? View.VISIBLE : View.GONE);
+                if (amountErrorTv != null) amountErrorTv.setVisibility(View.GONE);
+                if (warningTv != null) {
+                    warningTv.setVisibility(!sLastFetchWasLive ? View.VISIBLE : View.GONE);
+                }
                 return;
             }
-            int fromIdx = fromSpinner.getSelectedItemPosition();
-            int toIdx = toSpinner.getSelectedItemPosition();
-            if (fromIdx < 0) fromIdx = 0;
-            if (toIdx < 0) toIdx = 0;
-            double[] rates = sRatesToUsd != null ? sRatesToUsd : SAMPLE_RATES_TO_USD;
-            if (fromIdx >= rates.length) fromIdx = 0;
-            if (toIdx >= rates.length) toIdx = 0;
-            double fromRate = rates[fromIdx];
-            double toRate = rates[toIdx];
-            double usdValue = amount * fromRate;
-            double result = toRate > 0 ? usdValue / toRate : 0;
-            resultTv.setText(CalculatorUtils.formatNumber(result));
-            indicativeTv.setText(String.format("1 %s = %s %s", CODES[fromIdx], CalculatorUtils.formatNumber(fromRate / toRate), CODES[toIdx]));
-            if (warningTv != null) {
-                warningTv.setVisibility(sUsingSampleData ? View.VISIBLE : View.GONE);
+
+            if (!CurrencyConversion.isValidAmount(raw)) {
+                resultTv.setText("—");
+                indicativeTv.setText("—");
+                if (amountErrorTv != null) {
+                    amountErrorTv.setText(R.string.currency_error_invalid_amount);
+                    amountErrorTv.setVisibility(View.VISIBLE);
+                }
+                if (warningTv != null) warningTv.setVisibility(View.GONE);
+                return;
+            }
+
+            if (amountErrorTv != null) amountErrorTv.setVisibility(View.GONE);
+
+            try {
+                double amount = CurrencyConversion.parseAmount(raw);
+                String fromCode = fromSel[0].getCode();
+                String toCode = toSel[0].getCode();
+
+                double fromUsd = CurrencyRatesRepository.getUsdPerUnit(fromCode);
+                double toUsd = CurrencyRatesRepository.getUsdPerUnit(toCode);
+                boolean missingRate = !Double.isFinite(fromUsd) || fromUsd <= 0
+                        || !Double.isFinite(toUsd) || toUsd <= 0;
+
+                if (missingRate) {
+                    resultTv.setText("—");
+                    indicativeTv.setText(panel.getContext().getString(R.string.currency_rate_unavailable));
+                    if (warningTv != null) warningTv.setVisibility(View.VISIBLE);
+                    return;
+                }
+
+                double result = CurrencyConversion.convertViaUsd(amount, fromUsd, toUsd);
+                if (!Double.isFinite(result)) {
+                    resultTv.setText("—");
+                    indicativeTv.setText("—");
+                } else {
+                    resultTv.setText(CalculatorUtils.formatNumber(result));
+                    double cross = CurrencyConversion.unitsOfTargetPerOneSource(fromUsd, toUsd);
+                    indicativeTv.setText(Double.isFinite(cross)
+                            ? String.format("1 %s = %s %s", fromCode, CalculatorUtils.formatNumber(cross), toCode)
+                            : "—");
+                }
+                if (warningTv != null) {
+                    warningTv.setVisibility(!sLastFetchWasLive ? View.VISIBLE : View.GONE);
+                }
+            } catch (RuntimeException e) {
+                resultTv.setText("—");
+                indicativeTv.setText("—");
+                if (warningTv != null) warningTv.setVisibility(View.VISIBLE);
             }
         };
 
-        sRefreshRunnable = () -> {
+        Runnable refreshAll = () -> {
+            updateLabels.run();
             updateResult.run();
-            updateFlags.run();
         };
 
-        if (fromSpinner != null) {
-            fromSpinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
-                    updateFlags.run();
-                    updateResult.run();
-                }
-                @Override
-                public void onNothingSelected(android.widget.AdapterView<?> parent) {}
-            });
+        panel.setTag(R.id.currency_panel_refresh, refreshAll);
+
+        if (fromBtn != null) {
+            fromBtn.setOnClickListener(v -> CurrencyPickerDialog.show(
+                    ctx,
+                    catalog,
+                    ctx.getString(R.string.currency_picker_from),
+                    item -> {
+                        fromSel[0] = item;
+                        CurrencyPreferences.saveSelection(ctx, fromSel[0].getCode(), toSel[0] != null ? toSel[0].getCode() : "INR");
+                        refreshAll.run();
+                    }));
         }
-        if (toSpinner != null) {
-            toSpinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
-                    updateFlags.run();
-                    updateResult.run();
-                }
-                @Override
-                public void onNothingSelected(android.widget.AdapterView<?> parent) {}
-            });
+        if (toBtn != null) {
+            toBtn.setOnClickListener(v -> CurrencyPickerDialog.show(
+                    ctx,
+                    catalog,
+                    ctx.getString(R.string.currency_picker_to),
+                    item -> {
+                        toSel[0] = item;
+                        CurrencyPreferences.saveSelection(ctx, fromSel[0] != null ? fromSel[0].getCode() : "USD", toSel[0].getCode());
+                        refreshAll.run();
+                    }));
         }
 
         if (amountEt != null) {
             amountEt.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
                 @Override
                 public void afterTextChanged(Editable editable) {
                     updateResult.run();
                 }
             });
-        }
-        if (swapBtn != null && fromSpinner != null && toSpinner != null && resultTv != null) {
-            swapBtn.setOnClickListener(v -> {
-                int from = fromSpinner.getSelectedItemPosition();
-                int to = toSpinner.getSelectedItemPosition();
-                fromSpinner.setSelection(to);
-                toSpinner.setSelection(from);
-                updateFlags.run();
-                updateResult.run();
-                ConverterUiHelper.hideSoftKeyboard(panel);
-                ConverterUiHelper.scrollToShowResult(panel, resultTv);
+            amountEt.post(() -> {
+                amountEt.requestFocus();
+                amountEt.setSelection(amountEt.getText() != null ? amountEt.getText().length() : 0);
             });
         }
-        updateFlags.run();
-        updateResult.run();
+
+        if (swapBtn != null && fromSel[0] != null && toSel[0] != null) {
+            swapBtn.setOnClickListener(v -> {
+                ObjectAnimator.ofFloat(swapBtn, View.ROTATION, 0f, 180f).setDuration(240).start();
+                CurrencyItem tmp = fromSel[0];
+                fromSel[0] = toSel[0];
+                toSel[0] = tmp;
+                if (fromSel[0] != null && toSel[0] != null) {
+                    CurrencyPreferences.saveSelection(ctx, fromSel[0].getCode(), toSel[0].getCode());
+                }
+                updateLabels.run();
+                updateResult.run();
+                ConverterUiHelper.hideSoftKeyboard(panel);
+                if (resultTv != null) {
+                    ConverterUiHelper.scrollToShowResult(panel, resultTv);
+                }
+            });
+        }
+
+        refreshAll.run();
     }
 
-    /**
-     * Call when the currency converter panel becomes visible. Checks connectivity, shows
-     * "turn on internet" dialog if off (repeats every time user is on this screen with no internet),
-     * fetches live rates or uses sample data and shows warning.
-     */
+    @Nullable
+    private static CurrencyItem resolveItem(Context ctx, List<CurrencyItem> catalog, String prefCode, String fallbackCode) {
+        if (catalog.isEmpty()) return null;
+        CurrencyItem pref = CurrencyRegistry.find(ctx, prefCode);
+        if (pref != null && listContainsCode(catalog, pref.getCode())) {
+            return pref;
+        }
+        CurrencyItem fb = CurrencyRegistry.find(ctx, fallbackCode);
+        if (fb != null && listContainsCode(catalog, fb.getCode())) {
+            return fb;
+        }
+        for (CurrencyItem x : catalog) {
+            if (fallbackCode != null && fallbackCode.equalsIgnoreCase(x.getCode())) return x;
+        }
+        return catalog.get(0);
+    }
+
+    private static boolean listContainsCode(@NonNull List<CurrencyItem> catalog, @Nullable String code) {
+        if (code == null) return false;
+        String u = code.toUpperCase(Locale.US);
+        for (CurrencyItem x : catalog) {
+            if (u.equals(x.getCode())) return true;
+        }
+        return false;
+    }
+
+    private static void setCurrencyButton(@Nullable MaterialButton btn, @Nullable CurrencyItem item) {
+        if (btn == null || item == null) return;
+        btn.setText(item.getCode() + " — " + item.getName());
+        btn.setSingleLine(true);
+        btn.setEllipsize(TextUtils.TruncateAt.END);
+    }
+
+    private static void setFlagImage(Context ctx, @Nullable ImageView iv, @Nullable CurrencyItem item) {
+        if (iv == null || item == null) return;
+        CurrencySvgFlagLoader.loadInto(
+                iv, item, R.dimen.currency_flag_render_width_main, R.dimen.currency_flag_render_height_main);
+    }
+
     public static void onPanelVisible(Activity activity, View panel) {
         if (activity == null || panel == null) return;
+        CurrencyRatesRepository.loadCacheFromPrefs(activity);
+        CurrencyRatesRepository.notifyRegistryOfRateCodes(activity);
         boolean connected = isNetworkAvailable(activity);
         if (!connected) {
-            sUsingSampleData = true;
-            sRatesToUsd = SAMPLE_RATES_TO_USD.clone();
-            runOnUiThread(activity, () -> {
+            sLastFetchWasLive = false;
+            activity.runOnUiThread(() -> {
                 showInternetOffDialog(activity);
-                refreshUi(panel);
+                runRefresh(panel);
             });
             return;
         }
         ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(() -> {
-            double[] fetched = fetchRatesFromApi();
-            activity.runOnUiThread(() -> {
-                if (fetched != null) {
-                    sRatesToUsd = fetched;
-                    sUsingSampleData = false;
-                } else {
-                    sRatesToUsd = SAMPLE_RATES_TO_USD.clone();
-                    sUsingSampleData = true;
-                }
-                refreshUi(panel);
+        try {
+            executor.execute(() -> {
+                String json = CurrencyRatesRepository.fetchLatestJson();
+                activity.runOnUiThread(() -> {
+                    if (json != null) {
+                        CurrencyRatesRepository.saveCacheToPrefs(activity, json);
+                        sLastFetchWasLive = true;
+                    } else {
+                        sLastFetchWasLive = false;
+                    }
+                    CurrencyRatesRepository.notifyRegistryOfRateCodes(activity);
+                    runRefresh(panel);
+                });
             });
-        });
+        } catch (RejectedExecutionException e) {
+            activity.runOnUiThread(() -> {
+                sLastFetchWasLive = false;
+                runRefresh(panel);
+            });
+        } finally {
+            executor.shutdown();
+        }
+    }
+
+    private static void runRefresh(View panel) {
+        Runnable r = (Runnable) panel.getTag(R.id.currency_panel_refresh);
+        if (r != null) r.run();
     }
 
     private static boolean isNetworkAvailable(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm == null) return false;
-        NetworkInfo net = cm.getActiveNetworkInfo();
-        return net != null && net.isConnected();
+        Network network = cm.getActiveNetwork();
+        if (network == null) return false;
+        NetworkCapabilities caps = cm.getNetworkCapabilities(network);
+        return caps != null && caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET);
     }
 
     private static void showInternetOffDialog(Activity activity) {
@@ -223,49 +306,5 @@ public final class CurrencyPanel {
                 .setPositiveButton(android.R.string.ok, (d, w) -> d.dismiss())
                 .setCancelable(true)
                 .show();
-    }
-
-    /** @return new rates array (1 unit = X USD), or null on failure */
-    private static double[] fetchRatesFromApi() {
-        HttpURLConnection conn = null;
-        try {
-            URL url = new URL(API_URL);
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.setConnectTimeout(10000);
-            conn.setReadTimeout(10000);
-            int code = conn.getResponseCode();
-            if (code != HttpURLConnection.HTTP_OK) return null;
-            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) sb.append(line);
-            reader.close();
-            JSONObject root = new JSONObject(sb.toString());
-            JSONObject rates = root.optJSONObject("rates");
-            if (rates == null) return null;
-            double[] result = SAMPLE_RATES_TO_USD.clone();
-            result[0] = 1.0; // USD
-            double eur = rates.optDouble("EUR", 0);
-            if (eur > 0) result[1] = 1.0 / eur;
-            double gbp = rates.optDouble("GBP", 0);
-            if (gbp > 0) result[2] = 1.0 / gbp;
-            double inr = rates.optDouble("INR", 0);
-            if (inr > 0) result[3] = 1.0 / inr;
-            // result[4] BDT stays sample
-            return result;
-        } catch (Exception e) {
-            return null;
-        } finally {
-            if (conn != null) conn.disconnect();
-        }
-    }
-
-    private static void runOnUiThread(Activity activity, Runnable r) {
-        if (activity != null) activity.runOnUiThread(r);
-    }
-
-    private static void refreshUi(View panel) {
-        if (sRefreshRunnable != null) sRefreshRunnable.run();
     }
 }

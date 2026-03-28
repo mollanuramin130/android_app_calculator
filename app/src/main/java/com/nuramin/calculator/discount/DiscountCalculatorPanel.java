@@ -15,14 +15,14 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.snackbar.Snackbar;
 import com.nuramin.sunsetcoralcalculator.R;
-import com.nuramin.calculator.util.CalculatorUtils;
 import com.nuramin.calculator.util.ConverterUiHelper;
+import com.nuramin.calculator.util.LocaleFormatManager;
+
+import java.util.Locale;
 
 /**
- * Discount / Percentage Calculator. Reuses common TopBar; content only below it.
- * Formula: percentage-based discountAmount = original * (percent/100), finalPrice = original - discountAmount;
- * or direct amount: finalPrice = original - discountAmount, percent = (discountAmount/original)*100.
- * If both percent and amount filled, prioritize percentage.
+ * Discount / Percentage Calculator. Main discount from % of original; optional extra discount
+ * subtracts from the price after that discount. Requires original price and discount % to calculate.
  */
 public final class DiscountCalculatorPanel {
 
@@ -31,13 +31,13 @@ public final class DiscountCalculatorPanel {
 
         EditText originalEt = panel.findViewById(R.id.discount_original);
         EditText percentEt = panel.findViewById(R.id.discount_percent);
-        EditText amountEt = panel.findViewById(R.id.discount_amount_input);
+        EditText extraEt = panel.findViewById(R.id.discount_extra_discount);
         ImageButton originalPlus = panel.findViewById(R.id.discount_original_plus);
         ImageButton originalMinus = panel.findViewById(R.id.discount_original_minus);
         ImageButton percentPlus = panel.findViewById(R.id.discount_percent_plus);
         ImageButton percentMinus = panel.findViewById(R.id.discount_percent_minus);
-        ImageButton amountPlus = panel.findViewById(R.id.discount_amount_plus);
-        ImageButton amountMinus = panel.findViewById(R.id.discount_amount_minus);
+        ImageButton extraPlus = panel.findViewById(R.id.discount_extra_plus);
+        ImageButton extraMinus = panel.findViewById(R.id.discount_extra_minus);
         Button calculateBtn = panel.findViewById(R.id.discount_calculate_btn);
         MaterialCardView resultCard = panel.findViewById(R.id.discount_result_card);
         TextView mainValue = panel.findViewById(R.id.discount_main_value);
@@ -46,74 +46,97 @@ public final class DiscountCalculatorPanel {
         TextView summaryPct = panel.findViewById(R.id.discount_summary_pct);
         TextView summaryOff = panel.findViewById(R.id.discount_summary_off);
         MaterialCardView breakdownCard = panel.findViewById(R.id.discount_breakdown_card);
-        TextView breakdownLine1 = panel.findViewById(R.id.discount_breakdown_line1);
-        TextView breakdownLine2 = panel.findViewById(R.id.discount_breakdown_line2);
-        TextView breakdownLine3 = panel.findViewById(R.id.discount_breakdown_line3);
-        TextView breakdownFinal = panel.findViewById(R.id.discount_breakdown_final);
+        TextView breakdownValOriginal = panel.findViewById(R.id.discount_breakdown_value_original);
+        TextView breakdownValDiscount = panel.findViewById(R.id.discount_breakdown_value_discount);
+        TextView breakdownValExtra = panel.findViewById(R.id.discount_breakdown_value_extra);
+        TextView breakdownValFinal = panel.findViewById(R.id.discount_breakdown_value_final);
+
+        if (resultCard != null) {
+            resultCard.setVisibility(View.GONE);
+        }
+        if (breakdownCard != null) {
+            breakdownCard.setVisibility(View.GONE);
+        }
 
         setIncrementDecrement(panel, originalEt, originalPlus, originalMinus, 1.0, 1.0, 10000.0);
         setIncrementDecrement(panel, percentEt, percentPlus, percentMinus, 1.0, 0.0, 100.0);
-        setIncrementDecrement(panel, amountEt, amountPlus, amountMinus, 1.0, 0.0, 100000.0);
+        setIncrementDecrement(panel, extraEt, extraPlus, extraMinus, 1.0, 0.0, 100000.0);
 
         if (calculateBtn != null && resultCard != null && mainValue != null && youSave != null
                 && summaryOriginal != null && summaryPct != null && summaryOff != null
-                && breakdownCard != null && breakdownLine1 != null && breakdownLine2 != null
-                && breakdownLine3 != null && breakdownFinal != null) {
+                && breakdownCard != null && breakdownValOriginal != null && breakdownValDiscount != null
+                && breakdownValExtra != null && breakdownValFinal != null) {
             calculateBtn.setOnClickListener(v -> {
-                double original = parseDouble(originalEt != null ? originalEt.getText() : null, 100);
-                double percent = parseDouble(percentEt != null ? percentEt.getText() : null, 25);
-                double amountInput = parseDouble(amountEt != null ? amountEt.getText() : null, -1);
-
-                if (original <= 0) {
-                    Snackbar.make(panel, R.string.discount_error_invalid, Snackbar.LENGTH_SHORT).show();
+                if (isBlank(originalEt != null ? originalEt.getText() : null)) {
+                    Snackbar.make(panel, R.string.discount_error_original_required, Snackbar.LENGTH_SHORT).show();
+                    requestFocus(originalEt);
                     return;
                 }
-                if (percent < 0 || percent > 100) {
-                    Snackbar.make(panel, R.string.discount_error_invalid, Snackbar.LENGTH_SHORT).show();
-                    return;
-                }
-                if (amountInput >= 0 && amountInput > original) {
-                    Snackbar.make(panel, R.string.discount_error_invalid, Snackbar.LENGTH_SHORT).show();
+                if (isBlank(percentEt != null ? percentEt.getText() : null)) {
+                    Snackbar.make(panel, R.string.discount_error_percent_required, Snackbar.LENGTH_SHORT).show();
+                    requestFocus(percentEt);
                     return;
                 }
 
-                double discountAmount;
-                double finalPrice;
-                double effectivePercent;
-
-                boolean usePercent = (percentEt != null && percentEt.getText() != null && !percentEt.getText().toString().trim().isEmpty());
-                if (amountInput >= 0 && !usePercent) {
-                    effectivePercent = (amountInput / original) * 100;
-                    discountAmount = amountInput;
-                    finalPrice = original - discountAmount;
-                } else {
-                    effectivePercent = percent;
-                    discountAmount = round2(original * (percent / 100));
-                    if (discountAmount > original) discountAmount = original;
-                    finalPrice = original - discountAmount;
+                double original = LocaleFormatManager.parseLocalizedNumber(
+                        originalEt != null ? originalEt.getText() : null, Double.NaN);
+                double percent = LocaleFormatManager.parseLocalizedNumber(
+                        percentEt != null ? percentEt.getText() : null, Double.NaN);
+                if (!Double.isFinite(original) || original <= 0) {
+                    Snackbar.make(panel, R.string.discount_error_invalid, Snackbar.LENGTH_SHORT).show();
+                    return;
+                }
+                if (!Double.isFinite(percent) || percent < 0 || percent > 100) {
+                    Snackbar.make(panel, R.string.discount_error_invalid, Snackbar.LENGTH_SHORT).show();
+                    return;
                 }
 
-                finalPrice = round2(finalPrice);
-                discountAmount = round2(discountAmount);
-                effectivePercent = round2(effectivePercent);
+                double extraInput = 0;
+                if (extraEt != null && !isBlank(extraEt.getText())) {
+                    extraInput = LocaleFormatManager.parseLocalizedNumber(extraEt.getText(), 0);
+                    if (extraInput < 0) {
+                        Snackbar.make(panel, R.string.discount_error_invalid, Snackbar.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
 
-                String origStr = CalculatorUtils.formatNumber(original);
-                String finalStr = CalculatorUtils.formatNumber(finalPrice);
-                String offStr = CalculatorUtils.formatNumber(discountAmount);
-                String pctStr = String.format("%.1f", effectivePercent);
+                double mainDiscountPreview = round2(original * (percent / 100.0));
+                if (mainDiscountPreview > original) {
+                    mainDiscountPreview = original;
+                }
+                double afterMainPreview = round2(original - mainDiscountPreview);
+                if (extraInput > afterMainPreview + 1e-9) {
+                    Snackbar.make(panel, R.string.discount_error_extra_too_large, Snackbar.LENGTH_SHORT).show();
+                    requestFocus(extraEt);
+                    return;
+                }
+
+                DiscountCalculator.Result calc = DiscountCalculator.compute(original, percent, extraInput);
+                double mainDiscount = calc.mainDiscountAmount;
+                double extraDiscount = calc.extraDiscountAmount;
+                double totalDiscount = calc.totalDiscountAmount;
+                double finalPrice = calc.finalPrice;
+                double mainPct = calc.mainPercent;
+
+                String origStr = LocaleFormatManager.formatCurrency(panel.getContext(), original);
+                String finalStr = LocaleFormatManager.formatCurrency(panel.getContext(), finalPrice);
+                String mainOffStr = LocaleFormatManager.formatCurrency(panel.getContext(), mainDiscount);
+                String extraStr = LocaleFormatManager.formatCurrency(panel.getContext(), extraDiscount);
+                String totalStr = LocaleFormatManager.formatCurrency(panel.getContext(), totalDiscount);
+                String pctStr = String.format(Locale.getDefault(), "%.1f", mainPct);
 
                 mainValue.setText(finalStr);
                 mainValue.setTextColor(ContextCompat.getColor(panel.getContext(), R.color.discount_positive));
-                youSave.setText(panel.getContext().getString(R.string.discount_you_save, offStr));
+                youSave.setText(panel.getContext().getString(R.string.discount_you_save, totalStr));
                 summaryOriginal.setText(origStr);
                 summaryPct.setText("-" + pctStr + "%");
-                summaryOff.setText("-" + offStr);
+                summaryOff.setText("-" + totalStr);
 
-                breakdownLine1.setText(panel.getContext().getString(R.string.discount_breakdown_original, origStr));
-                breakdownLine2.setText(panel.getContext().getString(R.string.discount_breakdown_discount, pctStr, "-" + offStr));
-                breakdownLine3.setText(panel.getContext().getString(R.string.discount_breakdown_price_off, "-" + offStr));
-                breakdownFinal.setText(panel.getContext().getString(R.string.discount_breakdown_final, finalStr));
-                breakdownFinal.setTextColor(ContextCompat.getColor(panel.getContext(), R.color.discount_positive));
+                breakdownValOriginal.setText(origStr);
+                breakdownValDiscount.setText(String.format(Locale.getDefault(), "%s%% · %s", pctStr, mainOffStr));
+                breakdownValExtra.setText(extraDiscount > 0 ? "-" + extraStr : extraStr);
+                breakdownValFinal.setText(finalStr);
+                breakdownValFinal.setTextColor(ContextCompat.getColor(panel.getContext(), R.color.discount_positive));
 
                 resultCard.setVisibility(View.VISIBLE);
                 breakdownCard.setVisibility(View.VISIBLE);
@@ -136,17 +159,18 @@ public final class DiscountCalculatorPanel {
         }
     }
 
-    private static double round2(double value) {
-        return Math.round(value * 100) / 100.0;
+    private static boolean isBlank(CharSequence s) {
+        return s == null || s.toString().trim().isEmpty();
     }
 
-    private static double parseDouble(CharSequence s, double def) {
-        if (s == null || s.toString().trim().isEmpty()) return def;
-        try {
-            return Double.parseDouble(s.toString().replace(",", "").trim());
-        } catch (NumberFormatException e) {
-            return def;
+    private static void requestFocus(@Nullable EditText et) {
+        if (et != null) {
+            et.requestFocus();
         }
+    }
+
+    private static double round2(double v) {
+        return Math.round(v * 100) / 100.0;
     }
 
     private static void setIncrementDecrement(View panel, EditText et, ImageButton plus, ImageButton minus, double step, double min, double max) {
@@ -165,6 +189,11 @@ public final class DiscountCalculatorPanel {
                 et.setText(cleanDecimal(val));
             });
         }
+    }
+
+    private static double parseDouble(CharSequence s, double def) {
+        if (s == null || s.toString().trim().isEmpty()) return def;
+        return LocaleFormatManager.parseLocalizedNumber(s, def);
     }
 
     private static String cleanDecimal(double d) {

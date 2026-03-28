@@ -35,6 +35,17 @@ public class NumberTargetPuzzleEngineTest {
     }
 
     @Test
+    public void generatedPuzzlesHaveLinearSolution() {
+        for (int i = 0; i < 40; i++) {
+            engine.reset();
+            assertTrue(
+                    "Puzzle must be solvable with three ops, no parens (ExprParser rules)",
+                    NumberTargetPuzzleEngine.hasLinearSolution(
+                            engine.getCurrentNumbers(), engine.getCurrentTarget()));
+        }
+    }
+
+    @Test
     public void submitEmpty_invalid() {
         assertEquals(NumberTargetPuzzleEngine.SubmitResult.INVALID_EXPRESSION,
                 engine.submitExpression(""));

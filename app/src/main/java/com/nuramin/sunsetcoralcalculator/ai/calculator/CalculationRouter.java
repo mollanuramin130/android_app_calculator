@@ -7,6 +7,7 @@ import com.nuramin.sunsetcoralcalculator.ai.core.ExpressionParser;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Routes to EMI / Age / Discount / GST utils. Does not call existing calculator classes.
@@ -56,7 +57,7 @@ public final class CalculationRouter {
 
         double total = EMIUtil.totalPayment(emi, months);
         double interest = EMIUtil.totalInterest(total, principal);
-        String explanation = String.format("Based on %s loan at %.1f%% for %d months",
+        String explanation = String.format(Locale.getDefault(), "Based on %s loan at %.1f%% for %d months",
                 EMIUtil.formatCurrency(principal), rate, months);
         return new AIResult(AIResult.Type.EMI, "EMI Calculator", EMIUtil.formatMonthly(emi), explanation, true);
     }
@@ -80,18 +81,18 @@ public final class CalculationRouter {
     private AIResult calculateDiscountOrGst(String input, AIResult.Type type) {
         List<Double> numbers = ExpressionParser.extractNumbers(input);
         Double pct = ExpressionParser.extractPercentage(input);
-        if (numbers.isEmpty()) return AIResult.unknown("Try: 1000 with 18% GST");
+        if (numbers.isEmpty()) return AIResult.unknown("Try: 1000 with 18% tax");
         double amount = numbers.get(0);
         double percent = pct != null ? pct : (numbers.size() >= 2 ? numbers.get(1) : 18);
         if (type == AIResult.Type.GST) {
             double gst = DiscountUtil.gstAmount(amount, percent);
             double total = DiscountUtil.priceWithGst(amount, percent);
-            String explanation = String.format("Base ₹%,.0f + %.1f%% GST", amount, percent);
-            return new AIResult(AIResult.Type.GST, "GST Calculator", DiscountUtil.formatCurrency(total), explanation, true);
+            String explanation = String.format(Locale.getDefault(), "Base %s + %.1f%% tax", DiscountUtil.formatCurrency(amount), percent);
+            return new AIResult(AIResult.Type.GST, "Tax Calculator (GST/VAT/Sales Tax)", DiscountUtil.formatCurrency(total), explanation, true);
         }
         double after = DiscountUtil.priceAfterDiscount(amount, percent);
         double saved = DiscountUtil.discountAmount(amount, percent);
-        String explanation = String.format("%.1f%% off ₹%,.0f — you save %s", percent, amount, DiscountUtil.formatCurrency(saved));
+        String explanation = String.format(Locale.getDefault(), "%.1f%% off %s - you save %s", percent, DiscountUtil.formatCurrency(amount), DiscountUtil.formatCurrency(saved));
         return new AIResult(AIResult.Type.DISCOUNT, "Discount Calculator", DiscountUtil.formatCurrency(after), explanation, true);
     }
 }

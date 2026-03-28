@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="currency_subtitle">Check live rates, set rate alerts, receive notifications and more.</string>
+    <string name="currency_enter_details">Enter conversion details</string>
+    <string name="currency_subtitle">Choose from and to currencies, enter an amount, and see live conversion when online.</string>
     <string name="currency_amount_label">Amount</string>
     <string name="currency_converted_label">Converted Amount</string>
     <string name="currency_indicative_rate">Indicative Exchange Rate</string>
     <string name="currency_swap_hint">Swap currencies</string>
     <string name="currency_offline_title">Using sample rates</string>
     <string name="currency_offline_message">For live, accurate exchange rates please turn on your internet.</string>
-    <string name="currency_rates_not_accurate">These rates are for reference only and may not be accurate. Turn on mobile data or Wi‑Fi for live rates.</string>
+    <string name="currency_rates_not_accurate">Using cached or offline rates — refresh on Wi‑Fi or mobile data for the latest values.</string>
+    <string name="currency_rate_unavailable">Rate unavailable for this pair. Connect to the internet or try another currency.</string>
     <string name="currency_internet_off_title">No internet connection</string>
     <string name="currency_internet_off_message">Turn on your mobile data or Wi‑Fi to get actual exchange values.</string>
-    <string name="currency_usd">USD</string>
-    <string name="currency_eur">EUR</string>
-    <string name="currency_gbp">GBP</string>
-    <string name="currency_inr">INR</string>
-    <string name="currency_bdt">BDT</string>
-    <string-array name="currency_codes">
-        <item>USD</item>
-        <item>EUR</item>
-        <item>GBP</item>
-        <item>INR</item>
-        <item>BDT</item>
-    </string-array>
+    <string name="currency_picker_search_hint">Search by code, name, or country</string>
+    <string name="currency_picker_from">From currency</string>
+    <string name="currency_picker_to">To currency</string>
+    <string name="currency_amount_hint">0.00</string>
+    <string name="currency_enter_amount">Enter amount</string>
+    <string name="currency_section_from">From</string>
+    <string name="currency_section_to">To</string>
+    <string name="currency_live_conversion_hint">Updates automatically as you type</string>
+    <string name="currency_error_invalid_amount">Enter a valid number.</string>
+    <string name="currency_convert_label">Convert</string>
 </resources>

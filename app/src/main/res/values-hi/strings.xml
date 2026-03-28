@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AI कैलकुलेटर: EMI, टैक्स, BMI</string>
+    <string name="mode_basic_calculator">बेसिक कैलकुलेटर</string>
+    <string name="mode_temperature">तापमान कनवर्टर</string>
+    <string name="mode_emi">EMI कैलकुलेटर</string>
+    <string name="mode_interest">ब्याज कैलकुलेटर</string>
+    <string name="mode_currency">मुद्रा कनवर्टर</string>
+    <string name="mode_date_calculator">दिनांक कैलकुलेटर</string>
+    <string name="mode_bmi_calculator">BMI कैलकुलेटर</string>
+    <string name="mode_discount_calculator">डिस्काउंट / प्रतिशत</string>
+    <string name="mode_ai_smart">AI मोड</string>
+    <string name="ai_chip_gst">टैक्स</string>
+    <string name="ai_welcome_result">आप EMI, उम्र, डिस्काउंट, टैक्स पूछ सकते हैं…</string>
+    <string name="currency_picker_title">मुद्रा चुनें</string>
+    <string name="currency_picker_device_default">डिवाइस डिफ़ॉल्ट उपयोग करें</string>
+    <string name="date_dob_label">🎂 जन्म तिथि</string>
+    <string name="age_enter_dob">अपनी जन्म तिथि दर्ज करें</string>
+    <string name="ai_voice_unavailable">इस डिवाइस पर वॉइस इनपुट उपलब्ध नहीं है। कृपया टाइप करें।</string>
+    <string name="ai_voice_no_speech">आवाज़ नहीं मिली। दोबारा प्रयास करें या टाइप करें।</string>
+    <string name="share_app_unavailable">इस डिवाइस पर शेयर करना उपलब्ध नहीं है।</string>
+</resources>

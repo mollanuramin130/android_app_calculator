@@ -7,4 +7,7 @@
     <color name="currency_title">#FF1E3A5F</color>
     <color name="currency_card_bg">#FFFFFFFF</color>
     <color name="currency_swap_button">#FF2196F3</color>
+    <!-- Subtle outlines, handles, dividers (theme-aware) -->
+    <color name="currency_outline_muted">#1F000000</color>
+    <color name="currency_primary_tint">#FF1565C0</color>
 </resources>

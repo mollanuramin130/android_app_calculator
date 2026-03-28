@@ -61,6 +61,23 @@ public class HistoryStorageTest {
     }
 
     @Test
+    public void loadOldHistory_skipsNonObjectEntries() {
+        prefs.edit().putString("old_history", "[5,{\"expr\":\"x\",\"result\":\"y\",\"time\":1}]").apply();
+        List<HistoryEntry> list = storage.loadOldHistory();
+        assertEquals(1, list.size());
+        assertEquals("x", list.get(0).getExpression());
+        assertEquals("y", list.get(0).getResult());
+    }
+
+    @Test
+    public void loadOldHistory_corruptJson_returnsEmpty() {
+        prefs.edit().putString("old_history", "[not valid json").apply();
+        List<HistoryEntry> list = storage.loadOldHistory();
+        assertNotNull(list);
+        assertTrue(list.isEmpty());
+    }
+
+    @Test
     public void saveAll() {
         List<HistoryEntry> entries = List.of(
             new HistoryEntry("a", "1"),

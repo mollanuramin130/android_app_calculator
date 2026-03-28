@@ -17,6 +17,17 @@
     <string name="bmi_range_normal">Normal 18.5–24.9</string>
     <string name="bmi_range_overweight">Overweight 25–29.9</string>
     <string name="bmi_range_obese">Obese 30+</string>
+    <string name="bmi_ranges_summary">Underweight &lt;18.5   Normal 18.5–24.9   Overweight 25–29.9   Obese 30+</string>
+    <string name="bmi_range_underweight_bullet">• Underweight &lt;18.5</string>
+    <string name="bmi_range_normal_bullet">• Normal 18.5–24.9</string>
+    <string name="bmi_range_overweight_bullet">• Overweight 25–29.9</string>
+    <string name="bmi_range_obese_bullet">• Obese 30+</string>
+    <string name="bmi_desc_decrease_height">Decrease height</string>
+    <string name="bmi_desc_increase_height">Increase height</string>
+    <string name="bmi_desc_decrease_weight">Decrease weight</string>
+    <string name="bmi_desc_increase_weight">Increase weight</string>
+    <string name="bmi_desc_decrease_age">Decrease age</string>
+    <string name="bmi_desc_increase_age">Increase age</string>
     <string name="bmi_error_invalid">Please enter valid values</string>
     <string name="mode_bmi_calculator">BMI Calculator</string>
 </resources>

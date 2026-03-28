@@ -2,7 +2,7 @@ package com.nuramin.sunsetcoralcalculator.ai.calculator;
 
 import androidx.annotation.NonNull;
 
-import java.util.Locale;
+import com.nuramin.calculator.util.CurrencyFormatter;
 
 /**
  * Lightweight discount / GST calculation. Does not call existing app calculator classes.
@@ -31,6 +31,6 @@ public final class DiscountUtil {
 
     @NonNull
     public static String formatCurrency(double value) {
-        return String.format(Locale.US, "₹%,.2f", value);
+        return CurrencyFormatter.formatAmount(value);
     }
 }

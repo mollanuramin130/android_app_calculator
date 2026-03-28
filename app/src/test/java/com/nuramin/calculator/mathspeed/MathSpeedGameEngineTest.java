@@ -142,7 +142,8 @@ public class MathSpeedGameEngineTest {
             String text = engine.getCurrentEquationText();
             assertNotNull(text);
             assertTrue(text.contains("?"));
-            assertTrue(engine.getCorrectResult() != 0 || text.contains("÷"));
+            // Subtraction can yield 0 (e.g. 5 − 5); that case has no ÷
+            assertTrue(engine.getCorrectResult() != 0 || text.contains("÷") || text.contains("−"));
             List<Integer> opts = engine.getOptionValues();
             assertTrue(opts.contains(engine.getCorrectResult()));
         }

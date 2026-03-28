@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:fillViewport="true"
         android:background="@color/mode_screen_bg"
-        android:padding="20dp">
+        android:padding="@dimen/mode_content_scroll_padding_wide">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,12 +35,13 @@
                     android:gravity="center_vertical"
                     android:layout_marginBottom="20dp">
                     <ImageView
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/ic_drawer_emi"
+                        android:layout_width="@dimen/mode_content_icon_section"
+                        android:layout_height="@dimen/mode_content_icon_section"
+                        android:src="@drawable/ic_nav_emi"
                         android:contentDescription="@null"
-                        android:tint="@color/emi_text_primary"
-                        android:layout_marginEnd="10dp" />
+                        android:importantForAccessibility="no"
+                        android:layout_marginEnd="@dimen/mode_content_icon_margin_end_section"
+                        android:scaleType="fitCenter" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -69,20 +70,22 @@
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
                     android:layout_marginBottom="8dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/emi_rupee_symbol"
-                        android:textColor="@color/emi_text_secondary"
-                        android:textSize="16sp"
-                        android:layout_marginEnd="6dp" />
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="10dp"
+                        android:contentDescription="@string/cd_currency_indicator"
+                        android:importantForAccessibility="no"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_generic_currency"
+                        app:tint="@color/emi_slider_active" />
                     <EditText
                         android:id="@+id/emi_principal"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:inputType="numberDecimal"
-                        android:hint="1,00,000"
+                        android:hint="@string/hint_enter_amount"
                         android:textColor="@color/emi_input_text"
                         android:textColorHint="@color/emi_text_secondary"
                         android:background="@null"
@@ -304,7 +307,7 @@
                     android:textSize="28sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp"
-                    android:text="₹ 4,661 / month" />
+                    android:text="@string/emi_sample_result" />
 
                 <TextView
                     android:id="@+id/emi_total_interest"
@@ -313,7 +316,7 @@
                     android:textColor="@color/emi_text_secondary"
                     android:textSize="14sp"
                     android:layout_marginBottom="4dp"
-                    android:text="Total Interest Payable: ₹ 11,869" />
+                    android:text="@string/emi_sample_total_interest" />
 
                 <TextView
                     android:id="@+id/emi_total_payment"
@@ -322,7 +325,7 @@
                     android:textColor="@color/emi_text_secondary"
                     android:textSize="14sp"
                     android:layout_marginBottom="20dp"
-                    android:text="Total Payment (Principal): ₹ 1,11,869" />
+                    android:text="@string/emi_sample_total_payment" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -367,24 +370,27 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Card 3: Loan EMI Schedule -->
+            <!-- Card 3: Loan EMI Schedule (accent outline = active control, not disabled) -->
             <LinearLayout
                 android:id="@+id/emi_schedule_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:background="@drawable/emi_card_bg"
+                android:background="@drawable/emi_schedule_cta_bg"
+                android:foreground="?attr/selectableItemBackground"
                 android:padding="20dp"
-                android:elevation="4dp"
+                android:elevation="6dp"
                 android:clickable="true"
-                android:focusable="true">
+                android:focusable="true"
+                android:contentDescription="@string/emi_loan_schedule">
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_calendar"
                     android:contentDescription="@null"
-                    android:tint="@color/emi_text_primary"
+                    android:importantForAccessibility="no"
+                    android:tint="@color/emi_slider_active"
                     android:layout_marginEnd="12dp" />
                 <TextView
                     android:layout_width="0dp"
@@ -399,8 +405,9 @@
                     android:layout_height="24dp"
                     android:src="@drawable/ic_chevron_down"
                     android:contentDescription="@null"
+                    android:importantForAccessibility="no"
                     android:rotation="-90"
-                    android:tint="@color/emi_text_secondary" />
+                    android:tint="@color/emi_slider_active" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

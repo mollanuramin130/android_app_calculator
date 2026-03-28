@@ -2,7 +2,7 @@ package com.nuramin.sunsetcoralcalculator.ai.calculator;
 
 import androidx.annotation.NonNull;
 
-import java.util.Locale;
+import com.nuramin.calculator.util.CurrencyFormatter;
 
 /**
  * Lightweight EMI calculation. Does not call existing app calculator classes.
@@ -18,8 +18,15 @@ public final class EMIUtil {
     public static Double calculateEMI(double principalRs, double ratePercent, int months) {
         if (principalRs <= 0 || months <= 0) return null;
         double r = ratePercent / 12 / 100;
-        if (r <= 0) return principalRs / months;
-        double emi = principalRs * r * Math.pow(1 + r, months) / (Math.pow(1 + r, months) - 1);
+        if (r < 0) return null;
+        if (r == 0) {
+            double flat = principalRs / months;
+            return Double.isFinite(flat) ? Math.round(flat * 100) / 100.0 : null;
+        }
+        double pow = Math.pow(1 + r, months);
+        if (!Double.isFinite(pow) || pow <= 1) return null;
+        double emi = principalRs * r * pow / (pow - 1);
+        if (!Double.isFinite(emi)) return null;
         return Math.round(emi * 100) / 100.0;
     }
 
@@ -33,20 +40,11 @@ public final class EMIUtil {
 
     @NonNull
     public static String formatCurrency(double value) {
-        if (value >= 1_00_00_000) {
-            return String.format(Locale.US, "₹%.2f Cr", value / 1_00_00_000);
-        }
-        if (value >= 1_00_000) {
-            return String.format(Locale.US, "₹%.2f L", value / 1_00_000);
-        }
-        if (value >= 1_000) {
-            return String.format(Locale.US, "₹%.2f K", value / 1_000);
-        }
-        return String.format(Locale.US, "₹%.2f", value);
+        return CurrencyFormatter.formatAmount(value);
     }
 
     @NonNull
     public static String formatMonthly(double emi) {
-        return String.format(Locale.US, "₹%,.0f/month", emi);
+        return formatCurrency(emi) + "/month";
     }
 }

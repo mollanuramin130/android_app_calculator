@@ -3,7 +3,7 @@
     <string name="age_first_date">First date (Day / Month / Year)</string>
     <string name="age_second_date">Second date (Day / Month / Year)</string>
     <string name="age_use_today">Use today\'s date</string>
-    <string name="age_enter_dob">Enter Your Date of Birth</string>
+    <string name="age_enter_dob">Enter your birth date</string>
     <string name="age_calculate_button">Calculate Age</string>
     <string name="age_your_age_is">Your Age is:</string>
     <string name="age_years">Years</string>

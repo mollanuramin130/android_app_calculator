@@ -1,14 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp"
-    android:paddingTop="12dp"
-    android:paddingBottom="16dp"
-    android:background="@drawable/puzzle_game_gradient">
+    android:fillViewport="true"
+    android:background="@drawable/puzzle_game_gradient"
+    android:scrollbars="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/mode_content_scroll_padding"
+        android:paddingEnd="@dimen/mode_content_scroll_padding"
+        android:paddingTop="12dp"
+        android:paddingBottom="16dp">
+
+    <ImageView
+        android:id="@+id/puzzle_hero_icon"
+        android:layout_width="@dimen/mode_content_icon_hero"
+        android:layout_height="@dimen/mode_content_icon_hero"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@null"
+        android:importantForAccessibility="no"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_nav_number_puzzle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/puzzle_title_text"
@@ -20,7 +39,7 @@
         android:textColor="#FFFFFF"
         android:textSize="22sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/puzzle_hero_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -120,7 +139,9 @@
             android:textStyle="bold"
             app:cornerRadius="14dp"
             app:backgroundTint="#1E88E5"
+            app:layout_column="0"
             app:layout_columnWeight="1"
+            app:layout_row="0"
             app:layout_rowWeight="0" />
         <com.google.android.material.button.MaterialButton
             android:id="@+id/puzzle_num_1"
@@ -132,7 +153,9 @@
             android:textStyle="bold"
             app:cornerRadius="14dp"
             app:backgroundTint="#1E88E5"
+            app:layout_column="1"
             app:layout_columnWeight="1"
+            app:layout_row="0"
             app:layout_rowWeight="0" />
         <com.google.android.material.button.MaterialButton
             android:id="@+id/puzzle_num_2"
@@ -144,7 +167,9 @@
             android:textStyle="bold"
             app:cornerRadius="14dp"
             app:backgroundTint="#1E88E5"
+            app:layout_column="0"
             app:layout_columnWeight="1"
+            app:layout_row="1"
             app:layout_rowWeight="0" />
         <com.google.android.material.button.MaterialButton
             android:id="@+id/puzzle_num_3"
@@ -156,7 +181,9 @@
             android:textStyle="bold"
             app:cornerRadius="14dp"
             app:backgroundTint="#1E88E5"
+            app:layout_column="1"
             app:layout_columnWeight="1"
+            app:layout_row="1"
             app:layout_rowWeight="0" />
     </androidx.gridlayout.widget.GridLayout>
 
@@ -220,6 +247,7 @@
         android:orientation="horizontal"
         android:gravity="center"
         app:layout_constraintTop_toBottomOf="@id/puzzle_operators_row"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -246,4 +274,5 @@
             app:cornerRadius="12dp"
             app:backgroundTint="#E53935" />
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

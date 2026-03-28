@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -107,20 +108,22 @@
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp"
                     android:layout_marginBottom="16dp">
-                    <TextView
+                    <ImageView
                         android:layout_width="24dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/int_rupee"
-                        android:textColor="@color/int_text_primary"
-                        android:textSize="15sp"
-                        android:gravity="center" />
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="8dp"
+                        android:contentDescription="@string/cd_currency_indicator"
+                        android:importantForAccessibility="no"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_generic_currency"
+                        app:tint="@color/int_text_primary" />
                     <EditText
                         android:id="@+id/interest_principal"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:inputType="numberDecimal"
-                        android:hint="50,000"
+                        android:hint="@string/hint_enter_amount"
                         android:textColor="@color/int_input_text"
                         android:textColorHint="@color/int_text_secondary"
                         android:background="@null"
@@ -298,7 +301,7 @@
                     android:textSize="22sp"
                     android:textStyle="bold"
                     android:layout_marginTop="8dp"
-                    android:text="₹ 0" />
+                    android:text="@string/int_sample_zero" />
 
                 <TextView
                     android:id="@+id/interest_total_amount"
@@ -307,7 +310,7 @@
                     android:textColor="@color/int_text_secondary"
                     android:textSize="14sp"
                     android:layout_marginTop="4dp"
-                    android:text="Total Amount (Principal + ₹0)" />
+                    android:text="@string/int_sample_total_amount" />
 
                 <View
                     android:layout_width="match_parent"
@@ -359,7 +362,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/int_text_primary"
                         android:textSize="14sp"
-                        android:text="₹ 0" />
+                        android:text="@string/int_sample_zero" />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -380,7 +383,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/int_text_primary"
                         android:textSize="14sp"
-                        android:text="₹ 0" />
+                        android:text="@string/int_sample_zero" />
                 </LinearLayout>
 
                 <Button

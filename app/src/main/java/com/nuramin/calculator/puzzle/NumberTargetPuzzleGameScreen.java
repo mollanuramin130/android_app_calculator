@@ -35,6 +35,7 @@ public final class NumberTargetPuzzleGameScreen {
     private TextView expressionText;
     private TextView scoreText;
     private MaterialButton[] numButtons;
+    private View[] opButtons;
     private MaterialButton btnClear;
     private MaterialButton btnSubmit;
     private View expressionCard;
@@ -73,10 +74,16 @@ public final class NumberTargetPuzzleGameScreen {
             }
         }
 
-        panel.findViewById(R.id.puzzle_op_plus).setOnClickListener(v -> appendOperator(" + "));
-        panel.findViewById(R.id.puzzle_op_minus).setOnClickListener(v -> appendOperator(" − "));
-        panel.findViewById(R.id.puzzle_op_multiply).setOnClickListener(v -> appendOperator(" × "));
-        panel.findViewById(R.id.puzzle_op_divide).setOnClickListener(v -> appendOperator(" ÷ "));
+        int[] opIds = { R.id.puzzle_op_plus, R.id.puzzle_op_minus, R.id.puzzle_op_multiply, R.id.puzzle_op_divide };
+        String[] opLabels = { " + ", " − ", " × ", " ÷ " };
+        opButtons = new View[4];
+        for (int i = 0; i < 4; i++) {
+            opButtons[i] = panel.findViewById(opIds[i]);
+            if (opButtons[i] != null) {
+                final String op = opLabels[i];
+                opButtons[i].setOnClickListener(v -> appendOperator(op));
+            }
+        }
 
         if (btnClear != null) btnClear.setOnClickListener(v -> clearExpression());
         if (btnSubmit != null) btnSubmit.setOnClickListener(v -> onSubmit());
@@ -91,7 +98,7 @@ public final class NumberTargetPuzzleGameScreen {
         int n = engine.getCurrentNumbers()[index];
         expression.append(n);
         numberUsed[index] = true;
-        numButtons[index].setEnabled(false);
+        if (numButtons[index] != null) numButtons[index].setEnabled(false);
         refreshExpressionDisplay();
     }
 
@@ -122,6 +129,11 @@ public final class NumberTargetPuzzleGameScreen {
     }
 
     private void refreshPuzzleUi() {
+        applyPuzzleNumbersAndTarget();
+        resetExpressionState();
+    }
+
+    private void applyPuzzleNumbersAndTarget() {
         int[] nums = engine.getCurrentNumbers();
         for (int i = 0; i < 4 && i < numButtons.length; i++) {
             if (numButtons[i] != null) {
@@ -132,7 +144,15 @@ public final class NumberTargetPuzzleGameScreen {
         if (targetValue != null) {
             targetValue.setText(context.getString(R.string.puzzle_target, engine.getCurrentTarget()));
         }
-        clearExpression();
+    }
+
+    private void resetExpressionState() {
+        expression.setLength(0);
+        for (int i = 0; i < numberUsed.length; i++) {
+            numberUsed[i] = false;
+            if (numButtons[i] != null) numButtons[i].setEnabled(true);
+        }
+        refreshExpressionDisplay();
     }
 
     private void refreshScoreAndExpression() {
@@ -149,10 +169,11 @@ public final class NumberTargetPuzzleGameScreen {
         }
         if (btnClear != null) btnClear.setEnabled(enabled);
         if (btnSubmit != null) btnSubmit.setEnabled(enabled);
-        panel.findViewById(R.id.puzzle_op_plus).setEnabled(enabled);
-        panel.findViewById(R.id.puzzle_op_minus).setEnabled(enabled);
-        panel.findViewById(R.id.puzzle_op_multiply).setEnabled(enabled);
-        panel.findViewById(R.id.puzzle_op_divide).setEnabled(enabled);
+        if (opButtons != null) {
+            for (View v : opButtons) {
+                if (v != null) v.setEnabled(enabled);
+            }
+        }
     }
 
     private void onSubmit() {
@@ -168,7 +189,9 @@ public final class NumberTargetPuzzleGameScreen {
         switch (result) {
             case CORRECT:
                 playCorrectAnimation();
-                scoreText.setText(context.getString(R.string.puzzle_score, engine.getScore()));
+                if (scoreText != null) {
+                    scoreText.setText(context.getString(R.string.puzzle_score, engine.getScore()));
+                }
                 if (engine.isGameComplete()) {
                     showGameCompleteDialog();
                 } else {
@@ -183,6 +206,7 @@ public final class NumberTargetPuzzleGameScreen {
             case WRONG:
                 Toast.makeText(context, R.string.puzzle_incorrect_solution, Toast.LENGTH_SHORT).show();
                 playWrongAnimation();
+                clearExpression();
                 break;
             case WRONG_ATTEMPTS_EXHAUSTED:
             case NO_ATTEMPTS_LEFT:
@@ -199,6 +223,7 @@ public final class NumberTargetPuzzleGameScreen {
             case INVALID_NUMBERS:
                 Toast.makeText(context, R.string.puzzle_incorrect_solution, Toast.LENGTH_SHORT).show();
                 playWrongAnimation();
+                clearExpression();
                 break;
         }
     }

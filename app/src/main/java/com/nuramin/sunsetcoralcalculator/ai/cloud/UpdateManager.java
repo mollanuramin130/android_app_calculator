@@ -17,7 +17,7 @@ import com.nuramin.sunsetcoralcalculator.R;
 /**
  * Update Manager using Play Core Library.
  * Checks for update availability and shows "New version available" popup with Update Now button.
- * Can be used on app launch or from settings. Does not replace existing UpdateHelper; use as needed.
+ * Optional legacy helper; prefer {@link com.nuramin.sunsetcoralcalculator.ai.system.UpdateController} for production UX.
  */
 public final class UpdateManager {
 

@@ -62,10 +62,11 @@
                 android:clickable="true"
                 android:focusable="true">
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_drawer_calc"
-                    app:tint="@color/mode_button_text_light" />
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:scaleType="fitCenter"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_nav_basic" />
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -88,10 +89,11 @@
                 android:clickable="true"
                 android:focusable="true">
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_drawer_temp"
-                    app:tint="@color/mode_button_text_light" />
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:scaleType="fitCenter"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_nav_temperature" />
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -114,10 +116,11 @@
                 android:clickable="true"
                 android:focusable="true">
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_drawer_emi"
-                    app:tint="@color/mode_button_text_light" />
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:scaleType="fitCenter"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_nav_emi" />
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -140,10 +143,11 @@
                 android:clickable="true"
                 android:focusable="true">
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_drawer_interest"
-                    app:tint="@color/mode_button_text_light" />
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:scaleType="fitCenter"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_nav_interest" />
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -166,16 +170,44 @@
                 android:clickable="true"
                 android:focusable="true">
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_drawer_currency"
-                    app:tint="@color/mode_button_text_light" />
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:scaleType="fitCenter"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_generic_currency" />
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="20dp"
                     android:text="@string/mode_currency"
+                    android:textColor="@color/mode_button_text_light"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/drawer_item_tax"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:background="@drawable/drawer_row_bg"
+                android:clickable="true"
+                android:focusable="true">
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:scaleType="fitCenter"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_nav_tax" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="20dp"
+                    android:text="@string/mode_tax_calculator"
                     android:textColor="@color/mode_button_text_light"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -192,10 +224,11 @@
                 android:clickable="true"
                 android:focusable="true">
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_calendar"
-                    app:tint="@color/mode_button_text_light" />
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:scaleType="fitCenter"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_nav_date" />
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -218,10 +251,11 @@
                 android:clickable="true"
                 android:focusable="true">
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_drawer_emi"
-                    app:tint="@color/mode_button_text_light" />
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:scaleType="fitCenter"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_nav_bmi" />
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -244,16 +278,44 @@
                 android:clickable="true"
                 android:focusable="true">
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_drawer_currency"
-                    app:tint="@color/mode_button_text_light" />
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:scaleType="fitCenter"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_nav_discount" />
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="20dp"
                     android:text="@string/mode_discount_calculator"
+                    android:textColor="@color/mode_button_text_light"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/drawer_item_unit_converter"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:background="@drawable/drawer_row_bg"
+                android:clickable="true"
+                android:focusable="true">
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:scaleType="fitCenter"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_nav_unit" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="20dp"
+                    android:text="@string/mode_unit_converter"
                     android:textColor="@color/mode_button_text_light"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -270,10 +332,11 @@
                 android:clickable="true"
                 android:focusable="true">
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_drawer_calc"
-                    app:tint="@color/mode_button_text_light" />
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:scaleType="fitCenter"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_nav_number_puzzle" />
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -296,10 +359,11 @@
                 android:clickable="true"
                 android:focusable="true">
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_history"
-                    app:tint="@color/mode_button_text_light" />
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:scaleType="fitCenter"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_nav_memory_grid" />
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -322,10 +386,11 @@
                 android:clickable="true"
                 android:focusable="true">
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_history"
-                    app:tint="@color/mode_button_text_light" />
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:scaleType="fitCenter"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_nav_math_speed" />
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -348,16 +413,44 @@
                 android:clickable="true"
                 android:focusable="true">
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_drawer_calc"
-                    app:tint="@color/mode_button_text_light" />
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:scaleType="fitCenter"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_nav_ai" />
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="20dp"
                     android:text="@string/mode_ai_smart"
+                    android:textColor="@color/mode_button_text_light"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/drawer_item_favorites"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:background="@drawable/drawer_row_bg"
+                android:clickable="true"
+                android:focusable="true">
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:scaleType="fitCenter"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_nav_favorites" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="20dp"
+                    android:text="@string/mode_favorites"
                     android:textColor="@color/mode_button_text_light"
                     android:textSize="16sp" />
             </LinearLayout>

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 3-dot overflow: one icon per action; Share = ic_share, Feedback = envelope, Favourites = bookmark+ -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
@@ -7,7 +8,7 @@
     android:background="@drawable/popup_menu_bg"
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
-    android:minWidth="220dp">
+    android:minWidth="@dimen/overflow_menu_min_width">
 
     <LinearLayout
         android:id="@+id/menu_clear_history"
@@ -19,16 +20,20 @@
         android:paddingEnd="20dp"
         android:background="?attr/selectableItemBackground">
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/overflow_menu_icon_size"
+            android:layout_height="@dimen/overflow_menu_icon_size"
             android:src="@drawable/ic_clear_history"
             android:contentDescription="@null"
+            android:importantForAccessibility="no"
+            android:scaleType="fitCenter"
             app:tint="@color/mode_button_text_light" />
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="16dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="@string/menu_clear_history"
             android:textColor="@color/mode_button_text_light"
             android:textSize="16sp" />
@@ -44,16 +49,20 @@
         android:paddingEnd="20dp"
         android:background="?attr/selectableItemBackground">
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_info"
+            android:layout_width="@dimen/overflow_menu_icon_size"
+            android:layout_height="@dimen/overflow_menu_icon_size"
+            android:src="@drawable/ic_system_update"
             android:contentDescription="@null"
+            android:importantForAccessibility="no"
+            android:scaleType="fitCenter"
             app:tint="@color/mode_button_text_light" />
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="16dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="@string/menu_check_for_updates"
             android:textColor="@color/mode_button_text_light"
             android:textSize="16sp" />
@@ -69,16 +78,20 @@
         android:paddingEnd="20dp"
         android:background="?attr/selectableItemBackground">
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/overflow_menu_icon_size"
+            android:layout_height="@dimen/overflow_menu_icon_size"
             android:src="@drawable/ic_choose_theme"
             android:contentDescription="@null"
+            android:importantForAccessibility="no"
+            android:scaleType="fitCenter"
             app:tint="@color/mode_button_text_light" />
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="16dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="@string/menu_choose_theme"
             android:textColor="@color/mode_button_text_light"
             android:textSize="16sp" />
@@ -94,16 +107,20 @@
         android:paddingEnd="20dp"
         android:background="?attr/selectableItemBackground">
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/overflow_menu_icon_size"
+            android:layout_height="@dimen/overflow_menu_icon_size"
             android:src="@drawable/ic_privacy_policy"
             android:contentDescription="@null"
+            android:importantForAccessibility="no"
+            android:scaleType="fitCenter"
             app:tint="@color/mode_button_text_light" />
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="16dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="@string/menu_privacy_policy"
             android:textColor="@color/mode_button_text_light"
             android:textSize="16sp" />
@@ -119,17 +136,108 @@
         android:paddingEnd="20dp"
         android:background="?attr/selectableItemBackground">
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/overflow_menu_icon_size"
+            android:layout_height="@dimen/overflow_menu_icon_size"
             android:src="@drawable/ic_send_feedback"
             android:contentDescription="@null"
+            android:importantForAccessibility="no"
+            android:scaleType="fitCenter"
             app:tint="@color/mode_button_text_light" />
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="16dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="@string/menu_send_feedback"
+            android:textColor="@color/mode_button_text_light"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/menu_add_favorite"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:background="?attr/selectableItemBackground">
+        <ImageView
+            android:layout_width="@dimen/overflow_menu_icon_size"
+            android:layout_height="@dimen/overflow_menu_icon_size"
+            android:src="@drawable/ic_menu_add_favorite"
+            android:contentDescription="@null"
+            android:importantForAccessibility="no"
+            android:scaleType="fitCenter"
+            app:tint="@color/mode_button_text_light" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/menu_add_favorite"
+            android:textColor="@color/mode_button_text_light"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/menu_share_app"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:background="?attr/selectableItemBackground">
+        <ImageView
+            android:layout_width="@dimen/overflow_menu_icon_size"
+            android:layout_height="@dimen/overflow_menu_icon_size"
+            android:src="@drawable/ic_share"
+            android:contentDescription="@null"
+            android:importantForAccessibility="no"
+            android:scaleType="fitCenter"
+            app:tint="@color/mode_button_text_light" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/menu_share_app"
+            android:textColor="@color/mode_button_text_light"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/menu_rate_review"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:background="?attr/selectableItemBackground">
+        <ImageView
+            android:layout_width="@dimen/overflow_menu_icon_size"
+            android:layout_height="@dimen/overflow_menu_icon_size"
+            android:src="@drawable/ic_menu_rate_review"
+            android:contentDescription="@null"
+            android:importantForAccessibility="no"
+            android:scaleType="fitCenter"
+            app:tint="@color/mode_button_text_light" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/menu_rate_review"
             android:textColor="@color/mode_button_text_light"
             android:textSize="16sp" />
     </LinearLayout>
@@ -144,16 +252,20 @@
         android:paddingEnd="20dp"
         android:background="?attr/selectableItemBackground">
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/overflow_menu_icon_size"
+            android:layout_height="@dimen/overflow_menu_icon_size"
             android:src="@drawable/ic_help"
             android:contentDescription="@null"
+            android:importantForAccessibility="no"
+            android:scaleType="fitCenter"
             app:tint="@color/mode_button_text_light" />
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="16dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="@string/menu_help"
             android:textColor="@color/mode_button_text_light"
             android:textSize="16sp" />

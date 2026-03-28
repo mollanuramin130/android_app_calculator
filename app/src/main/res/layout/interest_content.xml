@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:fillViewport="true"
         android:background="@color/mode_screen_bg"
-        android:padding="16dp"
+        android:padding="@dimen/mode_content_scroll_padding"
         android:overScrollMode="ifContentScrolls">
 
         <LinearLayout
@@ -36,12 +36,13 @@
                     android:gravity="center_vertical"
                     android:layout_marginBottom="16dp">
                     <ImageView
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/ic_drawer_interest"
+                        android:layout_width="@dimen/mode_content_icon_section"
+                        android:layout_height="@dimen/mode_content_icon_section"
+                        android:src="@drawable/ic_nav_interest"
                         android:contentDescription="@null"
-                        android:tint="@color/int_text_primary"
-                        android:layout_marginEnd="8dp" />
+                        android:importantForAccessibility="no"
+                        android:layout_marginEnd="8dp"
+                        android:scaleType="fitCenter" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -108,20 +109,22 @@
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp"
                     android:layout_marginBottom="16dp">
-                    <TextView
+                    <ImageView
                         android:layout_width="24dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/int_rupee"
-                        android:textColor="@color/int_text_primary"
-                        android:textSize="15sp"
-                        android:gravity="center" />
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="8dp"
+                        android:contentDescription="@string/cd_currency_indicator"
+                        android:importantForAccessibility="no"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_generic_currency"
+                        app:tint="@color/int_text_primary" />
                     <EditText
                         android:id="@+id/interest_principal"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:inputType="numberDecimal"
-                        android:hint="50,000"
+                        android:hint="@string/hint_enter_amount"
                         android:textColor="@color/int_input_text"
                         android:textColorHint="@color/int_text_secondary"
                         android:background="@null"
@@ -269,12 +272,13 @@
                     android:gravity="center_vertical"
                     android:layout_marginBottom="12dp">
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/ic_drawer_interest"
+                        android:layout_width="@dimen/mode_content_icon_section_small"
+                        android:layout_height="@dimen/mode_content_icon_section_small"
+                        android:src="@drawable/ic_nav_interest"
                         android:contentDescription="@null"
-                        android:tint="@color/int_text_primary"
-                        android:layout_marginEnd="8dp" />
+                        android:importantForAccessibility="no"
+                        android:layout_marginEnd="8dp"
+                        android:scaleType="fitCenter" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -299,7 +303,7 @@
                     android:textSize="22sp"
                     android:textStyle="bold"
                     android:layout_marginTop="8dp"
-                    android:text="₹ 0" />
+                    android:text="@string/int_sample_zero" />
 
                 <TextView
                     android:id="@+id/interest_total_amount"
@@ -308,7 +312,7 @@
                     android:textColor="@color/int_text_secondary"
                     android:textSize="14sp"
                     android:layout_marginTop="4dp"
-                    android:text="Total Amount (Principal + ₹0)" />
+                    android:text="@string/int_sample_total_amount" />
 
                 <View
                     android:layout_width="match_parent"
@@ -360,7 +364,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/int_text_primary"
                         android:textSize="14sp"
-                        android:text="₹ 0" />
+                        android:text="@string/int_sample_zero" />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -381,7 +385,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/int_text_primary"
                         android:textSize="14sp"
-                        android:text="₹ 0" />
+                        android:text="@string/int_sample_zero" />
                 </LinearLayout>
 
                 <Button
@@ -394,7 +398,6 @@
                     android:textColor="@color/int_view_breakdown_btn_text"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:drawableStart="@drawable/ic_drawer_interest"
                     android:drawableEnd="@drawable/ic_chevron_down"
                     android:drawableTint="@color/int_view_breakdown_btn_text"
                     android:drawablePadding="8dp"

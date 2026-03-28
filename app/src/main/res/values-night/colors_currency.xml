@@ -7,4 +7,6 @@
     <color name="currency_title">#FF90CAF9</color>
     <color name="currency_card_bg">#FF2D2D2D</color>
     <color name="currency_swap_button">#FF2196F3</color>
+    <color name="currency_outline_muted">#33FFFFFF</color>
+    <color name="currency_primary_tint">#FF90CAF9</color>
 </resources>

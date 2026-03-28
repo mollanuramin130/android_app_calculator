@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Smart Multi Calculator with AI</string>
+    <string name="app_name">AI Calculator: EMI, TAX, BMI</string>
+    <string name="launcher_name">AI Calculator</string>
+    <string name="hint_enter_amount">Enter amount</string>
+    <string name="cd_currency_indicator">Currency</string>
     <string name="back">Back</string>
     <string name="history">History</string>
     <string name="backspace">Backspace</string>
@@ -21,11 +24,17 @@
     <string name="menu_choose_theme">Choose theme</string>
     <string name="menu_privacy_policy">Privacy policy</string>
     <string name="menu_send_feedback">Send feedback</string>
+    <string name="menu_add_favorite">Add to favourites</string>
+    <string name="menu_share_app">Share app</string>
+    <string name="menu_rate_review">Rate &amp; review</string>
     <string name="menu_help">Help</string>
     <string name="menu_check_for_updates">Check for updates</string>
     <string name="update_dialog_title">New Update Available 🚀</string>
     <string name="update_dialog_message">A new version is available with better features and improvements.</string>
+    <string name="update_bottom_prompt">New update available</string>
+    <string name="update_required_message">A new version is required to continue using this app. Please update now.</string>
     <string name="update_btn_now">Update Now</string>
+    <string name="update_btn_exit">Exit</string>
     <string name="update_btn_later">Later</string>
     <string name="update_btn_restart">Restart</string>
     <string name="update_restart_message">Update ready! Restart app to apply.</string>
@@ -33,10 +42,75 @@
     <string name="update_downloading_progress">Downloading update… %d%%</string>
     <string name="update_up_to_date">Your app is up to date ✅</string>
     <string name="update_no_internet">Check your internet connection</string>
-    <string name="help_message">Use the keypad to enter numbers and operators. Tap = to compute. Use the history icon for past calculations and the arrows icon to show scientific functions.</string>
-    <string name="help_content_full">• Basic calculator: Tap numbers and operators (+, −, ×, ÷). Tap = for the result. Use AC to clear, ( ) for parentheses.\n\n• Scientific mode: Tap \"Scientific mode\" above the keypad to show extra keys (√, π, sin, cos, tan, etc.).\n\n• History: Past calculations appear in the list. Tap \"Use\" on any item to load it and edit or continue.\n\n• Modes: Open the menu (☰) to switch to Temperature, EMI, Interest, Currency, or Date Calculator.\n\n• Theme: Use the 3-dot menu → Choose theme for Light, Dark, or System default.</string>
-    <string name="help_contact_developer">Contact developer for help</string>
-    <string name="help_email_subject">Nur\'s Custom Calculator – Help request</string>
+    <string name="update_bottom_sheet_title">New version available 🚀</string>
+    <string name="update_bottom_sheet_message">A new version is ready. You can update in the background without leaving the app.</string>
+    <string name="review_dialog_title">How would you rate this app?</string>
+    <string name="review_dialog_subtitle">Your feedback helps us improve.</string>
+    <string name="review_submit">Submit</string>
+    <string name="review_later">Maybe later</string>
+    <string name="review_link_play_store">Write a public review on Play Store</string>
+    <string name="review_thanks">Thank you!</string>
+    <string name="review_pick_stars">Please choose a star rating.</string>
+    <string name="review_feedback_thanks">Thanks for the feedback. We’ll keep improving.</string>
+    <string name="help_message">Use the keypad and tap = for the result. Open ☰ for every mode and History; tap ⋮ for theme, updates, favourites, and more. Toggle Scientific mode above the keypad for extra functions.</string>
+    <string name="help_content_full">• Side menu (☰): Tap the menu button or Switch mode on the calculator to choose a screen—Basic, Temperature, EMI, Interest, Currency, Tax, Date, BMI, Discount, Unit converter, Number Target Puzzle, Memory Number Grid, Math Speed Game, AI Smart, Favourites, or History.\n\n• Overflow (⋮): Clear history, Check for updates, Choose theme (Light / Dark / System), Privacy policy, Send feedback, Add to favourites, Share app, Rate &amp; review, and Help.\n\n• Basic calculator: Numbers and operators (+, −, ×, ÷), = , AC, and parentheses. Turn on Scientific mode above the keypad for √, π, powers, sin/cos/tan, ln/log, and related keys.\n\n• History: Open History from the side menu. Tap Use on a row to load that calculation.\n\n• Favourites: On supported screens, use Add to favourites from ⋮. Open Favourites from the side menu; swipe left to pin and right to delete.\n\n• AI Smart: Type a question in plain language. The microphone uses voice input when you allow it (the app may ask for permission).\n\n• Locale: Amounts and separators follow your device language/region settings where the mode supports it.</string>
+    <string name="help_contact_developer">Contact developer</string>
+    <string name="help_email_subject">AI Calculator – Help request</string>
+    <string name="share_app_message">Try this app: %1$s</string>
+    <!-- ShareController polished chooser title -->
+    <string name="share_via_chooser">Share via</string>
+    <string name="share_app_chooser_title">Share app via</string>
+    <string name="share_app_unavailable">Sharing is not available on this device.</string>
+    <string name="favorites_title">Favourites</string>
+    <string name="favorites_dialog_hint">Swipe left to pin · right to delete</string>
+    <string name="favorites_empty">No favourites yet. Add one from 3-dot menu.</string>
+    <string name="favorites_add_title">Add to favourites</string>
+    <string name="favorites_item_title_label">Title</string>
+    <string name="favorites_item_note_label">Note / Reminder</string>
+    <string name="favorites_item_title_hint">Example: EMI reminder</string>
+    <string name="favorites_item_note_hint">Example: Pay EMI on 5th every month</string>
+    <string name="favorites_saved">Saved to favourites</string>
+    <string name="favorites_validation_missing_list">Please fill in: %1$s</string>
+    <string name="favorites_validation_list_separator">, </string>
+    <string name="favorites_validation_generic">Could not save this favourite. Check your inputs and try again.</string>
+    <string name="favorites_field_title">Title</string>
+    <string name="favorites_field_principal">Principal</string>
+    <string name="favorites_field_rate">Rate</string>
+    <string name="favorites_field_tenure">Tenure</string>
+    <string name="favorites_field_time">Time period</string>
+    <string name="favorites_field_amount">Amount</string>
+    <string name="favorites_field_date_1">First date</string>
+    <string name="favorites_field_date_2">Second date</string>
+    <string name="favorites_field_value">Value</string>
+    <string name="favorites_field_from_unit">From unit</string>
+    <string name="favorites_field_to_unit">To unit</string>
+    <string name="favorites_field_note">Note</string>
+    <string name="favorites_remove">Remove</string>
+    <string name="favorites_pin">Pin</string>
+    <string name="favorites_unpin">Unpin</string>
+    <string name="favorites_delete">Delete</string>
+    <string name="favorites_pinned">Pinned</string>
+    <string name="favorites_unpinned_toast">Unpinned</string>
+    <string name="favorites_more">More</string>
+    <string name="favorites_priority_low">Priority: Low</string>
+    <string name="favorites_priority_medium">Priority: Medium</string>
+    <string name="favorites_priority_high">Priority: High</string>
+    <string name="favorites_priority_custom">Priority: Custom…</string>
+    <string name="favorites_auto_delete_enable">Enable auto-delete (7 days)</string>
+    <string name="favorites_auto_delete_disable">Disable auto-delete</string>
+    <string name="favorites_edit_title">Edit title</string>
+    <string name="favorites_delete_confirm">Remove this favourite?</string>
+    <string name="favorites_badge_low">L</string>
+    <string name="favorites_badge_medium">M</string>
+    <string name="favorites_badge_high">H</string>
+    <string name="favorites_badge_custom">C%1$d</string>
+    <string name="favorites_expiring_now">Expires now</string>
+    <string name="favorites_auto_delete_blocked_high_priority">High priority items are protected from auto-delete. Lower priority or turn off high priority first.</string>
+    <string name="favorites_high_priority_clears_auto_delete">Auto-delete turned off for high-priority items.</string>
+    <string name="favorites_custom_priority_clears_auto_delete">Auto-delete turned off — very high custom priority is protected.</string>
+    <string name="favorites_hint_high_priority_auto_delete">Tip: set priority below High to use auto-delete.</string>
+    <string name="favorites_auto_delete_enabled_toast">Auto-delete on — %1$s</string>
+    <string name="favorites_row_protected">Protected (priority)</string>
     <string name="drawer_title">Calculation modes</string>
     <string name="mode_basic_calculator">Basic Calculator</string>
     <string name="mode_basic_calculator_title">Basic Calculator Mode</string>
@@ -45,6 +119,7 @@
     <string name="mode_emi">EMI Calculator</string>
     <string name="mode_interest">Interest Calculator</string>
     <string name="mode_currency">Currency Converter</string>
+    <string name="mode_favorites">Favourites</string>
     <string name="mode_date_calculator">Date Calculator</string>
     <string name="quick_scientific_mode">Scientific mode</string>
     <string name="quick_switch_mode">Switch mode</string>
@@ -65,7 +140,7 @@
     <string name="feedback_thanks_message">We use feedback like yours to fix issues and improve the app.</string>
     <string name="feedback_thanks_ok">OK</string>
     <string name="privacy_policy_title">Privacy Policy</string>
-    <string name="privacy_policy_content">Nur\'s Custom Calculator respects your privacy.\n\n• This app does not collect personal data. Calculations are performed on your device only.\n\n• History is stored locally on your device and is not sent to any server.\n\n• If you contact us via Send feedback, we receive only the email content you choose to send (e.g. to mollanuramin130@gmail.com) to respond to your request.\n\n• We do not use analytics or third-party tracking in this app.\n\n• For questions about this policy, email mollanuramin130@gmail.com.</string>
+    <string name="privacy_policy_content">AI Calculator respects your privacy. This app is built so everyday calculations stay on your phone or tablet.\n\n• Calculations &amp; data on your device: Basic calculator, converters, EMI, tax, interest, date, BMI, discount, games, and similar tools run locally. Calculation history and favourites are saved only on your device and are not uploaded to us.\n\n• AI Smart: Short, simple inputs are handled offline on your device. Longer or natural-language questions may use the internet only if you add your own optional API keys (for example Google Gemini or DeepSeek) in the app; in that case your typed text is sent to that provider to get a response, under that provider’s terms and privacy policy. Without keys or without a network, the app uses local processing instead.\n\n• Voice: If you use the microphone, Android speech recognition may process audio on your device or through Google’s speech services, depending on your device and settings.\n\n• Updates: “Check for updates” uses Google Play’s in-app update flow; Google may process data as described in Play and your Google account settings.\n\n• Feedback: If you email us via Send feedback, we receive only what you choose to send (for example to mollanuramin130@gmail.com) so we can reply.\n\n• We do not run in-app analytics or third-party ad tracking in this app.\n\n• Questions about this policy: mollanuramin130@gmail.com</string>
     <string name="feedback_email_subject">Nur\'s Custom Calculator – Feedback</string>
     <string name="math_speed_game_title">Math Speed Game</string>
     <string name="math_game_score">Score: %d</string>
@@ -108,7 +183,7 @@
     <string name="electricity_bill_estimated_bill">Estimated Bill</string>
     <string name="electricity_bill_previous_reading">Previous Reading (kWh)</string>
     <string name="electricity_bill_current_reading">Current Reading (kWh)</string>
-    <string name="electricity_bill_cost_per_unit">Cost Per Unit (₹)</string>
+    <string name="electricity_bill_cost_per_unit">Cost Per Unit</string>
     <string name="electricity_bill_hint_previous">Enter previous meter reading</string>
     <string name="electricity_bill_hint_current">Enter current meter reading</string>
     <string name="electricity_bill_hint_cost">Enter price per unit</string>
@@ -245,7 +320,10 @@
 
     <!-- Memory Number Grid Game -->
     <string name="memory_grid_title">Memory Number Grid 🧩</string>
-    <string name="memory_grid_subtitle">Memorize the numbers before they disappear</string>
+    <string name="memory_grid_subtitle">Levels 1–3: 3 numbers each — any wrong tap ends the game. From level 4: wrong taps use chances; the correct next cell flashes briefly, then you keep playing.</string>
+    <string name="memory_grid_memorize_time">Memorize: %1$.1f s · +%2$.2f s per level (after level 3)</string>
+    <string name="memory_grid_memorize_tutorial">Memorize: %1$.1f s · tutorial levels 1–3 (3 numbers)</string>
+    <string name="memory_grid_chances">Chances: %d</string>
     <string name="memory_grid_level">Level %d</string>
     <string name="memory_grid_level_format">Level %d</string>
     <string name="memory_grid_score">Score: %d</string>
@@ -261,6 +339,16 @@
     <string name="memory_grid_perf_expert">Memory Expert</string>
     <string name="memory_grid_perf_master">Memory Master 🧠</string>
     <string name="memory_grid_restart">Restart</string>
-    <string name="memory_grid_instruction">Memorize the numbers, then tap the cells in order (1, 2, 3…). Wrong tap = game over.</string>
+    <string name="memory_grid_instruction">Memorize the numbers, then tap the cells in order (1, 2, 3…). Levels 1–3: one wrong tap ends the game. From level 4: you have several chances per level; a wrong tap shows the correct next cell briefly, then you continue until chances run out.</string>
     <string name="mode_memory_number_grid">Memory Number Grid</string>
+    <string name="calc_key_deg">DEG</string>
+    <string name="calc_key_sin">sin</string>
+    <string name="calc_key_cos">cos</string>
+    <string name="calc_key_tan">tan</string>
+    <string name="calc_key_inv">INV</string>
+    <string name="calc_key_ln">ln</string>
+    <string name="calc_key_log">log</string>
+    <string name="calc_key_ac">AC</string>
+    <string name="currency_picker_title">Choose currency</string>
+    <string name="currency_picker_device_default">Use device default</string>
 </resources>

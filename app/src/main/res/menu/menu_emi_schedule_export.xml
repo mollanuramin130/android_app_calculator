@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_emi_schedule_print"
+        android:icon="@drawable/ic_print"
+        android:title="@string/int_print_pdf" />
+    <item
+        android:id="@+id/action_emi_schedule_share"
+        android:icon="@drawable/ic_share"
+        android:title="@string/int_share_pdf" />
+</menu>

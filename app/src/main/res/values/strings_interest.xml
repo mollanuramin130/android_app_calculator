@@ -18,5 +18,26 @@
     <string name="int_view_breakdown">View Breakdown</string>
     <string name="int_years">Years</string>
     <string name="int_months">Months</string>
-    <string name="int_rupee">₹</string>
+    <string name="int_sample_zero">0.00</string>
+    <string name="int_sample_total_amount">Total Amount (Principal + 0.00)</string>
+
+    <string name="int_share_pdf">Share PDF</string>
+    <string name="int_print_pdf">Print</string>
+    <string name="int_pdf_subject">Interest calculator breakdown</string>
+    <string name="int_pdf_print_job_name">Interest breakdown</string>
+    <string name="int_calculate_first">Calculate first to export breakdown.</string>
+    <string name="int_pdf_error">Could not create PDF.</string>
+    <string name="int_pdf_document_title">Interest Calculator — Breakdown</string>
+    <string name="int_pdf_section_inputs">Inputs</string>
+    <string name="int_pdf_section_result">Result</string>
+    <string name="int_pdf_section_breakdown">Breakdown</string>
+    <string name="int_pdf_line_mode">Mode: %1$s</string>
+    <string name="int_pdf_line_principal">Principal: %1$s</string>
+    <string name="int_pdf_line_rate">Interest rate (P.A.): %1$s</string>
+    <string name="int_pdf_line_time">Time: %1$s</string>
+    <string name="int_pdf_line_total_interest">Total interest: %1$s</string>
+    <string name="int_pdf_line_principal_amount">Principal amount: %1$s</string>
+    <string name="int_pdf_footer_get_app">Get the app on Google Play:</string>
+    <string name="int_pdf_header_tagline">Interest breakdown report</string>
+    <string name="int_pdf_footer_link_label">Tap or open this link in a browser:</string>
 </resources>

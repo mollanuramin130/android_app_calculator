@@ -1,0 +1,23 @@
+package com.nuramin.calculator.unitconverter;
+
+import android.view.View;
+import android.widget.AdapterView;
+
+/** Lightweight callback wrapper for spinner selection changes. */
+final class SimpleItemSelectedListener implements AdapterView.OnItemSelectedListener {
+    private final Runnable onChange;
+
+    SimpleItemSelectedListener(Runnable onChange) {
+        this.onChange = onChange;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (onChange != null) onChange.run();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        // no-op
+    }
+}

@@ -88,7 +88,7 @@ public final class OverflowMenuHelper {
     /** Public for use from Toolbar menu (onOptionsItemSelected). */
     public static void showThemeDialog(AppCompatActivity activity) {
         SharedPreferences prefs = activity.getSharedPreferences(PREFS_NAME, AppCompatActivity.MODE_PRIVATE);
-        int current = prefs.getInt(KEY_THEME, 2);
+        int current = Math.max(0, Math.min(2, prefs.getInt(KEY_THEME, 2)));
         String[] options = {
                 activity.getString(R.string.theme_light),
                 activity.getString(R.string.theme_dark),

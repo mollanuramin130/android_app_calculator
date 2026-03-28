@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/mode_content_scroll_padding"
+    android:paddingEnd="@dimen/mode_content_scroll_padding"
+    android:paddingBottom="@dimen/currency_ui_inner_gap">
+
+    <!-- Bottom-sheet style handle (visual only; dialog remains AlertDialog from code) -->
+    <View
+        android:layout_width="@dimen/currency_ui_handle_width"
+        android:layout_height="@dimen/currency_ui_handle_height"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/currency_ui_inner_gap"
+        android:background="@drawable/bg_currency_picker_handle" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/currency_ui_inner_gap"
+        app:cardBackgroundColor="@color/currency_input_bg"
+        app:cardCornerRadius="@dimen/currency_ui_corner_medium"
+        app:cardElevation="0dp"
+        app:strokeColor="@color/currency_outline_muted"
+        app:strokeWidth="1dp">
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.Currency.TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/currency_ui_inner_gap"
+            android:paddingEnd="@dimen/currency_ui_inner_gap"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            app:endIconMode="clear_text"
+            app:hintEnabled="false"
+            app:startIconDrawable="@drawable/ic_search_24"
+            app:startIconMinSize="24dp"
+            app:startIconTint="@color/currency_primary_tint">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/currency_picker_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/currency_picker_search_hint"
+                android:importantForAutofill="no"
+                android:inputType="text|textCapCharacters"
+                android:minHeight="@dimen/currency_picker_search_min_height"
+                android:textColor="@color/currency_input_text"
+                android:textColorHint="@color/currency_label_text"
+                android:textSize="@dimen/currency_picker_search_text_size"
+                tools:ignore="UnusedAttribute" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/currency_card_bg"
+        app:cardCornerRadius="@dimen/currency_ui_corner_medium"
+        app:cardElevation="1dp"
+        app:strokeColor="@color/currency_outline_muted"
+        app:strokeWidth="1dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/currency_picker_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:maxHeight="@dimen/currency_picker_list_max_height"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:scrollbars="vertical" />
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>

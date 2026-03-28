@@ -35,11 +35,16 @@ public final class MemoryNumberGridGameScreen {
     private GridLayout gridLayout;
     private TextView levelText;
     private TextView scoreText;
+    private TextView memorizeTimeText;
+    private TextView chancesText;
     private View startBtn;
     private MaterialCardView[] cellCards;
     private TextView[] cellLabels;
     private boolean displayPhase = true; // true = numbers visible, no taps
     private Runnable hideNumbersRunnable;
+    private static final long PEEK_CORRECT_MS = 700L;
+    private boolean inputPeekInProgress;
+    private Runnable peekEndRunnable;
 
     public static void setup(View panel, @Nullable DrawerLayout drawerLayout,
                             @Nullable View.OnClickListener onOverflowClick) {
@@ -56,6 +61,8 @@ public final class MemoryNumberGridGameScreen {
     private void bind() {
         levelText = panel.findViewById(R.id.memory_grid_level_text);
         scoreText = panel.findViewById(R.id.memory_grid_score_text);
+        memorizeTimeText = panel.findViewById(R.id.memory_grid_memorize_time_text);
+        chancesText = panel.findViewById(R.id.memory_grid_chances_text);
         startBtn = panel.findViewById(R.id.memory_grid_start_btn);
         gridLayout = panel.findViewById(R.id.memory_grid_layout);
 
@@ -95,6 +102,7 @@ public final class MemoryNumberGridGameScreen {
     }
 
     private void startGame() {
+        cancelPeek();
         if (hideNumbersRunnable != null) {
             handler.removeCallbacks(hideNumbersRunnable);
             hideNumbersRunnable = null;
@@ -112,6 +120,7 @@ public final class MemoryNumberGridGameScreen {
         int count = engine.getNumbersCount();
         for (int i = 0; i < MemoryGridGameEngine.GRID_SIZE; i++) {
             int num = engine.getNumberAtCell(i);
+            if (cellLabels[i] == null) continue;
             if (num >= 1 && num <= count) {
                 cellLabels[i].setText(String.valueOf(num));
                 cellLabels[i].setVisibility(View.VISIBLE);
@@ -130,13 +139,13 @@ public final class MemoryNumberGridGameScreen {
         hideNumbersRunnable = null;
         displayPhase = false;
         for (int i = 0; i < MemoryGridGameEngine.GRID_SIZE; i++) {
-            cellLabels[i].setVisibility(View.GONE);
+            if (cellLabels[i] != null) cellLabels[i].setVisibility(View.GONE);
             setCellBackground(cellCards[i], 0xFF455A64);
         }
     }
 
     private void onCellClicked(int cellIndex) {
-        if (displayPhase) return;
+        if (displayPhase || inputPeekInProgress) return;
         if (engine.isGameOver()) return;
 
         MemoryGridGameEngine.TapResult result = engine.onCellTapped(cellIndex);
@@ -152,15 +161,66 @@ public final class MemoryNumberGridGameScreen {
                 playWrongTapAnimation(cellCards[cellIndex]);
                 handler.postDelayed(this::showGameOverDialog, 300);
                 break;
+            case WRONG_LOST_CHANCE:
+                updateChancesUi();
+                playWrongTapWithPeek(cellIndex, false);
+                break;
+            case WRONG_GAME_OVER:
+                updateChancesUi();
+                playWrongTapWithPeek(cellIndex, true);
+                break;
             case LEVEL_COMPLETE:
                 setCellBackground(cellCards[cellIndex], 0xFF4CAF50);
                 playCorrectTapAnimation(cellCards[cellIndex]);
-                scoreText.setText(context.getString(R.string.memory_grid_score_format, engine.getScore()));
+                if (scoreText != null) {
+                    scoreText.setText(context.getString(R.string.memory_grid_score_format, engine.getScore()));
+                }
                 handler.postDelayed(this::onLevelComplete, 400);
                 break;
             default:
                 break;
         }
+    }
+
+    private void playWrongTapWithPeek(int tappedWrongCell, boolean thenGameOver) {
+        int revealIdx = engine.getWrongRevealCellIndex();
+        setCellBackground(cellCards[tappedWrongCell], 0xFFE53935);
+        playWrongTapAnimation(cellCards[tappedWrongCell]);
+        if (revealIdx >= 0 && revealIdx < cellLabels.length && cellLabels[revealIdx] != null) {
+            int num = engine.getNumberAtCell(revealIdx);
+            cellLabels[revealIdx].setText(String.valueOf(num));
+            cellLabels[revealIdx].setVisibility(View.VISIBLE);
+            setCellBackground(cellCards[revealIdx], 0xFFFF9800);
+        }
+        if (peekEndRunnable != null) {
+            handler.removeCallbacks(peekEndRunnable);
+        }
+        inputPeekInProgress = true;
+        peekEndRunnable = () -> {
+            peekEndRunnable = null;
+            inputPeekInProgress = false;
+            if (tappedWrongCell >= 0 && tappedWrongCell < cellCards.length) {
+                boolean ok = engine.isCellAlreadyCompleted(tappedWrongCell);
+                setCellBackground(cellCards[tappedWrongCell], ok ? 0xFF4CAF50 : 0xFF455A64);
+            }
+            if (revealIdx >= 0 && revealIdx < cellLabels.length && cellLabels[revealIdx] != null) {
+                cellLabels[revealIdx].setVisibility(View.GONE);
+                boolean ok = engine.isCellAlreadyCompleted(revealIdx);
+                setCellBackground(cellCards[revealIdx], ok ? 0xFF4CAF50 : 0xFF455A64);
+            }
+            if (thenGameOver) {
+                showGameOverDialog();
+            }
+        };
+        handler.postDelayed(peekEndRunnable, PEEK_CORRECT_MS);
+    }
+
+    private void cancelPeek() {
+        if (peekEndRunnable != null) {
+            handler.removeCallbacks(peekEndRunnable);
+            peekEndRunnable = null;
+        }
+        inputPeekInProgress = false;
     }
 
     private void onLevelComplete() {
@@ -224,6 +284,29 @@ public final class MemoryNumberGridGameScreen {
     private void updateLevelScoreUi() {
         if (levelText != null) levelText.setText(context.getString(R.string.memory_grid_level_format, engine.getLevel()));
         if (scoreText != null) scoreText.setText(context.getString(R.string.memory_grid_score_format, engine.getScore()));
+        updateMemorizeTimeHint();
+        updateChancesUi();
+    }
+
+    private void updateChancesUi() {
+        if (chancesText == null) return;
+        if (engine.getLevel() <= MemoryGridGameEngine.TUTORIAL_MAX_LEVEL) {
+            chancesText.setVisibility(View.GONE);
+        } else {
+            chancesText.setVisibility(View.VISIBLE);
+            chancesText.setText(context.getString(R.string.memory_grid_chances, engine.getRemainingChances()));
+        }
+    }
+
+    private void updateMemorizeTimeHint() {
+        if (memorizeTimeText == null) return;
+        float sec = engine.getDisplayTimeMs() / 1000f;
+        if (engine.getLevel() <= MemoryGridGameEngine.TUTORIAL_MAX_LEVEL) {
+            memorizeTimeText.setText(context.getString(R.string.memory_grid_memorize_tutorial, sec));
+        } else {
+            float bonusSec = MemoryGridGameEngine.DISPLAY_MS_BONUS_PER_LEVEL / 1000f;
+            memorizeTimeText.setText(context.getString(R.string.memory_grid_memorize_time, sec, bonusSec));
+        }
     }
 
     private void setCellBackground(MaterialCardView card, int colorArgb) {
@@ -231,6 +314,7 @@ public final class MemoryNumberGridGameScreen {
     }
 
     private void playCorrectTapAnimation(View cell) {
+        if (cell == null) return;
         ObjectAnimator scaleX = ObjectAnimator.ofFloat(cell, View.SCALE_X, 1f, 1.15f, 1f);
         ObjectAnimator scaleY = ObjectAnimator.ofFloat(cell, View.SCALE_Y, 1f, 1.15f, 1f);
         scaleX.setDuration(150);
@@ -242,6 +326,7 @@ public final class MemoryNumberGridGameScreen {
     }
 
     private void playWrongTapAnimation(View cell) {
+        if (cell == null) return;
         ObjectAnimator shake = ObjectAnimator.ofFloat(cell, View.TRANSLATION_X, 0f, -15f, 15f, -10f, 10f, 0f);
         shake.setDuration(300);
         shake.start();

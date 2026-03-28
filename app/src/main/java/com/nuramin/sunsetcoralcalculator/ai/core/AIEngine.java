@@ -29,7 +29,7 @@ public final class AIEngine {
 
     private String getSuggestionForUnknown(String input) {
         if (input.matches(".*\\d+.*")) {
-            return "Try: Calculate EMI? or Add GST?";
+            return "Try: Calculate EMI? or add tax?";
         }
         return "Try: 5000 loan at 8% for 5 years";
     }

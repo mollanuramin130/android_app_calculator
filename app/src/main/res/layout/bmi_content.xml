@@ -10,8 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
+        android:paddingStart="@dimen/mode_content_scroll_padding"
+        android:paddingEnd="@dimen/mode_content_scroll_padding"
         android:paddingTop="16dp"
         android:paddingBottom="24dp">
 
@@ -19,6 +19,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/mode_content_icon_hero"
+                android:layout_height="@dimen/mode_content_icon_hero"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/mode_content_hero_margin_bottom"
+                android:contentDescription="@null"
+                android:importantForAccessibility="no"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_nav_bmi" />
 
             <!-- 1. BMI Result Card -->
             <com.google.android.material.card.MaterialCardView
@@ -104,7 +114,7 @@
                         android:layout_marginTop="8dp"
                         android:textSize="12sp"
                         android:textColor="@color/bmi_text_secondary"
-                        android:text="Underweight &lt;18.5   Normal 18.5–24.9   Overweight 25–29.9   Obese 30+" />
+                        android:text="@string/bmi_ranges_summary" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -188,7 +198,7 @@
                     android:layout_height="36dp"
                     android:background="@drawable/bmi_btn_plus"
                     android:src="@drawable/ic_bmi_minus"
-                    android:contentDescription="Decrease height"
+                    android:contentDescription="@string/bmi_desc_decrease_height"
                     app:tint="@color/bmi_text_primary"
                     android:layout_marginEnd="4dp" />
                 <ImageButton
@@ -197,7 +207,7 @@
                     android:layout_height="36dp"
                     android:background="@drawable/bmi_btn_plus"
                     android:src="@android:drawable/ic_input_add"
-                    android:contentDescription="Increase height"
+                    android:contentDescription="@string/bmi_desc_increase_height"
                     app:tint="@color/bmi_text_primary" />
             </LinearLayout>
 
@@ -235,7 +245,7 @@
                     android:layout_height="36dp"
                     android:background="@drawable/bmi_btn_plus"
                     android:src="@drawable/ic_bmi_minus"
-                    android:contentDescription="Decrease weight"
+                    android:contentDescription="@string/bmi_desc_decrease_weight"
                     app:tint="@color/bmi_text_primary"
                     android:layout_marginEnd="4dp" />
                 <ImageButton
@@ -244,7 +254,7 @@
                     android:layout_height="36dp"
                     android:background="@drawable/bmi_btn_plus"
                     android:src="@android:drawable/ic_input_add"
-                    android:contentDescription="Increase weight"
+                    android:contentDescription="@string/bmi_desc_increase_weight"
                     app:tint="@color/bmi_text_primary" />
             </LinearLayout>
 
@@ -282,7 +292,7 @@
                     android:layout_height="36dp"
                     android:background="@drawable/bmi_btn_plus"
                     android:src="@drawable/ic_bmi_minus"
-                    android:contentDescription="Decrease age"
+                    android:contentDescription="@string/bmi_desc_decrease_age"
                     app:tint="@color/bmi_text_primary"
                     android:layout_marginEnd="4dp" />
                 <ImageButton
@@ -291,7 +301,7 @@
                     android:layout_height="36dp"
                     android:background="@drawable/bmi_btn_plus"
                     android:src="@android:drawable/ic_input_add"
-                    android:contentDescription="Increase age"
+                    android:contentDescription="@string/bmi_desc_increase_age"
                     app:tint="@color/bmi_text_primary" />
             </LinearLayout>
 
@@ -336,28 +346,28 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="• Underweight &lt;18.5"
+                        android:text="@string/bmi_range_underweight_bullet"
                         android:textColor="@color/bmi_underweight"
                         android:textSize="14sp"
                         android:layout_marginBottom="8dp" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="• Normal 18.5–24.9"
+                        android:text="@string/bmi_range_normal_bullet"
                         android:textColor="@color/bmi_normal"
                         android:textSize="14sp"
                         android:layout_marginBottom="8dp" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="• Overweight 25–29.9"
+                        android:text="@string/bmi_range_overweight_bullet"
                         android:textColor="@color/bmi_overweight"
                         android:textSize="14sp"
                         android:layout_marginBottom="8dp" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="• Obese 30+"
+                        android:text="@string/bmi_range_obese_bullet"
                         android:textColor="@color/bmi_obese"
                         android:textSize="14sp" />
                 </LinearLayout>

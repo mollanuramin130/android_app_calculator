@@ -123,6 +123,16 @@ public class ExprParserTest {
     }
 
     @Test
+    public void whitespaceOnly_throws() {
+        assertThrows(() -> parse("   \t\n"));
+    }
+
+    @Test
+    public void invalidPower_throws() {
+        assertThrows(() -> parse("(-1)^0.5"));
+    }
+
+    @Test
     public void invalidCharacter_throws() {
         assertThrows(() -> parse("2@3"));
         assertThrows(() -> parse("2+"));

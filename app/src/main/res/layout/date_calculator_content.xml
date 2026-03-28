@@ -10,8 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
+        android:paddingStart="@dimen/mode_content_scroll_padding"
+        android:paddingEnd="@dimen/mode_content_scroll_padding"
         android:paddingTop="12dp"
         android:paddingBottom="24dp">
 
@@ -19,12 +19,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <ImageView
+                android:id="@+id/date_calculator_hero_icon"
+                android:layout_width="@dimen/mode_content_icon_hero"
+                android:layout_height="@dimen/mode_content_icon_hero"
+                android:layout_marginTop="4dp"
+                android:contentDescription="@null"
+                android:importantForAccessibility="no"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_nav_date"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/date_card_main"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/date_calculator_hero_icon"
                 app:cardCornerRadius="@dimen/date_card_radius"
                 app:cardElevation="@dimen/date_card_elevation"
                 app:cardBackgroundColor="@color/date_card_bg"

@@ -118,11 +118,11 @@ public class BasicCalculatorScreen {
         setNumberButton(R.id.btn_9, "9");
         setNumberButton(R.id.btn_dot, ".");
 
-        activity.findViewById(R.id.btn_plus).setOnClickListener(v -> handleOperator(OP_PLUS));
-        activity.findViewById(R.id.btn_minus).setOnClickListener(v -> handleOperator(OP_MINUS));
-        activity.findViewById(R.id.btn_multiply).setOnClickListener(v -> handleOperator(OP_MUL));
-        activity.findViewById(R.id.btn_divide).setOnClickListener(v -> handleOperator(OP_DIV));
-        activity.findViewById(R.id.btn_lparen).setOnClickListener(v -> handleParenthesis());
+        setClickIfPresent(R.id.btn_plus, v -> handleOperator(OP_PLUS));
+        setClickIfPresent(R.id.btn_minus, v -> handleOperator(OP_MINUS));
+        setClickIfPresent(R.id.btn_multiply, v -> handleOperator(OP_MUL));
+        setClickIfPresent(R.id.btn_divide, v -> handleOperator(OP_DIV));
+        setClickIfPresent(R.id.btn_lparen, v -> handleParenthesis());
         if (btnEquals != null) {
             btnEquals.setEnabled(true);
             btnEquals.setOnClickListener(v -> {
@@ -133,8 +133,8 @@ public class BasicCalculatorScreen {
                 });
             });
         }
-        activity.findViewById(R.id.btn_clear).setOnClickListener(v -> clearAll());
-        activity.findViewById(R.id.btn_percent).setOnClickListener(v -> handlePercentage());
+        setClickIfPresent(R.id.btn_clear, v -> clearAll());
+        setClickIfPresent(R.id.btn_percent, v -> handlePercentage());
 
         View btnBackspace = activity.findViewById(R.id.btn_backspace);
         if (btnBackspace != null) {
@@ -231,6 +231,11 @@ public class BasicCalculatorScreen {
         historyAdapter.clear();
         historyAdapter.addAll(getDisplayedHistoryList());
         historyAdapter.notifyDataSetChanged();
+    }
+
+    private void setClickIfPresent(int id, View.OnClickListener listener) {
+        View v = activity.findViewById(id);
+        if (v != null) v.setOnClickListener(listener);
     }
 
     private void setNumberButton(int id, String value) {

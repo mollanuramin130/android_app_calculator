@@ -20,13 +20,13 @@ public final class SuggestionEngine {
         if (t.isEmpty()) {
             out.add("5000 loan at 8% for 5 years");
             out.add("Age from 15 March 1990");
-            out.add("1000 with 18% GST");
+            out.add("1000 with 18% tax");
             out.add("500 with 20% discount");
             return out;
         }
         if (HAS_DIGIT.matcher(t).find()) {
             out.add("Calculate EMI?");
-            out.add("Add GST?");
+            out.add("Add tax?");
             if (t.length() <= 4) {
                 out.add("Discount %?");
             }

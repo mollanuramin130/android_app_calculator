@@ -12,8 +12,8 @@ import androidx.annotation.Nullable;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.nuramin.sunsetcoralcalculator.R;
-import com.nuramin.calculator.util.CalculatorUtils;
 import com.nuramin.calculator.util.ConverterUiHelper;
+import com.nuramin.calculator.util.LocaleFormatManager;
 
 /**
  * Interest Calculator: simple/compound, principal, rate, time (in Years or Months); calculate; result and breakdown.
@@ -23,6 +23,11 @@ public final class InterestCalculatorPanel {
 
     private static final int UNIT_YEARS = 0;
     private static final int UNIT_MONTHS = 1;
+
+    /** Empty fields use these defaults (matches EditText hints in interest_content). */
+    static final double DEFAULT_PRINCIPAL = 50000;
+    static final double DEFAULT_RATE_PCT = 8.5;
+    static final double DEFAULT_TIME = 5;
 
     public static void setup(View panel, @Nullable DrawerLayout drawerLayout, @Nullable View.OnClickListener onOverflowClick) {
         if (panel == null) return;
@@ -52,15 +57,20 @@ public final class InterestCalculatorPanel {
             timeUnitSpinner.setSelection(UNIT_YEARS);
         }
 
+        Button viewBreakdownBtn = panel.findViewById(R.id.interest_view_breakdown);
+        if (viewBreakdownBtn != null) {
+            viewBreakdownBtn.setOnClickListener(v -> InterestBreakdownExporter.showMenu(panel, v));
+        }
+
         if (calculateBtn != null && resultCard != null && resultTv != null && totalAmountTv != null
                 && breakdownPrincipalTv != null && breakdownInterestLabelTv != null && breakdownInterestTv != null
                 && principalEt != null && rateEt != null && timeEt != null && interestType != null) {
             calculateBtn.setOnClickListener(v -> {
-                double principal = parseDouble(principalEt.getText(), 50000);
-                double ratePct = parseDouble(rateEt.getText(), 8.5);
-                double timeValue = parseDouble(timeEt.getText(), 5);
+                double principal = parseDouble(principalEt.getText(), DEFAULT_PRINCIPAL);
+                double ratePct = parseDouble(rateEt.getText(), DEFAULT_RATE_PCT);
+                double timeValue = parseDouble(timeEt.getText(), DEFAULT_TIME);
                 boolean isMonths = timeUnitSpinner != null && timeUnitSpinner.getSelectedItemPosition() == UNIT_MONTHS;
-                double yearsForCalc = isMonths ? (timeValue / 12.0) : timeValue;
+                double yearsForCalc = InterestCalculator.yearsForInterest(timeValue, isMonths);
                 if (principal <= 0 || yearsForCalc <= 0) {
                     resultCard.setVisibility(View.GONE);
                     return;
@@ -69,19 +79,21 @@ public final class InterestCalculatorPanel {
                 double interest;
                 double totalAmount;
                 if (isCompound) {
-                    totalAmount = principal * Math.pow(1 + ratePct / 100, yearsForCalc);
-                    interest = totalAmount - principal;
+                    interest = InterestCalculator.compoundInterest(principal, ratePct, yearsForCalc);
+                    totalAmount = InterestCalculator.compoundTotalAmount(principal, ratePct, yearsForCalc);
                 } else {
-                    interest = principal * ratePct * yearsForCalc / 100;
-                    totalAmount = principal + interest;
+                    interest = InterestCalculator.simpleInterest(principal, ratePct, yearsForCalc);
+                    totalAmount = InterestCalculator.simpleTotalAmount(principal, ratePct, yearsForCalc);
                 }
-                String rupee = panel.getContext().getString(R.string.int_rupee);
-                resultTv.setText(rupee + " " + CalculatorUtils.formatNumber(interest));
-                totalAmountTv.setText(panel.getContext().getString(R.string.int_total_amount, rupee + " " + CalculatorUtils.formatNumber(totalAmount)));
-                breakdownPrincipalTv.setText(rupee + " " + CalculatorUtils.formatNumber(principal));
+                String interestAmount = LocaleFormatManager.formatCurrency(panel.getContext(), interest);
+                String totalAmountCurrency = LocaleFormatManager.formatCurrency(panel.getContext(), totalAmount);
+                String principalAmount = LocaleFormatManager.formatCurrency(panel.getContext(), principal);
+                resultTv.setText(interestAmount);
+                totalAmountTv.setText(panel.getContext().getString(R.string.int_total_amount, totalAmountCurrency));
+                breakdownPrincipalTv.setText(principalAmount);
                 breakdownInterestLabelTv.setText(panel.getContext().getString(
                         isCompound ? R.string.int_compound_interest_label : R.string.int_simple_interest_label));
-                breakdownInterestTv.setText(rupee + " " + CalculatorUtils.formatNumber(interest));
+                breakdownInterestTv.setText(interestAmount);
                 resultCard.setVisibility(View.VISIBLE);
                 ConverterUiHelper.hideSoftKeyboard(panel);
                 ConverterUiHelper.scrollToShowResult(panel, resultCard);
@@ -91,20 +103,7 @@ public final class InterestCalculatorPanel {
     }
 
     private static double parseDouble(CharSequence s, double def) {
-        if (s == null) return def;
-        try {
-            return Double.parseDouble(s.toString().replace(",", "").trim());
-        } catch (NumberFormatException e) {
-            return def;
-        }
+        return LocaleFormatManager.parseLocalizedNumber(s, def);
     }
 
-    private static int parseInt(CharSequence s, int def) {
-        if (s == null) return def;
-        try {
-            return Integer.parseInt(s.toString().replace(",", "").trim());
-        } catch (NumberFormatException e) {
-            return def;
-        }
-    }
 }

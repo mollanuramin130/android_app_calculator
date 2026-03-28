@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">حاسبة AI: EMI، الضريبة، BMI</string>
+    <string name="mode_basic_calculator">آلة حاسبة أساسية</string>
+    <string name="mode_temperature">محول درجة الحرارة</string>
+    <string name="mode_emi">حاسبة EMI</string>
+    <string name="mode_interest">حاسبة الفائدة</string>
+    <string name="mode_currency">محول العملات</string>
+    <string name="mode_date_calculator">حاسبة التاريخ</string>
+    <string name="mode_bmi_calculator">حاسبة BMI</string>
+    <string name="mode_discount_calculator">خصم / نسبة مئوية</string>
+    <string name="mode_ai_smart">وضع الذكاء الاصطناعي</string>
+    <string name="ai_chip_gst">ضريبة</string>
+    <string name="ai_welcome_result">اسأل عن EMI أو العمر أو الخصم أو الضريبة…</string>
+    <string name="currency_picker_title">اختر العملة</string>
+    <string name="currency_picker_device_default">استخدام إعداد الجهاز الافتراضي</string>
+    <string name="date_dob_label">🎂 تاريخ الميلاد</string>
+    <string name="age_enter_dob">أدخل تاريخ الميلاد</string>
+    <string name="ai_voice_unavailable">الإدخال الصوتي غير متاح على هذا الجهاز. يرجى الكتابة.</string>
+    <string name="ai_voice_no_speech">لم يتم سماع صوت. أعد المحاولة أو اكتب.</string>
+    <string name="share_app_unavailable">المشاركة غير متاحة على هذا الجهاز.</string>
+</resources>

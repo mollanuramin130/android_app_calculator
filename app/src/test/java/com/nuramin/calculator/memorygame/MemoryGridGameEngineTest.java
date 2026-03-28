@@ -104,22 +104,117 @@ public class MemoryGridGameEngineTest {
         for (int idx : order) engine.onCellTapped(idx);
         engine.advanceLevel();
         assertEquals(2, engine.getLevel());
-        assertEquals(4, engine.getNumbersCount());
+        assertEquals(3, engine.getNumbersCount());
     }
 
     @Test
-    public void getDisplayTimeMs_levels() {
+    public void tutorialLevels_sameNumbersAndMemorizeTime() {
         engine.reset();
-        assertEquals(3000L, engine.getDisplayTimeMs());
+        assertEquals(3, engine.getNumbersCount());
+        assertEquals(MemoryGridGameEngine.BASE_DISPLAY_MS, engine.getDisplayTimeMs());
         engine.startLevel();
-        int[] order = new int[3];
+        completeLevelWithCorrectTaps();
+        engine.advanceLevel();
+        assertEquals(2, engine.getLevel());
+        assertEquals(3, engine.getNumbersCount());
+        assertEquals(MemoryGridGameEngine.BASE_DISPLAY_MS, engine.getDisplayTimeMs());
+        engine.startLevel();
+        completeLevelWithCorrectTaps();
+        engine.advanceLevel();
+        assertEquals(3, engine.getLevel());
+        assertEquals(3, engine.getNumbersCount());
+        assertEquals(MemoryGridGameEngine.BASE_DISPLAY_MS, engine.getDisplayTimeMs());
+    }
+
+    @Test
+    public void afterTutorial_numbersAndMemorizeTimeIncrease() {
+        engine.reset();
+        engine.startLevel();
+        completeLevelWithCorrectTaps();
+        engine.advanceLevel();
+        engine.startLevel();
+        completeLevelWithCorrectTaps();
+        engine.advanceLevel();
+        engine.startLevel();
+        completeLevelWithCorrectTaps();
+        engine.advanceLevel();
+        assertEquals(4, engine.getLevel());
+        assertEquals(4, engine.getNumbersCount());
+        assertEquals(
+                MemoryGridGameEngine.BASE_DISPLAY_MS + MemoryGridGameEngine.DISPLAY_MS_BONUS_PER_LEVEL,
+                engine.getDisplayTimeMs());
+    }
+
+    private void completeLevelWithCorrectTaps() {
+        int n = engine.getNumbersCount();
+        int[] order = new int[n];
         for (int i = 0; i < MemoryGridGameEngine.GRID_SIZE; i++) {
-            int n = engine.getNumberAtCell(i);
-            if (n >= 1 && n <= 3) order[n - 1] = i;
+            int v = engine.getNumberAtCell(i);
+            if (v >= 1 && v <= n) order[v - 1] = i;
         }
         for (int idx : order) engine.onCellTapped(idx);
-        engine.advanceLevel();
-        assertEquals(3000L, engine.getDisplayTimeMs());
+    }
+
+    /** Any cell that is not the first correct tap (cell showing number 1). */
+    private int findWrongCellForFirstTap() {
+        int firstExpected = -1;
+        for (int i = 0; i < MemoryGridGameEngine.GRID_SIZE; i++) {
+            if (engine.getNumberAtCell(i) == 1) {
+                firstExpected = i;
+                break;
+            }
+        }
+        for (int i = 0; i < MemoryGridGameEngine.GRID_SIZE; i++) {
+            if (i != firstExpected) return i;
+        }
+        return 0;
+    }
+
+    @Test
+    public void postTutorial_wrongTap_losesChancesThenGameOver() {
+        engine.reset();
+        for (int r = 0; r < 3; r++) {
+            engine.startLevel();
+            completeLevelWithCorrectTaps();
+            engine.advanceLevel();
+        }
+        assertEquals(4, engine.getLevel());
+        engine.startLevel();
+        assertEquals(MemoryGridGameEngine.CHANCES_AFTER_TUTORIAL, engine.getRemainingChances());
+        assertEquals(
+                MemoryGridGameEngine.TapResult.WRONG_LOST_CHANCE,
+                engine.onCellTapped(findWrongCellForFirstTap()));
+        assertFalse(engine.isGameOver());
+        assertEquals(MemoryGridGameEngine.CHANCES_AFTER_TUTORIAL - 1, engine.getRemainingChances());
+        assertEquals(
+                MemoryGridGameEngine.TapResult.WRONG_LOST_CHANCE,
+                engine.onCellTapped(findWrongCellForFirstTap()));
+        assertEquals(1, engine.getRemainingChances());
+        assertEquals(
+                MemoryGridGameEngine.TapResult.WRONG_GAME_OVER,
+                engine.onCellTapped(findWrongCellForFirstTap()));
+        assertTrue(engine.isGameOver());
+    }
+
+    @Test
+    public void postTutorial_wrongRevealCell_isExpectedCell() {
+        engine.reset();
+        for (int r = 0; r < 3; r++) {
+            engine.startLevel();
+            completeLevelWithCorrectTaps();
+            engine.advanceLevel();
+        }
+        engine.startLevel();
+        int firstExpected = -1;
+        for (int i = 0; i < MemoryGridGameEngine.GRID_SIZE; i++) {
+            if (engine.getNumberAtCell(i) == 1) {
+                firstExpected = i;
+                break;
+            }
+        }
+        int wrong = findWrongCellForFirstTap();
+        engine.onCellTapped(wrong);
+        assertEquals(firstExpected, engine.getWrongRevealCellIndex());
     }
 
     @Test

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AI ক্যালকুলেটর: EMI, ট্যাক্স, BMI</string>
+    <string name="mode_basic_calculator">বেসিক ক্যালকুলেটর</string>
+    <string name="mode_temperature">তাপমাত্রা কনভার্টার</string>
+    <string name="mode_emi">EMI ক্যালকুলেটর</string>
+    <string name="mode_interest">সুদ ক্যালকুলেটর</string>
+    <string name="mode_currency">মুদ্রা কনভার্টার</string>
+    <string name="mode_date_calculator">তারিখ ক্যালকুলেটর</string>
+    <string name="mode_bmi_calculator">BMI ক্যালকুলেটর</string>
+    <string name="mode_discount_calculator">ডিসকাউন্ট / শতাংশ</string>
+    <string name="mode_ai_smart">AI মোড</string>
+    <string name="ai_chip_gst">ট্যাক্স</string>
+    <string name="ai_welcome_result">EMI, বয়স, ডিসকাউন্ট, ট্যাক্স — যেকোনো কিছু জিজ্ঞাসা করুন…</string>
+    <string name="currency_picker_title">মুদ্রা নির্বাচন করুন</string>
+    <string name="currency_picker_device_default">ডিভাইসের ডিফল্ট ব্যবহার করুন</string>
+    <string name="date_dob_label">🎂 জন্ম তারিখ</string>
+    <string name="age_enter_dob">আপনার জন্ম তারিখ দিন</string>
+    <string name="ai_voice_unavailable">এই ডিভাইসে ভয়েস ইনপুট পাওয়া যাচ্ছে না। অনুগ্রহ করে লিখুন।</string>
+    <string name="ai_voice_no_speech">কোনো কথা ধরা যায়নি। আবার চেষ্টা করুন বা লিখুন।</string>
+    <string name="share_app_unavailable">এই ডিভাইসে শেয়ার করা যাচ্ছে না।</string>
+</resources>

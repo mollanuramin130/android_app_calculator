@@ -8,13 +8,19 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -22,11 +28,20 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.nuramin.calculator.MainActivity;
 import com.nuramin.sunsetcoralcalculator.R;
+import com.nuramin.sunsetcoralcalculator.ai.system.ReviewController;
+import com.nuramin.sunsetcoralcalculator.ai.system.ShareController;
 
 import com.google.android.material.card.MaterialCardView;
+import com.nuramin.calculator.favorites.FavoritesDialogHelper;
+import com.nuramin.calculator.util.FavoriteStorage;
+import com.nuramin.calculator.util.favorites.FavoritesEngine;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Legacy Date Calculator Activity (full-screen with own toolbar/drawer).
@@ -54,18 +69,24 @@ public class DateCalculatorActivity extends AppCompatActivity {
     private static final String FEEDBACK_EMAIL = "mollanuramin130@gmail.com";
 
     @Override
-    public void onBackPressed() {
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-        super.onBackPressed();
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        applySavedTheme();
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_date_calculator);
 
         drawerLayout = findViewById(R.id.drawer_layout);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (drawerLayout != null && drawerLayout.isDrawerOpen(Gravity.START)) {
+                    drawerLayout.closeDrawer(Gravity.START);
+                    return;
+                }
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                finish();
+            }
+        });
         bindViews();
         setupToolbarTitle();
         setupDrawer();
@@ -76,6 +97,12 @@ public class DateCalculatorActivity extends AppCompatActivity {
         updateLabelSection1();
         updateCalculateState();
         addValidationListeners();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        FavoriteStorage.processExpiredAutoDeletes(this);
     }
 
     private void bindViews() {
@@ -128,6 +155,13 @@ public class DateCalculatorActivity extends AppCompatActivity {
         setDrawerItemToMain(R.id.drawer_item_interest, "interest");
         setDrawerItemToMain(R.id.drawer_item_currency, "currency");
         setDrawerItemToMain(R.id.drawer_item_history, "basic"); // History opens basic calculator
+        View favoritesItem = findViewById(R.id.drawer_item_favorites);
+        if (favoritesItem != null && drawerLayout != null) {
+            favoritesItem.setOnClickListener(v -> {
+                drawerLayout.closeDrawer(Gravity.START);
+                showFavoritesDialog();
+            });
+        }
         // drawer_item_date_calc: do nothing (stay), just close drawer
         View dateItem = findViewById(R.id.drawer_item_date_calc);
         if (dateItem != null) {
@@ -191,6 +225,27 @@ public class DateCalculatorActivity extends AppCompatActivity {
                 sendFeedbackEmail();
             });
         }
+        View addFavorite = menuView.findViewById(R.id.menu_add_favorite);
+        if (addFavorite != null) {
+            addFavorite.setOnClickListener(v -> {
+                popup.dismiss();
+                showAddFavoriteDialog();
+            });
+        }
+        View shareApp = menuView.findViewById(R.id.menu_share_app);
+        if (shareApp != null) {
+            shareApp.setOnClickListener(v -> {
+                popup.dismiss();
+                shareAppLink();
+            });
+        }
+        View rateReview = menuView.findViewById(R.id.menu_rate_review);
+        if (rateReview != null) {
+            rateReview.setOnClickListener(v -> {
+                popup.dismiss();
+                launchInAppReview();
+            });
+        }
         View help = menuView.findViewById(R.id.menu_help);
         if (help != null) {
             help.setOnClickListener(v -> {
@@ -199,6 +254,12 @@ public class DateCalculatorActivity extends AppCompatActivity {
             });
         }
         popup.showAsDropDown(anchor != null ? anchor : menuView, 0, 0);
+    }
+
+    private void applySavedTheme() {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        int mode = Math.max(0, Math.min(2, prefs.getInt(KEY_THEME, 2)));
+        applyThemeMode(mode);
     }
 
     private void applyThemeMode(int mode) {
@@ -211,7 +272,7 @@ public class DateCalculatorActivity extends AppCompatActivity {
 
     private void showThemeDialog() {
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        int current = prefs.getInt(KEY_THEME, 2);
+        int current = Math.max(0, Math.min(2, prefs.getInt(KEY_THEME, 2)));
         String[] options = { getString(R.string.theme_light), getString(R.string.theme_dark), getString(R.string.theme_system) };
         new AlertDialog.Builder(this)
                 .setTitle(R.string.theme_dialog_title)
@@ -240,6 +301,187 @@ public class DateCalculatorActivity extends AppCompatActivity {
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(Intent.createChooser(intent, getString(R.string.menu_send_feedback)));
         }
+    }
+
+    private void shareAppLink() {
+        ShareController.shareApp(this, getString(R.string.share_via_chooser));
+    }
+
+    private void launchInAppReview() {
+        ReviewController.openReviewFromMenu(this);
+    }
+
+    private void showAddFavoriteDialog() {
+        List<FavoriteInputData> detected = buildDateFavoriteInputs();
+        LinearLayout root = new LinearLayout(this);
+        root.setOrientation(LinearLayout.VERTICAL);
+        int pad = (int) (16 * getResources().getDisplayMetrics().density);
+        root.setPadding(pad, pad, pad, 0);
+
+        TextView titleLabel = new TextView(this);
+        titleLabel.setText(R.string.favorites_item_title_label);
+        root.addView(titleLabel);
+
+        EditText titleInput = new EditText(this);
+        titleInput.setHint(R.string.favorites_item_title_hint);
+        titleInput.setText(getString(R.string.date_calculator_title));
+        root.addView(titleInput);
+
+        List<EditText> dynamicValueInputs = new ArrayList<>();
+        List<String> dynamicLabels = new ArrayList<>();
+        if (!detected.isEmpty()) {
+            for (FavoriteInputData data : detected) {
+                TextView fieldLabel = new TextView(this);
+                fieldLabel.setText(data.label);
+                fieldLabel.setPadding(0, pad / 2, 0, 0);
+                root.addView(fieldLabel);
+
+                EditText fieldInput = new EditText(this);
+                fieldInput.setText(data.value);
+                root.addView(fieldInput);
+
+                dynamicLabels.add(data.label);
+                dynamicValueInputs.add(fieldInput);
+            }
+        }
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.favorites_add_title)
+                .setView(root)
+                .setPositiveButton(android.R.string.ok, null)
+                .setNegativeButton(android.R.string.cancel, null)
+                .create();
+        dialog.setOnShowListener(d -> dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            String t = titleInput.getText() == null ? "" : titleInput.getText().toString().trim();
+            if (t.isEmpty()) t = getString(R.string.date_calculator_title);
+            StringBuilder noteBuilder = new StringBuilder();
+            for (int i = 0; i < dynamicValueInputs.size(); i++) {
+                String fieldVal = dynamicValueInputs.get(i).getText() == null ? "" : dynamicValueInputs.get(i).getText().toString().trim();
+                if (fieldVal.isEmpty()) continue;
+                if (noteBuilder.length() > 0) noteBuilder.append('\n');
+                noteBuilder.append(dynamicLabels.get(i)).append(": ").append(fieldVal);
+            }
+            appendResultToFavoriteNote(noteBuilder);
+            if (noteBuilder.length() == 0) noteBuilder.append(buildDateFavoriteNote());
+            String n = noteBuilder.toString();
+            if (saveFavoriteSmart(t, n, getString(R.string.date_calculator_title), dynamicLabels, dynamicValueInputs)) {
+                dialog.dismiss();
+            }
+        }));
+        dialog.show();
+    }
+
+    private String buildDateFavoriteNote() {
+        String d = date1Day != null && date1Day.getText() != null ? date1Day.getText().toString().trim() : "";
+        String m = date1Month != null && date1Month.getText() != null ? date1Month.getText().toString().trim() : "";
+        String y = date1Year != null && date1Year.getText() != null ? date1Year.getText().toString().trim() : "";
+        if (d.isEmpty() && m.isEmpty() && y.isEmpty()) return "";
+        return "Date: " + d + "/" + m + "/" + y;
+    }
+
+    private List<FavoriteInputData> buildDateFavoriteInputs() {
+        List<FavoriteInputData> out = new ArrayList<>();
+        addIfValue(out, "Mode", currentDateMode());
+        addIfValue(out, "Date 1", joinDate(text(date1Day), text(date1Month), text(date1Year)));
+        if (!isAgeMode) {
+            addIfValue(out, "Date 2", joinDate(text(date2Day), text(date2Month), text(date2Year)));
+        }
+        return out;
+    }
+
+    private String currentDateMode() {
+        if (modeGroup == null) return "";
+        int checkedId = modeGroup.getCheckedRadioButtonId();
+        if (checkedId == View.NO_ID) return "";
+        View checked = modeGroup.findViewById(checkedId);
+        if (checked instanceof RadioButton) {
+            CharSequence cs = ((RadioButton) checked).getText();
+            return cs == null ? "" : cs.toString().trim();
+        }
+        return "";
+    }
+
+    private String text(EditText et) {
+        if (et == null || et.getText() == null) return "";
+        return et.getText().toString().trim();
+    }
+
+    private String joinDate(String d, String m, String y) {
+        if ((d == null || d.isEmpty()) && (m == null || m.isEmpty()) && (y == null || y.isEmpty())) return "";
+        return (d == null ? "" : d) + "/" + (m == null ? "" : m) + "/" + (y == null ? "" : y);
+    }
+
+    private void appendResultToFavoriteNote(StringBuilder noteBuilder) {
+        if (noteBuilder == null) return;
+        String main = resultText != null && resultText.getText() != null ? resultText.getText().toString().trim() : "";
+        String sub = resultSub != null && resultSub.getText() != null ? resultSub.getText().toString().trim() : "";
+        if (main.isEmpty() && sub.isEmpty()) return;
+        if (noteBuilder.length() > 0) noteBuilder.append('\n');
+        noteBuilder.append("Result: ").append(main);
+        if (!sub.isEmpty()) noteBuilder.append(" (").append(sub).append(")");
+    }
+
+    private void addIfValue(List<FavoriteInputData> out, String label, String value) {
+        if (value == null) return;
+        String v = value.trim();
+        if (v.isEmpty()) return;
+        out.add(new FavoriteInputData(label, v));
+    }
+
+    private static final class FavoriteInputData {
+        final String label;
+        final String value;
+        FavoriteInputData(String label, String value) {
+            this.label = label;
+            this.value = value;
+        }
+    }
+
+    private void showFavoritesDialog() {
+        FavoritesDialogHelper.show(this);
+    }
+
+    private Map<String, String> buildFavoritePayload(String title, String note, String screen, List<String> labels, List<EditText> values) {
+        Map<String, String> payload = new LinkedHashMap<>();
+        payload.put("title", title);
+        payload.put("note", note);
+        payload.put("screen", screen);
+        if (labels != null && values != null) {
+            for (int i = 0; i < labels.size() && i < values.size(); i++) {
+                String k = labels.get(i) == null ? "" : labels.get(i).trim();
+                String val = values.get(i) != null && values.get(i).getText() != null
+                        ? values.get(i).getText().toString().trim() : "";
+                if (!k.isEmpty() && !val.isEmpty()) payload.put(k, val);
+            }
+        }
+        return payload;
+    }
+
+    private boolean saveFavoriteSmart(String title, String note, String screen, List<String> labels, List<EditText> values) {
+        Map<String, String> payload = buildFavoritePayload(title, note, screen, labels, values);
+        FavoritesEngine.Response<Void> check = FavoriteStorage.validateForAdd(payload, "date");
+        if (!check.success) {
+            Toast.makeText(this, FavoriteStorage.formatValidationMessage(this, check), Toast.LENGTH_LONG).show();
+            return false;
+        }
+        FavoritesEngine.Response<FavoritesEngine.FavoriteRecord> response = FavoriteStorage.addAdvanced(
+                this,
+                payload,
+                "date",
+                FavoritesEngine.DuplicatePolicy.MERGE
+        );
+        if (!response.success) {
+            Toast.makeText(this, "Could not save: " + (response.error == null ? "Unknown error" : response.error.message), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        boolean merged = response.metadata.containsKey("merged_into");
+        boolean duplicate = response.metadata.containsKey("duplicate");
+        if (merged || duplicate) {
+            Toast.makeText(this, "Favourite updated (duplicate merged)", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, R.string.favorites_saved, Toast.LENGTH_SHORT).show();
+        }
+        return true;
     }
 
     private void showHelpDialog() {

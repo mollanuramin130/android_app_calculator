@@ -24,8 +24,7 @@ public final class AmountFormatter {
     private static final DecimalFormat SCIENTIFIC;
 
     static {
-        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
-        symbols.setGroupingSeparator(',');
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
         WITH_GROUPING = new DecimalFormat("#,###.##", symbols);
         WITH_GROUPING.setGroupingUsed(true);
         WITH_GROUPING.setGroupingSize(3);
@@ -75,10 +74,12 @@ public final class AmountFormatter {
      */
     public static String stripGrouping(CharSequence s) {
         if (s == null) return "";
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
+        char grouping = symbols.getGroupingSeparator();
         StringBuilder sb = new StringBuilder(s.length());
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
-            if (c != ',' && c != '\u00A0' && c != ' ') sb.append(c);
+            if (c != grouping && c != ',' && c != '\u00A0' && c != ' ') sb.append(c);
         }
         return sb.toString();
     }
@@ -126,7 +127,8 @@ public final class AmountFormatter {
         if (intPart.isEmpty()) return numStr; // e.g. ".5"
         StringBuilder grouped = new StringBuilder();
         for (int i = 0; i < intPart.length(); i++) {
-            if (i > 0 && (intPart.length() - i) % 3 == 0) grouped.append(',');
+            char grouping = new DecimalFormatSymbols(Locale.getDefault()).getGroupingSeparator();
+            if (i > 0 && (intPart.length() - i) % 3 == 0) grouped.append(grouping);
             grouped.append(intPart.charAt(i));
         }
         return grouped.append(decPart).toString();
@@ -141,9 +143,10 @@ public final class AmountFormatter {
         if (formatted == null || raw == null || rawIndex <= 0) return 0;
         if (rawIndex >= raw.length()) return formatted.length();
         int rawCount = 0;
+        char grouping = new DecimalFormatSymbols(Locale.getDefault()).getGroupingSeparator();
         for (int i = 0; i < formatted.length(); i++) {
             char c = formatted.charAt(i);
-            if (c == 44 || c == '\u00A0' || c == ' ') continue; // 44 = ASCII comma
+            if (c == grouping || c == 44 || c == '\u00A0' || c == ' ') continue; // 44 = ASCII comma
             rawCount++;
             if (rawCount == rawIndex) return i + 1;
         }
@@ -160,9 +163,10 @@ public final class AmountFormatter {
         if (formattedIndex <= 0) return 0;
         int end = formattedIndex > formatted.length() ? formatted.length() : formattedIndex;
         int rawCount = 0;
+        char grouping = new DecimalFormatSymbols(Locale.getDefault()).getGroupingSeparator();
         for (int i = 0; i < end; i++) {
             char c = formatted.charAt(i);
-            if (c != 44 && c != '\u00A0' && c != ' ') rawCount++; // 44 = ASCII comma
+            if (c != grouping && c != 44 && c != '\u00A0' && c != ' ') rawCount++; // 44 = ASCII comma
         }
         return rawCount;
     }

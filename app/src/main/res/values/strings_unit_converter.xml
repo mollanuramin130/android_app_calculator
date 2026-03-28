@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mode_unit_converter">Unit Converter</string>
+    <string name="unit_converter_title">Universal Unit Converter</string>
+    <string name="unit_category_label">Category</string>
+    <string name="unit_value_label">Value</string>
+    <string name="unit_value_hint">Enter numeric value</string>
+    <string name="unit_from_label">From Unit</string>
+    <string name="unit_to_label">To Unit</string>
+    <string name="unit_convert_btn">Convert</string>
+    <string name="unit_swap_btn">Swap</string>
+    <string name="unit_result_label">Converted Result</string>
+    <string name="unit_same_unit_note">Same source and target unit.</string>
+</resources>

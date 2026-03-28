@@ -7,13 +7,27 @@ import java.util.Random;
 
 /**
  * Pure game logic for Memory Number Grid. Level, score, difficulty, validation.
- * Modular: no Android dependencies; can be unit-tested or reused.
+ * <p>Levels 1–{@value #TUTORIAL_MAX_LEVEL} are tutorial: always 3 numbers, fixed memorize time; any wrong tap ends the game.
+ * From level {@value #TUTORIAL_MAX_LEVEL} + 1 onward, more numbers appear and extra memorize time is added per level.
  */
 public final class MemoryGridGameEngine {
 
     public static final int GRID_SIZE = 16; // 4x4
     public static final int CORRECT_TAP_SCORE = 5;
     public static final int LEVEL_COMPLETE_BONUS = 20;
+
+    /** Levels 1..this (inclusive): same as “level 1” grid size (3 numbers) and no memorize-time ramp yet. */
+    public static final int TUTORIAL_MAX_LEVEL = 3;
+
+    /** After tutorial: wrong taps consume one chance; at zero chances the game ends. */
+    public static final int CHANCES_AFTER_TUTORIAL = 3;
+
+    /** Starting memorization window (ms) during tutorial levels — numbers stay visible this long before hiding. */
+    public static final long BASE_DISPLAY_MS = 2800L;
+    /** From level {@value #TUTORIAL_MAX_LEVEL} + 1 onward: each level adds this many ms (stacks on top of {@link #BASE_DISPLAY_MS}). */
+    public static final long DISPLAY_MS_BONUS_PER_LEVEL = 220L;
+    private static final long MIN_DISPLAY_MS = 1400L;
+    private static final long MAX_DISPLAY_MS = 12000L;
 
     private final Random random = new Random();
 
@@ -27,6 +41,10 @@ public final class MemoryGridGameEngine {
     private int nextTapIndex;
     private boolean gameOver;
     private boolean levelComplete;
+    /** After tutorial: wrong taps left this level (reset in {@link #startLevel()}). */
+    private int remainingChances;
+    /** Correct cell to briefly reveal after a wrong tap (post-tutorial); -1 if none. */
+    private int wrongRevealCellIndex = -1;
 
     public int getLevel() {
         return level;
@@ -44,28 +62,50 @@ public final class MemoryGridGameEngine {
         return levelComplete;
     }
 
-    /** Number of numbers to show for current level (3..10). */
-    public int getNumbersCount() {
-        if (level <= 1) return 3;
-        if (level == 2) return 4;
-        if (level == 3) return 5;
-        if (level == 4) return 6;
-        if (level == 5) return 7;
-        if (level == 6) return 8;
-        if (level == 7) return 9;
-        return 10; // 8+
+    /** Remaining wrong-tap allowances this level (0 in tutorial). */
+    public int getRemainingChances() {
+        if (level <= TUTORIAL_MAX_LEVEL) return 0;
+        return remainingChances;
     }
 
-    /** Display time in milliseconds for current level. */
+    /**
+     * After a post-tutorial wrong tap, the cell index that should have been tapped next (for UI peek).
+     * Meaningful only for {@link TapResult#WRONG_LOST_CHANCE} and {@link TapResult#WRONG_GAME_OVER}.
+     */
+    public int getWrongRevealCellIndex() {
+        return wrongRevealCellIndex;
+    }
+
+    /** Whether this cell was already tapped correctly earlier in the current level. */
+    public boolean isCellAlreadyCompleted(int cellIndex) {
+        if (tapOrder == null || nextTapIndex <= 0) return false;
+        for (int t = 0; t < nextTapIndex; t++) {
+            if (tapOrder[t] == cellIndex) return true;
+        }
+        return false;
+    }
+
+    /**
+     * How many numbers appear on the grid (3..10). Tutorial levels 1–{@value #TUTORIAL_MAX_LEVEL} always use 3;
+     * after that, count matches level (capped at 10).
+     */
+    public int getNumbersCount() {
+        if (level <= TUTORIAL_MAX_LEVEL) return 3;
+        return Math.min(10, level);
+    }
+
+    /**
+     * How long numbers stay visible (memorization phase). Tutorial: fixed {@link #BASE_DISPLAY_MS}.
+     * After tutorial: {@code BASE_DISPLAY_MS + (level - TUTORIAL_MAX_LEVEL) * DISPLAY_MS_BONUS_PER_LEVEL}, clamped.
+     */
     public long getDisplayTimeMs() {
-        if (level <= 1) return 3000;
-        if (level == 2) return 3000;
-        if (level == 3) return 2500;
-        if (level == 4) return 2000;
-        if (level == 5) return 1800;
-        if (level == 6) return 1600;
-        if (level == 7) return 1400;
-        return 1200; // 8+
+        long t = BASE_DISPLAY_MS;
+        if (level > TUTORIAL_MAX_LEVEL) {
+            t += (long) (level - TUTORIAL_MAX_LEVEL) * DISPLAY_MS_BONUS_PER_LEVEL;
+        }
+        if (t < MIN_DISPLAY_MS) return MIN_DISPLAY_MS;
+        if (t > MAX_DISPLAY_MS) return MAX_DISPLAY_MS;
+        return t;
     }
 
     /** Reset state and prepare for a new game (level 1, score 0). */
@@ -100,6 +140,12 @@ public final class MemoryGridGameEngine {
             tapOrder[n] = cellIndex;
         }
         nextTapIndex = 0;
+        if (level > TUTORIAL_MAX_LEVEL) {
+            remainingChances = CHANCES_AFTER_TUTORIAL;
+        } else {
+            remainingChances = 0;
+        }
+        wrongRevealCellIndex = -1;
     }
 
     /** Get number at cell (1-based) or -1 if empty. */
@@ -115,6 +161,7 @@ public final class MemoryGridGameEngine {
         if (gameOver || nextTapIndex >= tapOrder.length) {
             return TapResult.IGNORED;
         }
+        wrongRevealCellIndex = -1;
         int expectedCell = tapOrder[nextTapIndex];
         if (cellIndex == expectedCell) {
             score += CORRECT_TAP_SCORE;
@@ -125,10 +172,19 @@ public final class MemoryGridGameEngine {
                 return TapResult.LEVEL_COMPLETE;
             }
             return TapResult.CORRECT;
-        } else {
+        }
+        // Wrong cell
+        if (level <= TUTORIAL_MAX_LEVEL) {
             gameOver = true;
             return TapResult.WRONG;
         }
+        remainingChances--;
+        wrongRevealCellIndex = expectedCell;
+        if (remainingChances <= 0) {
+            gameOver = true;
+            return TapResult.WRONG_GAME_OVER;
+        }
+        return TapResult.WRONG_LOST_CHANCE;
     }
 
     /** Call after level complete to advance to next level and start it. */
@@ -139,7 +195,12 @@ public final class MemoryGridGameEngine {
 
     public enum TapResult {
         CORRECT,
+        /** Tutorial only: wrong tap ends the game immediately. */
         WRONG,
+        /** Post-tutorial: wrong tap but chances remain; UI may peek {@link #getWrongRevealCellIndex()}. */
+        WRONG_LOST_CHANCE,
+        /** Post-tutorial: wrong tap with no chances left; UI may peek then game over. */
+        WRONG_GAME_OVER,
         LEVEL_COMPLETE,
         IGNORED
     }

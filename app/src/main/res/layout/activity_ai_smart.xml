@@ -16,9 +16,9 @@
         android:elevation="4dp"
         app:title="@string/ai_smart_title"
         app:titleTextColor="@color/ai_toolbar_title"
+        app:menu="@menu/menu_ai_smart"
         app:navigationIcon="@drawable/ic_arrow_back_ai"
-        app:navigationIconTint="@color/ai_toolbar_title"
-        app:menu="@menu/menu_ai_smart" />
+        app:navigationIconTint="@color/ai_toolbar_title" />
 
     <!-- Chat messages + loading overlay -->
     <FrameLayout

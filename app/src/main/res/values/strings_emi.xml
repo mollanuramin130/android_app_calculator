@@ -12,14 +12,34 @@
     <string name="emi_principal">Principal</string>
     <string name="emi_interest">Interest</string>
     <string name="emi_loan_schedule">Loan EMI Schedule</string>
-    <string name="emi_rupee_symbol">₹</string>
-    <string name="emi_range_1k">₹ 1k</string>
-    <string name="emi_range_1l">₹ 1 L</string>
-    <string name="emi_range_1cr">₹ 1 Cr</string>
+    <string name="emi_range_1k">1k</string>
+    <string name="emi_range_1l">100k</string>
+    <string name="emi_range_1cr">10M</string>
     <string name="emi_range_1pct">1%</string>
     <string name="emi_range_25pct">25%</string>
     <string name="emi_range_6m">6M</string>
     <string name="emi_range_360m">360M</string>
     <string name="emi_months">Months</string>
     <string name="emi_use_slider_for_large">Use the slider for very large amounts</string>
+    <string name="emi_sample_result">1,234.56 / month</string>
+    <string name="emi_sample_total_interest">Total Interest Payable: 2,500.00</string>
+    <string name="emi_sample_total_payment">Total Payment (Principal): 12,500.00</string>
+
+    <string name="emi_schedule_summary_line">Loan %1$s · %2$s p.a. · %3$s</string>
+    <string name="emi_schedule_tenure_months">%1$d months</string>
+    <string name="emi_schedule_emi_line">EMI: %1$s / month</string>
+    <string name="emi_schedule_col_mo">Mo</string>
+    <string name="emi_schedule_col_principal">Principal</string>
+    <string name="emi_schedule_col_interest">Interest</string>
+    <string name="emi_schedule_col_balance">Balance</string>
+    <string name="emi_calculate_first_schedule">Calculate your EMI first to view the schedule.</string>
+
+    <string name="emi_pdf_document_title">Loan EMI schedule</string>
+    <string name="emi_pdf_subtitle">Amortization table</string>
+    <string name="emi_pdf_summary_title">Loan details</string>
+    <string name="emi_pdf_continued">(continued)</string>
+    <string name="emi_pdf_subject">Loan EMI schedule</string>
+    <string name="emi_pdf_print_job_name">EMI schedule</string>
+    <string name="emi_pdf_error">Could not create PDF.</string>
+    <string name="emi_schedule_export_menu_cd">Print or share PDF</string>
 </resources>

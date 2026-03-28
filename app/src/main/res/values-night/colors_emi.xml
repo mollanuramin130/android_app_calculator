@@ -16,4 +16,5 @@
     <color name="emi_pie_principal">#FF3B82F6</color>
     <color name="emi_pie_interest">#FF22D3EE</color>
     <color name="emi_card_border">#1AFFFFFF</color>
+    <color name="emi_schedule_row_alt">#FF252F42</color>
 </resources>

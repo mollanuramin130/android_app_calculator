@@ -120,7 +120,7 @@ public final class MathSpeedGameController {
         equationText.setText(engine.getCurrentEquationText());
 
         startBtn.setOnClickListener(v -> startGame());
-        resetBtn.setOnClickListener(v -> resetGame());
+        if (resetBtn != null) resetBtn.setOnClickListener(v -> resetGame());
     }
 
     private void startGame() {
