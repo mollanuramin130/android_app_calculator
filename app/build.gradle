@@ -15,10 +15,10 @@ android {
 
     defaultConfig {
         applicationId "com.nuramin.sunsetcoralcalculator"
-        minSdk 24
+        minSdk 21
         targetSdk 35
-        versionCode 16
-        versionName "v4.0.1"
+        versionCode 20
+        versionName "v4.1.1"
         buildConfigField "String", "DEEPSEEK_API_KEY", "\"${deepSeekKey}\""
         buildConfigField "String", "GEMINI_API_KEY", "\"${geminiKey}\""
     }
@@ -42,7 +42,8 @@ android {
             if (rootProject.file("keystore.properties").exists()) {
                 signingConfig signingConfigs.release
             }
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

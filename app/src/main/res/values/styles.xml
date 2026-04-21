@@ -51,6 +51,8 @@
         <item name="backgroundTint">@null</item>
     </style>
     <!-- Keypad "white" style: light grey keys (dark text) / AC and = dark (white text) -->
+    <!-- Keys do not take focus: keeps the expression field focused like standard calculator apps,
+         so selection/cursor state stays valid while tapping digits and backspace. -->
     <style name="Widget.CalculatorButton.KeypadStandard" parent="Widget.MaterialComponents.Button">
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
@@ -60,6 +62,8 @@
         <item name="android:textStyle">bold</item>
         <item name="android:background">@drawable/button_keypad_standard</item>
         <item name="backgroundTint">@null</item>
+        <item name="android:focusable">false</item>
+        <item name="android:focusableInTouchMode">false</item>
     </style>
     <style name="Widget.CalculatorButton.KeypadAccent" parent="Widget.MaterialComponents.Button">
         <item name="android:insetTop">0dp</item>
@@ -70,6 +74,8 @@
         <item name="android:textStyle">bold</item>
         <item name="android:background">@drawable/button_keypad_accent</item>
         <item name="backgroundTint">@null</item>
+        <item name="android:focusable">false</item>
+        <item name="android:focusableInTouchMode">false</item>
     </style>
     <!-- Scientific function keys: smaller text, auto-size to fit, real calculator key look -->
     <style name="Widget.CalculatorButton.KeypadScientific" parent="Widget.CalculatorButton.KeypadStandard">

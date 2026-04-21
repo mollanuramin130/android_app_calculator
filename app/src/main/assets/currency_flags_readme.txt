@@ -5,7 +5,7 @@ Files use **ISO 3166-1 alpha-2** keys:
 
   `currency_flags/<cc>.svg`   (lowercase, e.g. `us.svg`, `in.svg`, `eu.svg`)
 
-Source set: **4×3** aspect ratio (`Screen_UI icon/Flag svg/flags/4x3/`). UI frames and SVG render sizes use 4:3 (see `currency_flag_render_*` in `values/dimens.xml`).
+Source set: **4×3** aspect ratio (ISO flag SVGs). UI frames and SVG render sizes use 4:3 (see `currency_flag_render_*` in `values/dimens.xml`).
 
 Mapping:
 

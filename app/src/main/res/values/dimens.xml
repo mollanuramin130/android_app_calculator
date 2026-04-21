@@ -9,7 +9,7 @@
     <dimen name="overflow_menu_min_width">260dp</dimen>
     <dimen name="overflow_menu_icon_size">24dp</dimen>
 
-    <!-- Mode panels (drawer + Screen_UI ic_nav_*): one system for padding & icon sizes -->
+    <!-- Mode panels (drawer + nav icons): one system for padding & icon sizes -->
     <dimen name="mode_content_scroll_padding">16dp</dimen>
     <dimen name="mode_content_scroll_padding_wide">20dp</dimen>
     <dimen name="mode_content_icon_hero">48dp</dimen>

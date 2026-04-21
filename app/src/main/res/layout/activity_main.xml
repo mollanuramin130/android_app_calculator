@@ -62,24 +62,16 @@
                 android:gravity="end"
                 android:clipChildren="false">
 
-                <HorizontalScrollView
-                    android:id="@+id/display_scroll"
+                <!-- Full-width field scrolls text inside the EditText (standard pattern). Avoids
+                     HorizontalScrollView + wrap_content EditText fighting over scroll position. -->
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fillViewport="false"
-                    android:scrollbars="horizontal">
+                    android:layout_height="48dp"
+                    android:minHeight="48dp">
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="48dp"
-                        android:layout_gravity="end"
-                        android:orientation="horizontal"
-                        android:gravity="end|center_vertical"
-                        android:minWidth="120dp">
-
-                    <EditText
+                    <com.nuramin.calculator.basic.ExpressionEditText
                         android:id="@+id/tv_expression"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:minHeight="44dp"
                         android:minWidth="120dp"
@@ -87,13 +79,16 @@
                         android:textColor="@color/mode_button_text_light"
                         android:textSize="@dimen/mode_display_expression_size"
                         android:visibility="visible"
-                        android:singleLine="true"
+                        android:maxLines="1"
+                        android:scrollHorizontally="true"
+                        android:scrollbarStyle="insideOverlay"
+                        android:overScrollMode="never"
                         android:ellipsize="none"
                         android:background="@null"
                         android:cursorVisible="true"
                         android:focusable="true"
                         android:focusableInTouchMode="true"
-                        android:inputType="text"
+                        android:inputType="none"
                         android:imeOptions="flagNoExtractUi"
                         android:longClickable="true"
                         android:shadowColor="#80000000"
@@ -102,9 +97,7 @@
                         android:shadowRadius="2"
                         tools:text="123+456"
                         tools:visibility="visible" />
-
-                    </LinearLayout>
-                </HorizontalScrollView>
+                </FrameLayout>
 
                 <TextView
                     android:id="@+id/tv_result"
@@ -545,6 +538,8 @@
                     android:contentDescription="@string/backspace"
                     android:padding="12dp"
                     android:scaleType="centerInside"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     app:tint="@color/keypad_standard_text" />
                 <Button android:id="@+id/btn_equals" style="@style/Widget.CalculatorButton.KeypadAccent" android:text="="
                     android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />

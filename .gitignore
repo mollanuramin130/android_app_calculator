@@ -24,3 +24,5 @@ Thumbs.db
 Calculator_Screen_Image/
 Extra_Image/
 App_Sceenshot/
+
+# Keep store_assets/ in the repo (Play Console / marketing graphics — not part of the APK build).

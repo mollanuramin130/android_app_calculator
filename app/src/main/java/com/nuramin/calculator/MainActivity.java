@@ -95,9 +95,13 @@ public class MainActivity extends AppCompatActivity {
     private static final String FEEDBACK_EMAIL = "mollanuramin130@gmail.com";
 
     /** Intent extra: open this panel when MainActivity starts (e.g. from Date Calculator drawer). */
-    public static final String EXTRA_OPEN_PANEL = "open_panel"; // values: basic, temp, emi, interest, tax, currency
+    public static final String EXTRA_OPEN_PANEL = "open_panel";
+    // Supported values include: scientific, temp, emi, interest, tax, currency, date_calc, bmi, discount,
+    // unit_converter, memory_grid_game, number_target_puzzle, math_speed_game (see onCreate).
     /** Intent extra: clear calculator history on launch. */
     public static final String EXTRA_CLEAR_HISTORY = "clear_history";
+    /** Intent extra: skip automatic review dialog (e.g. Play Store screenshot automation). */
+    public static final String EXTRA_SKIP_AUTO_REVIEW = "skip_auto_review";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,8 +154,41 @@ public class MainActivity extends AppCompatActivity {
         setupInAppUpdate();
         ReviewController.onMainActivityCreate(this, savedInstanceState);
 
-        // If launched from Date Calculator drawer, open the requested panel
-        String openPanel = getIntent() != null ? getIntent().getStringExtra(EXTRA_OPEN_PANEL) : null;
+        applyOpenPanelFromIntent(getIntent(), true);
+        basicCalculatorScreen.updateDisplay();
+
+        if (getIntent() != null && getIntent().getBooleanExtra(EXTRA_CLEAR_HISTORY, false)) {
+            if (basicCalculatorScreen != null) basicCalculatorScreen.clearHistory();
+        }
+
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        applyOpenPanelFromIntent(intent, false);
+        if (basicCalculatorScreen != null) {
+            basicCalculatorScreen.updateDisplay();
+        }
+        if (intent != null && intent.getBooleanExtra(EXTRA_CLEAR_HISTORY, false)) {
+            if (basicCalculatorScreen != null) basicCalculatorScreen.clearHistory();
+        }
+    }
+
+    /**
+     * Opens the mode requested via {@link #EXTRA_OPEN_PANEL} (e.g. adb screenshots, deep links).
+     *
+     * @param useDefaultWhenMissing if true and extra is absent, show basic calculator; if false, leave current panel
+     */
+    private void applyOpenPanelFromIntent(Intent intent, boolean useDefaultWhenMissing) {
+        String openPanel = intent != null ? intent.getStringExtra(EXTRA_OPEN_PANEL) : null;
+        if (openPanel == null) {
+            if (useDefaultWhenMissing) {
+                showPanel(calculatorPanel, 0);
+            }
+            return;
+        }
         if ("temp".equals(openPanel)) {
             showPanel(panelTemp, R.string.temp_converter_title);
         } else if ("emi".equals(openPanel)) {
@@ -176,15 +213,15 @@ public class MainActivity extends AppCompatActivity {
             showPanel(panelNumberTargetPuzzle, R.string.mode_number_target_puzzle);
         } else if ("math_speed_game".equals(openPanel)) {
             showPanel(panelMathSpeedGame, R.string.math_speed_game_title);
+        } else if ("scientific".equals(openPanel)) {
+            showPanel(calculatorPanel, 0);
+            if (scientificRows != null) {
+                scientificRows.setVisibility(View.VISIBLE);
+                updateCalculatorModeTitle();
+            }
         } else {
             showPanel(calculatorPanel, 0);
         }
-        basicCalculatorScreen.updateDisplay();
-
-        if (getIntent() != null && getIntent().getBooleanExtra(EXTRA_CLEAR_HISTORY, false)) {
-            if (basicCalculatorScreen != null) basicCalculatorScreen.clearHistory();
-        }
-
     }
 
     /**

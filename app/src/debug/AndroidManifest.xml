@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Debug only: allows `adb shell am start …/AISmartActivity` for Play Store screenshots. Release keeps exported=false from main manifest. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <application>
+        <!-- Replace entire activity so adb can start it for screenshots; release manifest unchanged. -->
+        <activity
+            android:name="com.nuramin.sunsetcoralcalculator.ai.ui.AISmartActivity"
+            android:exported="true"
+            android:theme="@style/Theme.SunsetCoralCalculator"
+            android:windowSoftInputMode="adjustResize"
+            tools:node="replace" />
+    </application>
+</manifest>

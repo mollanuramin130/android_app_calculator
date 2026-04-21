@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.play.core.review.ReviewInfo;
 import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
+import com.nuramin.calculator.MainActivity;
 import com.nuramin.sunsetcoralcalculator.R;
 
 /**
@@ -50,6 +51,10 @@ public final class ReviewController {
      * Call from {@link AppCompatActivity#onCreate(Bundle)} with the saved state bundle.
      */
     public static void onMainActivityCreate(AppCompatActivity activity, @Nullable Bundle savedInstanceState) {
+        if (activity.getIntent() != null
+                && activity.getIntent().getBooleanExtra(MainActivity.EXTRA_SKIP_AUTO_REVIEW, false)) {
+            return;
+        }
         if (savedInstanceState != null) return;
         SharedPreferences prefs = activity.getSharedPreferences(PREFS, AppCompatActivity.MODE_PRIVATE);
         int count = prefs.getInt(KEY_LAUNCH_COUNT, 0) + 1;

@@ -8,13 +8,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
+import android.text.Layout;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.HorizontalScrollView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -35,14 +34,14 @@ import java.util.List;
 
 /**
  * Basic Calculator: smart expression engine with numbers, operators, %, (), AC, delete, =.
- * No XML or UI changes; only internal logic.
+ * Expression line uses {@link ExpressionEditText} with in-place {@link Editable} updates (not {@code setText})
+ * for keypad-driven changes so mid-expression delete keeps caret and horizontal scroll stable.
  */
 public class BasicCalculatorScreen {
 
     private final AppCompatActivity activity;
-    private EditText tvExpression;
+    private ExpressionEditText expressionField;
     private TextView tvResult;
-    private HorizontalScrollView displayScroll;
     private Button btnEquals;
     private ListView panelHistoryList;
     private View tabCalculateHistory;
@@ -91,19 +90,23 @@ public class BasicCalculatorScreen {
     }
 
     public void setup() {
-        tvExpression = activity.findViewById(R.id.tv_expression);
+        expressionField = activity.findViewById(R.id.tv_expression);
         tvResult = activity.findViewById(R.id.tv_result);
-        displayScroll = activity.findViewById(R.id.display_scroll);
         btnEquals = activity.findViewById(R.id.btn_equals);
         panelHistoryList = activity.findViewById(R.id.panel_history_list);
 
-        if (tvExpression == null || tvResult == null) return;
+        if (expressionField == null || tvResult == null) return;
 
         // Prevent soft keyboard in all scenarios (tap, select, copy, long-press)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            tvExpression.setShowSoftInputOnFocus(false);
+            expressionField.setShowSoftInputOnFocus(false);
         }
-        tvExpression.setOnFocusChangeListener((v, hasFocus) -> { if (hasFocus) hideSoftKeyboard(); });
+        expressionField.setHorizontallyScrolling(true);
+        expressionField.setOnTouchListener((v, event) -> {
+            v.getParent().requestDisallowInterceptTouchEvent(true);
+            return false;
+        });
+        expressionField.setOnFocusChangeListener((v, hasFocus) -> { if (hasFocus) hideSoftKeyboard(); });
 
         // Number buttons 0–9 and dot: route to single handler
         setNumberButton(R.id.btn_0, "0");
@@ -155,7 +158,7 @@ public class BasicCalculatorScreen {
         setScientificButton(R.id.btn_ln, v -> handleLn());
         setScientificButton(R.id.btn_log, v -> handleLog());
 
-        tvExpression.addTextChangedListener(new TextWatcher() {
+        expressionField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -173,8 +176,7 @@ public class BasicCalculatorScreen {
                     syncStateFromExpression();
                     if (!raw.equals(filtered)) {
                         updatingFromCode = true;
-                        tvExpression.setText(filtered);
-                        tvExpression.setSelection(filtered.length());
+                        replaceExpressionBuffer(filtered, filtered.length());
                         updatingFromCode = false;
                     }
                     updateDisplay();
@@ -399,10 +401,10 @@ public class BasicCalculatorScreen {
 
     /** Current cursor/insert position in expression (for insert-at-cursor). Display has commas; convert to raw index. */
     private int getInsertPosition() {
-        if (tvExpression == null) return expression.length();
-        int displaySel = tvExpression.getSelectionStart();
+        if (expressionField == null) return expression.length();
+        int displaySel = expressionField.getSelectionStart();
         if (displaySel < 0) return expression.length();
-        CharSequence displayText = tvExpression.getText();
+        CharSequence displayText = expressionField.getText();
         if (displayText == null) return expression.length();
         int rawPos = AmountFormatter.formattedIndexToRawIndex(displayText.toString(), displaySel);
         return Math.min(Math.max(0, rawPos), expression.length());
@@ -646,16 +648,18 @@ public class BasicCalculatorScreen {
         expression.setLength(0);
         updatingFromCode = true;
         tvResult.setText("0");
-        if (tvExpression != null) {
-            tvExpression.setText("");
-            tvExpression.setVisibility(View.GONE);
+        if (expressionField != null) {
+            expressionField.getText().clear();
+            expressionField.setVisibility(View.GONE);
         }
         updatingFromCode = false;
         lastInputIsOperator = false;
         lastInputIsDecimal = false;
         isResultDisplayed = false;
         openParenthesisCount = 0;
-        scrollDisplayToEnd();
+        if (expressionField != null) {
+            expressionField.scrollTo(0, 0);
+        }
     }
 
     // ---- 9. Percentage: like standard calculators ----
@@ -710,11 +714,11 @@ public class BasicCalculatorScreen {
             expressionBeforeEquals = null;
             cancelResultAnimation();
             if (tvResult != null) tvResult.setText("Error");
-            if (tvExpression != null) tvExpression.setVisibility(View.VISIBLE);
+            if (expressionField != null) expressionField.setVisibility(View.VISIBLE);
             lastInputIsOperator = false;
             lastInputIsDecimal = false;
             isResultDisplayed = false;
-            scrollDisplayToEnd();
+            scrollExpressionToEnd();
             return;
         }
 
@@ -722,14 +726,13 @@ public class BasicCalculatorScreen {
         saveToHistory(exprStr, resultStr);
 
         updatingFromCode = true;
-        if (tvExpression != null) {
-            tvExpression.setVisibility(View.VISIBLE);
+        if (expressionField != null) {
+            expressionField.setVisibility(View.VISIBLE);
         }
         lastValidLiveResult = resultStr;
         String resultRaw = AmountFormatter.stripGrouping(resultStr);
-        if (tvExpression != null) {
-            tvExpression.setText(resultStr);
-            tvExpression.setSelection(resultStr.length());
+        if (expressionField != null) {
+            replaceExpressionBuffer(resultStr, resultStr.length());
         }
         if (tvResult != null) tvResult.setText("");
         expression.setLength(0);
@@ -740,7 +743,7 @@ public class BasicCalculatorScreen {
         isResultDisplayed = true;
         openParenthesisCount = 0;
         refreshHistoryList();
-        scrollDisplayToEnd();
+        scrollExpressionToEnd();
     }
 
     /**
@@ -942,48 +945,125 @@ public class BasicCalculatorScreen {
         refreshHistoryList();
     }
 
+    /**
+     * Updates the expression field in-place via {@link Editable#replace} instead of {@code setText},
+     * so mid-expression delete/insert does not reset layout scroll or caret the way a full buffer rebuild does.
+     */
+    private void replaceExpressionBuffer(CharSequence newText, int selectionStart) {
+        if (expressionField == null) return;
+        Editable ed = expressionField.getText();
+        if (ed == null) return;
+        int n = newText != null ? newText.length() : 0;
+        ed.replace(0, ed.length(), newText != null ? newText : "", 0, n);
+        expressionField.setSelection(Math.max(0, Math.min(selectionStart, ed.length())));
+    }
+
+    /** Scroll horizontally so the caret stays inside the visible viewport (calculator-style). */
+    private void keepCursorVisible() {
+        if (expressionField == null) return;
+        Layout layout = expressionField.getLayout();
+        if (layout == null) {
+            expressionField.post(this::keepCursorVisible);
+            return;
+        }
+        int cursorPos = expressionField.getSelectionStart();
+        if (cursorPos < 0) {
+            cursorPos = 0;
+        }
+        int x = (int) layout.getPrimaryHorizontal(cursorPos);
+        int scrollX = expressionField.getScrollX();
+        int width = expressionInnerWidthPx();
+        float density = activity.getResources().getDisplayMetrics().density;
+        int padding = (int) (40f * density + 0.5f);
+        if (width <= 0) {
+            expressionField.post(this::keepCursorVisible);
+            return;
+        }
+        if (x > scrollX + width - padding) {
+            expressionField.scrollTo(Math.max(0, x - width + padding), 0);
+        } else if (x < scrollX + expressionField.getCompoundPaddingLeft()) {
+            expressionField.scrollTo(Math.max(0, x - padding), 0);
+        }
+    }
+
+    private void refreshLiveResultLine(String expr) {
+        String toEval = expandPercentages(expr).replace('×', '*').replace('÷', '/').replace('−', '-').replaceAll("\\s+", "");
+        Double live = evaluateLiveExpression(toEval);
+        if (live != null) {
+            lastValidLiveResult = formatResult(live);
+            tvResult.setText(lastValidLiveResult);
+        } else {
+            tvResult.setText("");
+        }
+    }
+
     public void updateDisplay() {
-        if (tvExpression == null || tvResult == null) return;
+        if (expressionField == null || tvResult == null) return;
         String expr = expression.toString();
         if (expr.isEmpty()) {
             lastValidLiveResult = null;
-            tvExpression.setVisibility(View.GONE);
+            expressionField.setVisibility(View.GONE);
             updatingFromCode = true;
-            tvExpression.setText("");
+            expressionField.getText().clear();
             updatingFromCode = false;
             tvResult.setText("0");
-        } else {
-            tvExpression.setVisibility(View.VISIBLE);
-            updatingFromCode = true;
-            String displayExpr = AmountFormatter.formatExpressionForDisplay(expr);
-            tvExpression.setText(displayExpr);
-            int rawSel = (pendingSelectionAfterUpdate != null) ? Math.max(0, Math.min(pendingSelectionAfterUpdate, expr.length())) : expr.length();
-            int displaySel = AmountFormatter.rawIndexToFormattedIndex(displayExpr, expr, rawSel);
-            tvExpression.setSelection(displaySel);
-            pendingSelectionAfterUpdate = null;
-            updatingFromCode = false;
-            String toEval = expandPercentages(expr).replace('×', '*').replace('÷', '/').replace('−', '-').replaceAll("\\s+", "");
-            Double live = evaluateLiveExpression(toEval);
-            if (live != null) {
-                lastValidLiveResult = formatResult(live);
-                tvResult.setText(lastValidLiveResult);
-            } else {
-                tvResult.setText("");
-            }
+            expressionField.scrollTo(0, 0);
+            return;
         }
-        scrollDisplayToEnd();
+        expressionField.setVisibility(View.VISIBLE);
+        String displayExpr = AmountFormatter.formatExpressionForDisplay(expr);
+        int rawSel = (pendingSelectionAfterUpdate != null)
+                ? Math.max(0, Math.min(pendingSelectionAfterUpdate, expr.length()))
+                : expr.length();
+        boolean scrollToEndAfterUpdate = (rawSel >= expr.length());
+        int displaySel = AmountFormatter.rawIndexToFormattedIndex(displayExpr, expr, rawSel);
+        pendingSelectionAfterUpdate = null;
+
+        updatingFromCode = true;
+        replaceExpressionBuffer(displayExpr, displaySel);
+        updatingFromCode = false;
+
+        expressionField.requestFocus();
+        refreshLiveResultLine(expr);
+
+        if (scrollToEndAfterUpdate) {
+            expressionField.post(this::scrollExpressionToEndInner);
+        } else {
+            expressionField.post(this::keepCursorVisible);
+        }
     }
 
-    private void scrollDisplayToEnd() {
-        if (displayScroll != null) {
-            displayScroll.post(() -> displayScroll.fullScroll(View.FOCUS_RIGHT));
+    /** Inner width between compound paddings — scroll range is based on this, not parent HSV. */
+    private int expressionInnerWidthPx() {
+        if (expressionField == null) return 0;
+        return expressionField.getWidth() - expressionField.getCompoundPaddingLeft() - expressionField.getCompoundPaddingRight();
+    }
+
+    private void scrollExpressionToEnd() {
+        if (expressionField == null) return;
+        expressionField.post(this::scrollExpressionToEndInner);
+    }
+
+    private void scrollExpressionToEndInner() {
+        if (expressionField == null) return;
+        Layout layout = expressionField.getLayout();
+        if (layout == null) {
+            expressionField.post(this::scrollExpressionToEndInner);
+            return;
         }
+        int innerW = expressionInnerWidthPx();
+        if (innerW <= 0) {
+            expressionField.post(this::scrollExpressionToEndInner);
+            return;
+        }
+        int maxX = Math.max(0, layout.getWidth() - innerW);
+        expressionField.scrollTo(maxX, 0);
     }
 
     private void hideSoftKeyboard() {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null && tvExpression != null) {
-            imm.hideSoftInputFromWindow(tvExpression.getWindowToken(), 0);
+        if (imm != null && expressionField != null) {
+            imm.hideSoftInputFromWindow(expressionField.getWindowToken(), 0);
         }
     }
 
@@ -1037,7 +1117,7 @@ public class BasicCalculatorScreen {
         expression.append(trimmed);
         syncStateFromExpression();
         isResultDisplayed = false;
-        if (tvExpression != null) tvExpression.setVisibility(View.VISIBLE);
+        if (expressionField != null) expressionField.setVisibility(View.VISIBLE);
         if (tvResult != null) tvResult.setText("");
         updateDisplay();
     }
@@ -1061,7 +1141,7 @@ public class BasicCalculatorScreen {
         lastInputIsDecimal = false;
         isResultDisplayed = false;
         pendingSelectionAfterUpdate = pos + digits.length();
-        if (tvExpression != null) tvExpression.setVisibility(View.VISIBLE);
+        if (expressionField != null) expressionField.setVisibility(View.VISIBLE);
         if (tvResult != null) tvResult.setText("");
         updateDisplay();
     }

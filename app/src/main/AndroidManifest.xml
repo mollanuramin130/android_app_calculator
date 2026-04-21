@@ -2,7 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- Mic is optional (AI voice); do not require hardware mic for install eligibility. -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!-- Play device catalog: explicit optional hardware so TV / no-mic devices stay eligible. -->
+    <uses-feature android:name="android.hardware.microphone" android:required="false" />
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -15,6 +20,7 @@
         <activity
             android:name="com.nuramin.calculator.MainActivity"
             android:exported="true"
+            android:launchMode="singleTop"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/launcher_name"
             android:roundIcon="@mipmap/ic_launcher_round"
